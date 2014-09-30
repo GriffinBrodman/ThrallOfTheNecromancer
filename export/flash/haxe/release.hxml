@@ -1,10 +1,12 @@
 -main ApplicationMain 
 -cp C:\HaxeToolkit\haxe\flixel-tools/flixel/3,3,5/
--D flixel=3.3.5
 -cp C:\HaxeToolkit\haxe\flixel-tools/lime/1,0,1/
--D lime=1.0.1
 -cp C:\HaxeToolkit\haxe\flixel-tools/openfl/2,0,1/
+-cp C:\HaxeToolkit\haxe\flixel-tools/flixel-addons/1,1,0/
+-D flixel-addons=1.1.0
 -D openfl=2.0.1
+-D flixel=3.3.5
+-D lime=1.0.1
 -cp source
 -cp C:\HaxeToolkit\haxe\flixel-tools/openfl/2,0,1/backends/flash
 -cp C:\HaxeToolkit\haxe\flixel-tools/openfl/2,0,1/backends/flash

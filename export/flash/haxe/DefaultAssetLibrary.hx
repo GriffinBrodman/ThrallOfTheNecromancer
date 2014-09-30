@@ -48,12 +48,54 @@ class DefaultAssetLibrary extends AssetLibrary {
 		
 		className.set ("assets/data/data-goes-here.txt", __ASSET__assets_data_data_goes_here_txt);
 		type.set ("assets/data/data-goes-here.txt", AssetType.TEXT);
+		className.set ("assets/data/room-001.oel", __ASSET__assets_data_room_001_oel);
+		type.set ("assets/data/room-001.oel", AssetType.TEXT);
+		className.set ("assets/data/tutorial.oep", __ASSET__assets_data_tutorial_oep);
+		type.set ("assets/data/tutorial.oep", AssetType.TEXT);
+		className.set ("assets/images/button.png", __ASSET__assets_images_button_png);
+		type.set ("assets/images/button.png", AssetType.IMAGE);
+		className.set ("assets/images/coin.png", __ASSET__assets_images_coin_png);
+		type.set ("assets/images/coin.png", AssetType.IMAGE);
+		className.set ("assets/images/enemy-0.png", __ASSET__assets_images_enemy_0_png);
+		type.set ("assets/images/enemy-0.png", AssetType.IMAGE);
+		className.set ("assets/images/enemy-1.png", __ASSET__assets_images_enemy_1_png);
+		type.set ("assets/images/enemy-1.png", AssetType.IMAGE);
+		className.set ("assets/images/health.png", __ASSET__assets_images_health_png);
+		type.set ("assets/images/health.png", AssetType.IMAGE);
 		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
 		type.set ("assets/images/images-go-here.txt", AssetType.TEXT);
+		className.set ("assets/images/player.png", __ASSET__assets_images_player_png);
+		type.set ("assets/images/player.png", AssetType.IMAGE);
+		className.set ("assets/images/pointer.png", __ASSET__assets_images_pointer_png);
+		type.set ("assets/images/pointer.png", AssetType.IMAGE);
+		className.set ("assets/images/tiles.png", __ASSET__assets_images_tiles_png);
+		type.set ("assets/images/tiles.png", AssetType.IMAGE);
+		className.set ("assets/music/HaxeFlixel_Tutorial_Game.mp3", __ASSET__assets_music_haxeflixel_tutorial_game_mp3);
+		type.set ("assets/music/HaxeFlixel_Tutorial_Game.mp3", AssetType.MUSIC);
+		className.set ("assets/music/HaxeFlixel_Tutorial_Game.ogg", __ASSET__assets_music_haxeflixel_tutorial_game_ogg);
+		type.set ("assets/music/HaxeFlixel_Tutorial_Game.ogg", AssetType.MUSIC);
 		className.set ("assets/music/music-goes-here.txt", __ASSET__assets_music_music_goes_here_txt);
 		type.set ("assets/music/music-goes-here.txt", AssetType.TEXT);
+		className.set ("assets/sounds/coin.wav", __ASSET__assets_sounds_coin_wav);
+		type.set ("assets/sounds/coin.wav", AssetType.SOUND);
+		className.set ("assets/sounds/combat.wav", __ASSET__assets_sounds_combat_wav);
+		type.set ("assets/sounds/combat.wav", AssetType.SOUND);
+		className.set ("assets/sounds/fled.wav", __ASSET__assets_sounds_fled_wav);
+		type.set ("assets/sounds/fled.wav", AssetType.SOUND);
+		className.set ("assets/sounds/hurt.wav", __ASSET__assets_sounds_hurt_wav);
+		type.set ("assets/sounds/hurt.wav", AssetType.SOUND);
+		className.set ("assets/sounds/lose.wav", __ASSET__assets_sounds_lose_wav);
+		type.set ("assets/sounds/lose.wav", AssetType.SOUND);
+		className.set ("assets/sounds/miss.wav", __ASSET__assets_sounds_miss_wav);
+		type.set ("assets/sounds/miss.wav", AssetType.SOUND);
+		className.set ("assets/sounds/select.wav", __ASSET__assets_sounds_select_wav);
+		type.set ("assets/sounds/select.wav", AssetType.SOUND);
 		className.set ("assets/sounds/sounds-go-here.txt", __ASSET__assets_sounds_sounds_go_here_txt);
 		type.set ("assets/sounds/sounds-go-here.txt", AssetType.TEXT);
+		className.set ("assets/sounds/step.wav", __ASSET__assets_sounds_step_wav);
+		type.set ("assets/sounds/step.wav", AssetType.SOUND);
+		className.set ("assets/sounds/win.wav", __ASSET__assets_sounds_win_wav);
+		type.set ("assets/sounds/win.wav", AssetType.SOUND);
 		className.set ("assets/sounds/beep.mp3", __ASSET__assets_sounds_beep_mp3);
 		type.set ("assets/sounds/beep.mp3", AssetType.MUSIC);
 		className.set ("assets/sounds/flixel.mp3", __ASSET__assets_sounds_flixel_mp3);
@@ -66,15 +108,78 @@ class DefaultAssetLibrary extends AssetLibrary {
 		id = "assets/data/data-goes-here.txt";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
+		id = "assets/data/room-001.oel";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "assets/data/tutorial.oep";
+		path.set (id, id);
+		type.set (id, AssetType.TEXT);
+		id = "assets/images/button.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/coin.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/enemy-0.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/enemy-1.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/health.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
 		id = "assets/images/images-go-here.txt";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
+		id = "assets/images/player.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/pointer.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/images/tiles.png";
+		path.set (id, id);
+		type.set (id, AssetType.IMAGE);
+		id = "assets/music/HaxeFlixel_Tutorial_Game.mp3";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
+		id = "assets/music/HaxeFlixel_Tutorial_Game.ogg";
+		path.set (id, id);
+		type.set (id, AssetType.MUSIC);
 		id = "assets/music/music-goes-here.txt";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
+		id = "assets/sounds/coin.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/combat.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/fled.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/hurt.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/lose.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/miss.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/select.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
 		id = "assets/sounds/sounds-go-here.txt";
 		path.set (id, id);
 		type.set (id, AssetType.TEXT);
+		id = "assets/sounds/step.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
+		id = "assets/sounds/win.wav";
+		path.set (id, id);
+		type.set (id, AssetType.SOUND);
 		id = "assets/sounds/beep.mp3";
 		path.set (id, id);
 		type.set (id, AssetType.MUSIC);
@@ -92,14 +197,77 @@ class DefaultAssetLibrary extends AssetLibrary {
 		className.set ("assets/data/data-goes-here.txt", __ASSET__assets_data_data_goes_here_txt);
 		type.set ("assets/data/data-goes-here.txt", AssetType.TEXT);
 		
+		className.set ("assets/data/room-001.oel", __ASSET__assets_data_room_001_oel);
+		type.set ("assets/data/room-001.oel", AssetType.TEXT);
+		
+		className.set ("assets/data/tutorial.oep", __ASSET__assets_data_tutorial_oep);
+		type.set ("assets/data/tutorial.oep", AssetType.TEXT);
+		
+		className.set ("assets/images/button.png", __ASSET__assets_images_button_png);
+		type.set ("assets/images/button.png", AssetType.IMAGE);
+		
+		className.set ("assets/images/coin.png", __ASSET__assets_images_coin_png);
+		type.set ("assets/images/coin.png", AssetType.IMAGE);
+		
+		className.set ("assets/images/enemy-0.png", __ASSET__assets_images_enemy_0_png);
+		type.set ("assets/images/enemy-0.png", AssetType.IMAGE);
+		
+		className.set ("assets/images/enemy-1.png", __ASSET__assets_images_enemy_1_png);
+		type.set ("assets/images/enemy-1.png", AssetType.IMAGE);
+		
+		className.set ("assets/images/health.png", __ASSET__assets_images_health_png);
+		type.set ("assets/images/health.png", AssetType.IMAGE);
+		
 		className.set ("assets/images/images-go-here.txt", __ASSET__assets_images_images_go_here_txt);
 		type.set ("assets/images/images-go-here.txt", AssetType.TEXT);
+		
+		className.set ("assets/images/player.png", __ASSET__assets_images_player_png);
+		type.set ("assets/images/player.png", AssetType.IMAGE);
+		
+		className.set ("assets/images/pointer.png", __ASSET__assets_images_pointer_png);
+		type.set ("assets/images/pointer.png", AssetType.IMAGE);
+		
+		className.set ("assets/images/tiles.png", __ASSET__assets_images_tiles_png);
+		type.set ("assets/images/tiles.png", AssetType.IMAGE);
+		
+		className.set ("assets/music/HaxeFlixel_Tutorial_Game.mp3", __ASSET__assets_music_haxeflixel_tutorial_game_mp3);
+		type.set ("assets/music/HaxeFlixel_Tutorial_Game.mp3", AssetType.MUSIC);
+		
+		className.set ("assets/music/HaxeFlixel_Tutorial_Game.ogg", __ASSET__assets_music_haxeflixel_tutorial_game_ogg);
+		type.set ("assets/music/HaxeFlixel_Tutorial_Game.ogg", AssetType.MUSIC);
 		
 		className.set ("assets/music/music-goes-here.txt", __ASSET__assets_music_music_goes_here_txt);
 		type.set ("assets/music/music-goes-here.txt", AssetType.TEXT);
 		
+		className.set ("assets/sounds/coin.wav", __ASSET__assets_sounds_coin_wav);
+		type.set ("assets/sounds/coin.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/combat.wav", __ASSET__assets_sounds_combat_wav);
+		type.set ("assets/sounds/combat.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/fled.wav", __ASSET__assets_sounds_fled_wav);
+		type.set ("assets/sounds/fled.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/hurt.wav", __ASSET__assets_sounds_hurt_wav);
+		type.set ("assets/sounds/hurt.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/lose.wav", __ASSET__assets_sounds_lose_wav);
+		type.set ("assets/sounds/lose.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/miss.wav", __ASSET__assets_sounds_miss_wav);
+		type.set ("assets/sounds/miss.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/select.wav", __ASSET__assets_sounds_select_wav);
+		type.set ("assets/sounds/select.wav", AssetType.SOUND);
+		
 		className.set ("assets/sounds/sounds-go-here.txt", __ASSET__assets_sounds_sounds_go_here_txt);
 		type.set ("assets/sounds/sounds-go-here.txt", AssetType.TEXT);
+		
+		className.set ("assets/sounds/step.wav", __ASSET__assets_sounds_step_wav);
+		type.set ("assets/sounds/step.wav", AssetType.SOUND);
+		
+		className.set ("assets/sounds/win.wav", __ASSET__assets_sounds_win_wav);
+		type.set ("assets/sounds/win.wav", AssetType.SOUND);
 		
 		className.set ("assets/sounds/beep.mp3", __ASSET__assets_sounds_beep_mp3);
 		type.set ("assets/sounds/beep.mp3", AssetType.MUSIC);
@@ -724,9 +892,30 @@ class DefaultAssetLibrary extends AssetLibrary {
 #elseif flash
 
 @:keep class __ASSET__assets_data_data_goes_here_txt extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_data_room_001_oel extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_data_tutorial_oep extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_images_button_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_coin_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_enemy_0_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_enemy_1_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_health_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
 @:keep class __ASSET__assets_images_images_go_here_txt extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_images_player_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_pointer_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_images_tiles_png extends flash.display.BitmapData { public function new () { super (0, 0, true, 0); } }
+@:keep class __ASSET__assets_music_haxeflixel_tutorial_game_mp3 extends openfl.media.Sound { }
+@:keep class __ASSET__assets_music_haxeflixel_tutorial_game_ogg extends openfl.media.Sound { }
 @:keep class __ASSET__assets_music_music_goes_here_txt extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_sounds_coin_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_combat_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_fled_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_hurt_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_lose_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_miss_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_select_wav extends openfl.media.Sound { }
 @:keep class __ASSET__assets_sounds_sounds_go_here_txt extends openfl.utils.ByteArray { }
+@:keep class __ASSET__assets_sounds_step_wav extends openfl.media.Sound { }
+@:keep class __ASSET__assets_sounds_win_wav extends openfl.media.Sound { }
 @:keep class __ASSET__assets_sounds_beep_mp3 extends openfl.media.Sound { }
 @:keep class __ASSET__assets_sounds_flixel_mp3 extends openfl.media.Sound { }
 
@@ -741,13 +930,55 @@ class DefaultAssetLibrary extends AssetLibrary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #elseif (windows || mac || linux)
 
 
 @:file("assets/data/data-goes-here.txt") class __ASSET__assets_data_data_goes_here_txt extends flash.utils.ByteArray {}
+@:file("assets/data/room-001.oel") class __ASSET__assets_data_room_001_oel extends flash.utils.ByteArray {}
+@:file("assets/data/tutorial.oep") class __ASSET__assets_data_tutorial_oep extends flash.utils.ByteArray {}
+@:bitmap("assets/images/button.png") class __ASSET__assets_images_button_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/coin.png") class __ASSET__assets_images_coin_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/enemy-0.png") class __ASSET__assets_images_enemy_0_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/enemy-1.png") class __ASSET__assets_images_enemy_1_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/health.png") class __ASSET__assets_images_health_png extends flash.display.BitmapData {}
 @:file("assets/images/images-go-here.txt") class __ASSET__assets_images_images_go_here_txt extends flash.utils.ByteArray {}
+@:bitmap("assets/images/player.png") class __ASSET__assets_images_player_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/pointer.png") class __ASSET__assets_images_pointer_png extends flash.display.BitmapData {}
+@:bitmap("assets/images/tiles.png") class __ASSET__assets_images_tiles_png extends flash.display.BitmapData {}
+@:sound("assets/music/HaxeFlixel_Tutorial_Game.mp3") class __ASSET__assets_music_haxeflixel_tutorial_game_mp3 extends flash.media.Sound {}
+@:sound("assets/music/HaxeFlixel_Tutorial_Game.ogg") class __ASSET__assets_music_haxeflixel_tutorial_game_ogg extends flash.media.Sound {}
 @:file("assets/music/music-goes-here.txt") class __ASSET__assets_music_music_goes_here_txt extends flash.utils.ByteArray {}
+@:sound("assets/sounds/coin.wav") class __ASSET__assets_sounds_coin_wav extends flash.media.Sound {}
+@:sound("assets/sounds/combat.wav") class __ASSET__assets_sounds_combat_wav extends flash.media.Sound {}
+@:sound("assets/sounds/fled.wav") class __ASSET__assets_sounds_fled_wav extends flash.media.Sound {}
+@:sound("assets/sounds/hurt.wav") class __ASSET__assets_sounds_hurt_wav extends flash.media.Sound {}
+@:sound("assets/sounds/lose.wav") class __ASSET__assets_sounds_lose_wav extends flash.media.Sound {}
+@:sound("assets/sounds/miss.wav") class __ASSET__assets_sounds_miss_wav extends flash.media.Sound {}
+@:sound("assets/sounds/select.wav") class __ASSET__assets_sounds_select_wav extends flash.media.Sound {}
 @:file("assets/sounds/sounds-go-here.txt") class __ASSET__assets_sounds_sounds_go_here_txt extends flash.utils.ByteArray {}
+@:sound("assets/sounds/step.wav") class __ASSET__assets_sounds_step_wav extends flash.media.Sound {}
+@:sound("assets/sounds/win.wav") class __ASSET__assets_sounds_win_wav extends flash.media.Sound {}
 @:sound("C:/HaxeToolkit/haxe/flixel-tools/flixel/3,3,5/assets/sounds/beep.mp3") class __ASSET__assets_sounds_beep_mp3 extends flash.media.Sound {}
 @:sound("C:/HaxeToolkit/haxe/flixel-tools/flixel/3,3,5/assets/sounds/flixel.mp3") class __ASSET__assets_sounds_flixel_mp3 extends flash.media.Sound {}
 
