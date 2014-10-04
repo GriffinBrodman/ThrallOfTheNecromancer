@@ -21,7 +21,7 @@ class PlayState extends FlxState
 	private var _player:Player;
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
-	private var _grpCoins:FlxTypedGroup<Coin>;
+	//private var _grpCoins:FlxTypedGroup<Coin>;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _hud:HUD;
 	private var _money:Int = 0;
@@ -48,8 +48,6 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
-		_grpCoins = new FlxTypedGroup<Coin>();
-		add(_grpCoins);
 		
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
@@ -68,7 +66,7 @@ class PlayState extends FlxState
 		_combatHud = new CombatHUD();
 		add(_combatHud);
 		
-		_sndCoin = FlxG.sound.load(AssetPaths.coin__wav);
+		
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
@@ -84,11 +82,6 @@ class PlayState extends FlxState
 		{
 			_player.x = x;
 			_player.y = y;
-		}
-		else if (entityName == "coin")
-		{
-			_grpCoins.add(new Coin(x + 4, y + 4));
-			
 		}
 		else if (entityName == "enemy")
 		{
@@ -106,11 +99,9 @@ class PlayState extends FlxState
 		super.destroy();
 		_player = FlxDestroyUtil.destroy(_player);
 		_mWalls = FlxDestroyUtil.destroy(_mWalls);
-		_grpCoins = FlxDestroyUtil.destroy(_grpCoins);
 		_grpEnemies = FlxDestroyUtil.destroy(_grpEnemies);
 		_hud = FlxDestroyUtil.destroy(_hud);
 		_combatHud = FlxDestroyUtil.destroy(_combatHud);
-		_sndCoin = FlxDestroyUtil.destroy(_sndCoin);
 	}
 
 	/**
@@ -128,7 +119,6 @@ class PlayState extends FlxState
 		if (!_inCombat)
 		{
 			FlxG.collide(_player, _mWalls);
-			FlxG.overlap(_player, _grpCoins, playerTouchCoin);
 			FlxG.collide(_grpEnemies, _mWalls);
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
@@ -160,9 +150,6 @@ class PlayState extends FlxState
 					{
 						_combatHud.e.flicker();
 					}
-					#if mobile
-					virtualPad.visible = true;
-					#end
 					_inCombat = false;
 					_player.active = true;
 					_grpEnemies.active = true;
@@ -201,16 +188,5 @@ class PlayState extends FlxState
 		}
 		else
 			e.seesPlayer = false;		
-	}
-	
-	private function playerTouchCoin(P:Player, C:Coin):Void
-	{
-		if (P.alive && P.exists && C.alive && C.exists)
-		{
-			_sndCoin.play(true);
-			_money++;
-			_hud.updateHUD(_health, _money);
-			C.kill();
-		}
 	}
 }
