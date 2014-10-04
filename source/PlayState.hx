@@ -116,46 +116,13 @@ class PlayState extends FlxState
 			return;
 		}
 		
-		if (!_inCombat)
-		{
+
 			FlxG.collide(_player, _mWalls);
 			FlxG.collide(_grpEnemies, _mWalls);
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
-		}
-		else
-		{
-			if (!_combatHud.visible)
-			{
-				_health = _combatHud.playerHealth;
-				_hud.updateHUD(_health, _money);
-				if (_combatHud.outcome == DEFEAT)
-				{
-					_ending = true;
-					FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
-				}
-				else
-				{
-					if (_combatHud.outcome == VICTORY)
-					{
-						_combatHud.e.kill();
-						if (_combatHud.e.etype == 1)
-						{
-							_won = true;
-							_ending = true;
-							FlxG.camera.fade(FlxColor.BLACK, .33, false, doneFadeOut);
-						}
-					}
-					else 
-					{
-						_combatHud.e.flicker();
-					}
-					_inCombat = false;
-					_player.active = true;
-					_grpEnemies.active = true;
-				}
-			}
-		}
+		
+		
 	}
 	
 	private function doneFadeOut():Void 
@@ -165,18 +132,7 @@ class PlayState extends FlxState
 	
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
-		if (P.alive && P.exists && E.alive && E.exists && !E.isFlickering())
-		{
-			startCombat(E);
-		}
-	}
-	
-	private function startCombat(E:Enemy):Void
-	{
-		_inCombat = true;
-		_player.active = false;
-		_grpEnemies.active = false;
-		_combatHud.initCombat(_health, E);
+		
 	}
 	
 	private function checkEnemyVision(e:Enemy):Void
