@@ -92,7 +92,7 @@ class Enemy extends FlxSprite
 		}
 		else
 		{
-			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(speed));
+			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(-speed));
 		}
 	}
 	

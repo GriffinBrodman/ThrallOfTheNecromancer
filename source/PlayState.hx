@@ -67,7 +67,6 @@ class PlayState extends FlxState
 		add(_combatHud);
 		
 		
-		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		super.create();	
@@ -115,14 +114,10 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		
-
-			FlxG.collide(_player, _mWalls);
-			FlxG.collide(_grpEnemies, _mWalls);
-			_grpEnemies.forEachAlive(checkEnemyVision);
-			FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
-		
-		
+		FlxG.collide(_player, _mWalls);
+		FlxG.collide(_grpEnemies, _mWalls);
+		_grpEnemies.forEachAlive(checkEnemyVision);
+		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 	}
 	
 	private function doneFadeOut():Void 
