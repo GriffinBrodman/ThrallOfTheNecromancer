@@ -1,17 +1,24 @@
 package;
 
+import entities.Entity;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxState;
+import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import spellEffects.SpellEffect;
+import spells.TrapSpell;
+import spells.YellSpell;
 using flixel.util.FlxSpriteUtil;
+
+import spells.SpellBook;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -19,6 +26,7 @@ using flixel.util.FlxSpriteUtil;
 class PlayState extends FlxState
 {
 	private var _player:Player;
+	private var _spellbook:SpellBook;
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
 	//private var _grpCoins:FlxTypedGroup<Coin>;
@@ -32,27 +40,28 @@ class PlayState extends FlxState
 	private var _won:Bool;
 	private var _paused:Bool;
 	private var _sndCoin:FlxSound;
-
+	private var _grpSpellEffects:FlxTypedGroup<SpellEffect>;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
-		#if !FLX_NO_MOUSE
-		FlxG.mouse.visible = false;
-		#end
-		
+
 		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
 		
-		
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
 		_player = new Player();
+		_spellbook = new SpellBook([new TrapSpell(), new YellSpell()]);
+		
+		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
+		add(_grpSpellEffects);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
@@ -118,6 +127,13 @@ class PlayState extends FlxState
 		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
+		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
+		
+		_spellbook.update();
+		if (_spellbook.getEffectToBeAdded() != null){
+			_grpSpellEffects.add(_spellbook.getEffectToBeAdded());
+			_spellbook.wipeEffectToBeAdded();
+		}
 	}
 	
 	private function doneFadeOut():Void 
@@ -128,6 +144,11 @@ class PlayState extends FlxState
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
 		
+	}
+	
+	private function enemyTouchTrap(E:Enemy, T:SpellEffect):Void
+	{
+		T.touchedBy(E);
 	}
 	
 	private function checkEnemyVision(e:Enemy):Void

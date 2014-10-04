@@ -13,6 +13,7 @@ class Player extends FlxSprite
 {
 	public var speed:Float = 200;
 	private var _sndStep:FlxSound;
+	public static var luring:Bool = false;
 	
 	public function new(X:Float=0, Y:Float=0) 
 	{
@@ -108,12 +109,16 @@ class Player extends FlxSprite
 					animation.play("d");
 			}
 		}
-		
+	}
+	
+	public function lure() {
+		luring = FlxG.keys.anyPressed(["Space"]);
 	}
 	
 	override public function update():Void 
 	{
 		movement();
+		lure();
 		super.update();
 	}
 	

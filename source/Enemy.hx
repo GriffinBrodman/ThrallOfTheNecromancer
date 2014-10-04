@@ -6,6 +6,7 @@ import flixel.FlxSprite;
 import flixel.system.FlxSound;
 import flixel.util.FlxAngle;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
@@ -19,8 +20,10 @@ class Enemy extends FlxSprite
 	private var _idleTmr:Float;
 	private var _moveDir:Float;
 	public var seesPlayer:Bool = false;
+	public var isLured:Bool = false;
 	public var playerPos(default, null):FlxPoint;
 	private var _sndStep:FlxSound;
+	private var stunDuration:Int;
 	
 	public function new(X:Float=0, Y:Float=0, EType:Int) 
 	{
@@ -45,6 +48,11 @@ class Enemy extends FlxSprite
 		_sndStep.proximity(x,y,FlxG.camera.target, FlxG.width *.6);
 	}
 	
+	private function updateCooldowns() {
+		if (stunDuration > 0)
+			stunDuration--;
+	}
+	
 	override public function update():Void 
 	{
 		if (isFlickering())
@@ -56,6 +64,7 @@ class Enemy extends FlxSprite
 			_sndStep.setPosition(x + _halfWidth, y + height);
 			_sndStep.play();
 		}
+		updateCooldowns();
 	}
 	
 	public function idle():Void
@@ -86,11 +95,18 @@ class Enemy extends FlxSprite
 	
 	public function chase():Void
 	{
-		if (!seesPlayer)
+		if (stunDuration > 0)
+			return;
+		
+		if (!seesPlayer || !FlxMath.isDistanceToPointWithin(this, playerPos, 100))
 		{
 			_brain.activeState = idle;
 		}
-		else
+		else if (Player.luring)
+		{
+			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(speed));
+		}
+		else 
 		{
 			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(-speed));
 		}
@@ -139,6 +155,12 @@ class Enemy extends FlxSprite
 			etype = EType;
 			loadGraphic("assets/images/enemy-" + Std.string(etype) + ".png", true, 16, 16);
 		}
+	}
+	
+	public function stun(stunDuration:Int) {
+		this.velocity.x = 0;
+		this.velocity.y = 0;
+		this.stunDuration = stunDuration;
 	}
 	
 	override public function destroy():Void 
