@@ -66,8 +66,10 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entities");
 		
 		add(_player);
+		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
+		FlxG.camera.setScale(1, 1);
+		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 		
-		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 		
 		_hud = new HUD();
 		add(_hud);
