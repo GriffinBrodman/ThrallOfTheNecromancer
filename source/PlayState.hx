@@ -79,7 +79,7 @@ class PlayState extends FlxState
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
 		_escapeLimit = ESCAPEE_THRESHOLD;
 		
-		_hud = new HUD();
+		_hud = new HUD(_timer);
 		add(_hud);
 		
 		_combatHud = new CombatHUD();
@@ -90,6 +90,11 @@ class PlayState extends FlxState
 		
 		super.create();	
 		
+	}
+	
+	private function getSecs(_timer:Int):Int
+	{
+		return Std.int(_timer / FRAMES_PER_SECOND);
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -127,7 +132,9 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-
+		_timer--;
+		_hud.updateHUD(getSecs(_timer));
+		
 		if (_timer <= 0)
 		{
 			FlxG.switchState(new GameOverState(_won, _money));
@@ -143,8 +150,8 @@ class PlayState extends FlxState
 			_grpSpellEffects.add(_spellbook.getEffectToBeAdded());
 			_spellbook.wipeEffectToBeAdded();
 		}
-		_timer--;
-		trace(_timer);
+
+		//trace(_timer);
 	}
 	
 	private function doneFadeOut():Void 
