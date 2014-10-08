@@ -25,6 +25,10 @@ import spells.SpellBook;
  */
 class PlayState extends FlxState
 {
+	public static var NUM_SECONDS = 60;
+	public static var FRAMES_PER_SECOND = 60;
+	public static var ESCAPEE_THRESHOLD = 2;
+	
 	private var _player:Player;
 	private var _spellbook:SpellBook;
 	private var _map:FlxOgmoLoader;
@@ -36,11 +40,13 @@ class PlayState extends FlxState
 	private var _health:Int = 3;
 	private var _inCombat:Bool = false;
 	private var _combatHud:CombatHUD;
-	private var _ending:Bool;
 	private var _won:Bool;
 	private var _paused:Bool;
 	private var _sndCoin:FlxSound;
 	private var _grpSpellEffects:FlxTypedGroup<SpellEffect>;
+	private var _timer:Int;
+	private var _escapeLimit:Int;			//Limits number of humans we can let escape
+	private var _numEscaped = 0;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -70,6 +76,8 @@ class PlayState extends FlxState
 		FlxG.camera.setScale(1, 1);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 		
+		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
+		_escapeLimit = ESCAPEE_THRESHOLD;
 		
 		_hud = new HUD();
 		add(_hud);
@@ -88,14 +96,13 @@ class PlayState extends FlxState
 	{
 		var x:Int = Std.parseInt(entityData.get("x"));
 		var y:Int = Std.parseInt(entityData.get("y"));
-		if (entityName == "player")
+		switch(entityName)
 		{
-			_player.x = x;
-			_player.y = y;
-		}
-		else if (entityName == "enemy")
-		{
-			_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
+			case "player":
+				_player.x = x;
+				_player.y = y;
+			case "enemy":
+				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
 		}
 	}
 	
@@ -121,9 +128,9 @@ class PlayState extends FlxState
 	{
 		super.update();
 
-		if (_ending)
+		if (_timer <= 0)
 		{
-			return;
+			FlxG.switchState(new GameOverState(_won, _money));
 		}
 		FlxG.collide(_player, _mWalls);
 		FlxG.collide(_grpEnemies, _mWalls);
@@ -136,6 +143,8 @@ class PlayState extends FlxState
 			_grpSpellEffects.add(_spellbook.getEffectToBeAdded());
 			_spellbook.wipeEffectToBeAdded();
 		}
+		_timer--;
+		trace(_timer);
 	}
 	
 	private function doneFadeOut():Void 
