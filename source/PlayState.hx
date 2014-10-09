@@ -15,6 +15,7 @@ import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import spellEffects.SpellEffect;
+import spells.BatsSpell;
 import spells.TrapSpell;
 import spells.YellSpell;
 using flixel.util.FlxSpriteUtil;
@@ -71,7 +72,7 @@ class PlayState extends FlxState
 		add(_grpEnemies);
 		
 		_player = new Player();
-		_spellbook = new SpellBook([new TrapSpell(), new YellSpell()]);
+		_spellbook = new SpellBook([new TrapSpell(), new YellSpell(), new BatsSpell()]);
 		
 		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
 		add(_grpSpellEffects);
