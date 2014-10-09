@@ -33,7 +33,7 @@ class PlayState extends FlxState
 	private var _spellbook:SpellBook;
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
-	//private var _grpCoins:FlxTypedGroup<Coin>;
+	private var _mBorders:FlxTilemap;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _hud:HUD;
 	private var _money:Int = 0;
@@ -59,6 +59,11 @@ class PlayState extends FlxState
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
 		add(_mWalls);
+		
+		_mBorders = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "playerwall");
+		_mBorders.setTileProperties(1, FlxObject.ANY);
+		_mBorders.setTileProperties(2, FlxObject.ANY);
+		add(_mBorders);
 		
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
@@ -139,7 +144,8 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new GameOverState(_won, _money));
 		}
-		FlxG.collide(_player, _mWalls);
+		//FlxG.collide(_player, _mWalls);
+		FlxG.collide(_player, _mBorders);
 		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
@@ -150,8 +156,6 @@ class PlayState extends FlxState
 			_grpSpellEffects.add(_spellbook.getEffectToBeAdded());
 			_spellbook.wipeEffectToBeAdded();
 		}
-
-		//trace(_timer);
 	}
 	
 	private function doneFadeOut():Void 
