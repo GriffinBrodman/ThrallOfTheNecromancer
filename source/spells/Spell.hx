@@ -24,6 +24,9 @@ class Spell
 	}
 	
 	public function setFirstClickPos(pos:FlxPoint):Void {
+		if (cooldown > 0)
+			return;
+		
 		firstClickPos = pos;
 		firstClicked = true;
 	}
