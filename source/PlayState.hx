@@ -1,6 +1,7 @@
 package;
 
 import entities.Entity;
+import entities.Exit;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -35,12 +36,13 @@ class PlayState extends FlxState
 	private var _mWalls:FlxTilemap;
 	private var _mBorders:FlxTilemap;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
+	private var _grpExits:FlxTypedGroup<Exit>;
 	private var _hud:HUD;
 	private var _money:Int = 0;
 	private var _health:Int = 3;
 	private var _inCombat:Bool = false;
 	private var _combatHud:CombatHUD;
-	private var _won:Bool;
+	private var _won:Bool = false;
 	private var _paused:Bool;
 	private var _sndCoin:FlxSound;
 	private var _grpSpellEffects:FlxTypedGroup<SpellEffect>;
@@ -73,6 +75,9 @@ class PlayState extends FlxState
 		
 		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
 		add(_grpSpellEffects);
+		
+		 _grpExits = new FlxTypedGroup<Exit>();
+		add(_grpExits);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
@@ -113,6 +118,8 @@ class PlayState extends FlxState
 				_player.y = y;
 			case "enemy":
 				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
+			case "exit":
+				_grpExits.add(new Exit(x, y));
 		}
 	}
 	
@@ -142,6 +149,11 @@ class PlayState extends FlxState
 		
 		if (_timer <= 0)
 		{
+			_won = true;
+			FlxG.switchState(new GameOverState(_won, _money));
+		}
+		if (_numEscaped >= _escapeLimit)
+		{
 			FlxG.switchState(new GameOverState(_won, _money));
 		}
 		//FlxG.collide(_player, _mWalls);
@@ -150,6 +162,7 @@ class PlayState extends FlxState
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
+		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		
 		_spellbook.update();
 		if (_spellbook.getEffectToBeAdded() != null){
@@ -171,6 +184,12 @@ class PlayState extends FlxState
 	private function enemyTouchTrap(E:Enemy, T:SpellEffect):Void
 	{
 		T.touchedBy(E);
+	}
+	
+	private function humanExit(human:Enemy, exit:Entity)
+	{
+		human.kill();
+		_numEscaped++;
 	}
 	
 	private function checkEnemyVision(e:Enemy):Void
