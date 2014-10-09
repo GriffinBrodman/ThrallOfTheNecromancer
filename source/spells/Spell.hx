@@ -11,6 +11,9 @@ class Spell
 {
 	private var cooldownMax:Int;
 	private var cooldown:Int;
+	private var twoClickSpell:Bool;
+	private var firstClicked:Bool;
+	private var firstClickPos:FlxPoint;
 
 	private function new()
 	{
@@ -20,8 +23,21 @@ class Spell
 		return null;
 	}
 	
+	public function setFirstClickPos(pos:FlxPoint):Void {
+		firstClickPos = pos;
+		firstClicked = true;
+	}
+	
 	public function getCooldown():Int {
 		return cooldown;
+	}
+	
+	public function isTwoClickSpell():Bool {
+		return twoClickSpell;
+	}
+	
+	public function isFirstClicked():Bool {
+		return firstClicked;
 	}
 	
 	public function update() {

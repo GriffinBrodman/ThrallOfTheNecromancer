@@ -14,6 +14,7 @@ import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import spellEffects.SpellEffect;
+import spells.BatsSpell;
 import spells.TrapSpell;
 import spells.YellSpell;
 using flixel.util.FlxSpriteUtil;
@@ -58,7 +59,7 @@ class PlayState extends FlxState
 		add(_grpEnemies);
 		
 		_player = new Player();
-		_spellbook = new SpellBook([new TrapSpell(), new YellSpell()]);
+		_spellbook = new SpellBook([new TrapSpell(), new YellSpell(), new BatsSpell()]);
 		
 		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
 		add(_grpSpellEffects);
@@ -69,7 +70,6 @@ class PlayState extends FlxState
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
 		FlxG.camera.setScale(1, 1);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
-		
 		
 		_hud = new HUD();
 		add(_hud);
@@ -125,7 +125,7 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		FlxG.collide(_player, _mWalls);
+		//FlxG.collide(_player, _mWalls);
 		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
