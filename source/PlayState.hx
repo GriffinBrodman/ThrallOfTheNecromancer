@@ -87,8 +87,9 @@ class PlayState extends FlxState
 		
 		for (i in 0..._grpEnemies.length)
 		{
-			var currExit = _grpExits.getRandom();
+			var currExit = _grpExits.getFirstAlive();
 			_grpEnemies.members[i].setGoal(new FlxPoint(currExit.x, currExit.y));
+			_grpEnemies.members[i].party =  _grpEnemies;
 		}
 		add(_player);
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
@@ -101,8 +102,6 @@ class PlayState extends FlxState
 		_hud = new HUD(_timer);
 		add(_hud);
 		
-		_combatHud = new CombatHUD();
-		add(_combatHud);
 		
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);

@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
@@ -16,7 +17,7 @@ using flixel.util.FlxSpriteUtil;
 
 class Enemy extends FlxSprite
 {
-	public var speed:Float = 80;
+	public var speed:Int = FlxRandom.intRanged(40, 60);
 	public var etype(default, null):Int;
 	private var _brain:FSM;
 	private var _idleTmr:Float;
@@ -30,6 +31,9 @@ class Enemy extends FlxSprite
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
 	private var map:FlxTilemap;
+	private var trapped:Bool = false;
+	private var helping:Bool = false;
+	public var party:FlxTypedGroup<Enemy>;
 	
 	public function new(X:Float=0, Y:Float=0, EType:Int, m:FlxTilemap) 
 	{
@@ -86,6 +90,46 @@ class Enemy extends FlxSprite
 	
 	public function idle():Void
 	{
+		if (trapped) return;
+		if (helpComrade())
+		{
+			if (!helping)
+			{
+				helping = true;
+				pathing = false;
+				path.cancel();
+			}
+			if (stunDuration > 0)
+			{
+			path.cancel();
+			pathing = false;
+			return;
+			}
+			var trappedGuy = getTrappedComrade();
+			var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), trappedGuy.getMidpoint());
+			if (pathPoints != null && !pathing) 
+			{
+				path.cancel();
+				pathing = true;
+				path.start(this,pathPoints, speed);
+			}
+			
+			if (path.finished)
+			{
+				path.cancel();
+				pathing = false;
+				trappedGuy.trapped = false;
+			}
+			
+			
+			return;
+		}
+		if (helping)
+		{
+			helping = false;
+			path.cancel();
+			pathing = false;
+		}
 		if (seesPlayer)
 		{
 			path.cancel();
@@ -101,10 +145,10 @@ class Enemy extends FlxSprite
 			}
 			else if (!pathing){
 				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null) 
+				if (pathPoints != null && !pathing) 
 				{
 					pathing = true;
-					path.start(this,pathPoints);
+					path.start(this,pathPoints, speed);
 				}
 			}
 		}
@@ -112,6 +156,7 @@ class Enemy extends FlxSprite
 	
 	public function chase():Void
 	{
+		if (trapped) return;
 		if (stunDuration > 0)
 			return;
 		
@@ -182,6 +227,30 @@ class Enemy extends FlxSprite
 	
 	public function stun(stunDuration:Int) {
 		this.stunDuration = stunDuration;
+	}
+	
+	public function trap() {
+		this.velocity.x = 0;
+		this.velocity.y = 0;
+		this.trapped = true;
+		pathing = false;
+		path.cancel();
+	}
+	
+	public function helpComrade():Bool {
+		for (i in 0...party.length)
+		{
+			if(party.members[i].trapped) return true;
+		}
+		return false;
+	}
+	
+	public function getTrappedComrade():Enemy {
+		for (i in 0...party.length)
+		{
+			if(party.members[i].trapped) return party.members[i];
+		}
+		return null;
 	}
 	
 	override public function destroy():Void 
