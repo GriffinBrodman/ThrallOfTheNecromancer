@@ -34,8 +34,6 @@
     <enemy id="1" x="272" y="240" etype="0" />
     <enemy id="2" x="272" y="256" etype="0" />
     <enemy id="3" x="256" y="256" etype="0" />
-    <enemy id="4" x="256" y="240" etype="0" />
-    <enemy id="6" x="256" y="224" etype="0" />
     <player id="5" x="576" y="320" />
     <exit id="7" x="320" y="464" />
     <exit id="8" x="336" y="464" />
