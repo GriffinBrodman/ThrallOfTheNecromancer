@@ -14,6 +14,7 @@ import flixel.tile.FlxTilemap;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxPoint;
 import spellEffects.SpellEffect;
 import spells.BatsSpell;
 import spells.TrapSpell;
@@ -83,9 +84,10 @@ class PlayState extends FlxState
 		_map.loadEntities(placeEntities, "entities");
 		
 		for (i in 0..._grpEnemies.length)
-			{
-			_grpEnemies.members[i].setGoal(_grpExits.getRandom().getMidpoint());
-			}
+		{
+			var currExit = _grpExits.getRandom();
+			_grpEnemies.members[i].setGoal(new FlxPoint(currExit.x, currExit.y));
+		}
 		add(_player);
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
 		FlxG.camera.setScale(1, 1);
@@ -122,7 +124,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype")), _mBorders));
+				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype")), _mWalls));
 			case "exit":
 				_grpExits.add(new Exit(x, y));
 		}

@@ -66,7 +66,6 @@ class Enemy extends FlxSprite
 	public function setGoal(end:FlxPoint) {
 		endPoint = end;
 		var pathPoints:Array<FlxPoint> = map.findPath(FlxPoint.get(this.x + this.width / 2, this.y + this.height / 2), endPoint);
-		
 		// Tell unit to follow path
 		if (pathPoints != null) 
 		{

@@ -95,9 +95,9 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		add(_txtPlayerHealth);
 		
 		// create and add a FlxBar to show the enemy's health. We'll make it Red and Yellow.
-		_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, FlxBar.FILL_LEFT_TO_RIGHT, 20, 10);
-		_enemyHealthBar.createFilledBar(FlxColor.CRIMSON, FlxColor.YELLOW, true, FlxColor.YELLOW);
-		add(_enemyHealthBar);
+		//_enemyHealthBar = new FlxBar(_sprEnemy.x - 6, _txtPlayerHealth.y, FlxBar.FILL_LEFT_TO_RIGHT, 20, 10);
+		//_enemyHealthBar.createFilledBar(FlxColor.CRIMSON, FlxColor.YELLOW, true, FlxColor.YELLOW);
+		//add(_enemyHealthBar);
 		
 		// create our choices and add them to the group.
 		_choices = new Array<FlxText>();
