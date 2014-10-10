@@ -22,7 +22,7 @@ class Trap extends SpellEffect
 	
 	override public function touchedBy(E:Enemy)
 	{
-		E.stun(120);
+		E.stopAndStun(120);
 		this.destroy();
 	}
 	

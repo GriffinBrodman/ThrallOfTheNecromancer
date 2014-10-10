@@ -22,7 +22,7 @@ class Yell extends SpellEffect
 	
 	override public function touchedBy(E:Enemy)
 	{
-		E.stun(1);
+		E.stopAndStun(1);
 	}
 	
 	override public function update() {

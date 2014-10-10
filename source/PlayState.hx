@@ -19,6 +19,7 @@ import spellEffects.SpellEffect;
 import spells.BatsSpell;
 import spells.TrapSpell;
 import spells.YellSpell;
+import flixel.util.FlxMath;
 using flixel.util.FlxSpriteUtil;
 
 import spells.SpellBook;
@@ -31,6 +32,7 @@ class PlayState extends FlxState
 	public static var NUM_SECONDS = 60;
 	public static var FRAMES_PER_SECOND = 60;
 	public static var ESCAPEE_THRESHOLD = 2;
+	public static var ENEMY_SIGHT_RANGE = 100;
 	
 	private var _player:Player;
 	private var _spellbook:SpellBook;
@@ -201,7 +203,7 @@ class PlayState extends FlxState
 	
 	private function checkEnemyVision(e:Enemy):Void
 	{
-		if (_mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
+		if (FlxMath.isDistanceWithin(e, _player, ENEMY_SIGHT_RANGE) && _mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());

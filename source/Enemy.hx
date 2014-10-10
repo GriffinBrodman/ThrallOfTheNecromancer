@@ -74,8 +74,8 @@ class Enemy extends FlxSprite
 	{
 		if (isFlickering())
 			return;
-		_brain.update();
 		super.update();
+		_brain.update();
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 		{
 			_sndStep.setPosition(x + _halfWidth, y + height);
@@ -99,11 +99,13 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
-			if (pathPoints != null && !pathing) 
-			{
-				pathing = true;
-				path.start(this,pathPoints);
+			else if (!pathing){
+				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
+				if (pathPoints != null) 
+				{
+					pathing = true;
+					path.start(this,pathPoints);
+				}
 			}
 		}
 	}
@@ -113,7 +115,7 @@ class Enemy extends FlxSprite
 		if (stunDuration > 0)
 			return;
 		
-		if (!seesPlayer || !FlxMath.isDistanceToPointWithin(this, playerPos, 100))
+		if (!seesPlayer)
 		{
 			_brain.activeState = idle;
 		}
@@ -172,9 +174,13 @@ class Enemy extends FlxSprite
 		}
 	}
 	
-	public function stun(stunDuration:Int) {
+	public function stopAndStun(stunDuration:Int) {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
+		stun(stunDuration);
+	}
+	
+	public function stun(stunDuration:Int) {
 		this.stunDuration = stunDuration;
 	}
 	

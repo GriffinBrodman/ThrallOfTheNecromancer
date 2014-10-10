@@ -3,6 +3,7 @@ package spellEffects;
 import flixel.util.FlxAngle;
 import flixel.util.FlxPoint;
 import flixel.util.FlxVelocity;
+import flixel.util.FlxMath;
 
 /**
  * ...
@@ -12,7 +13,7 @@ class Bats extends SpellEffect
 {
 	public static var BATS_SPEED:Int = 150;
 	public static var BATS_DURATION:Int = 90;
-	public static var BATS_DRAG_SPEED:Int = 20;
+	public static var BATS_DRAG_SPEED:Int = 200;
 	private var duration:Int;
 
 	public function new(X1:Float=0, Y1:Float=0, X2:Float=0, Y2:Float=0) 
@@ -31,11 +32,11 @@ class Bats extends SpellEffect
 	
 	override public function touchedBy(E:Enemy)
 	{
-		// TODO: Fill with some effect
 		var angle:Float = FlxAngle.angleBetween(E, this, true);
 		var vel = FlxVelocity.velocityFromAngle(angle, BATS_DRAG_SPEED);
-		E.velocity.x += vel.x;
-		E.velocity.y += vel.y;		
+		E.stun(1);
+		E.velocity.x += vel.x * Math.random();
+		E.velocity.y += vel.y * Math.random();
 	}
 	
 	override public function update() {
