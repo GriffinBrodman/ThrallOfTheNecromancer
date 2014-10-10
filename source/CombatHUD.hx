@@ -82,11 +82,11 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		add(_sprPlayer);
 		
 		// do the same thing for an enemy. We'll just use enemy type 0 for now and change it later.
-		_sprEnemy = new Enemy(_sprBack.x + 76, _sprBack.y + 16, 0);
-		_sprEnemy.animation.frameIndex = 3;
-		_sprEnemy.active = false;
-		_sprEnemy.facing = FlxObject.LEFT;
-		add(_sprEnemy);
+		//_sprEnemy = new Enemy(_sprBack.x + 76, _sprBack.y + 16, 0);
+		//_sprEnemy.animation.frameIndex = 3;
+		//_sprEnemy.active = false;
+		//_sprEnemy.facing = FlxObject.LEFT;
+		//add(_sprEnemy);
 		
 		// setup the player's health display and add it to the group.
 		_txtPlayerHealth = new FlxText(0, _sprPlayer.y + _sprPlayer.height  + 2, 0, "3 / 3", 8);

@@ -4,9 +4,11 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxSound;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
+import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
@@ -24,12 +26,15 @@ class Enemy extends FlxSprite
 	public var playerPos(default, null):FlxPoint;
 	private var _sndStep:FlxSound;
 	private var stunDuration:Int;
+	private var path:FlxPath;
+	private var endPoint:FlxPoint;
+	private var map:FlxTilemap;
 	
-	public function new(X:Float=0, Y:Float=0, EType:Int) 
+	public function new(X:Float=0, Y:Float=0, EType:Int, m:FlxTilemap) 
 	{
 		super(X, Y);
 		etype = EType;
-		loadGraphic("assets/images/enemy-" + Std.string(etype) + ".png", true, 16, 16);
+		loadGraphic("assets/images/player.png", true, 16, 16);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("d", [0, 1, 0, 2], 6, false);
@@ -45,12 +50,28 @@ class Enemy extends FlxSprite
 		playerPos = FlxPoint.get();
 		
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav,.4);
-		_sndStep.proximity(x,y,FlxG.camera.target, FlxG.width *.6);
+		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width * .6);
+		
+		
+		map = m;
+		path = new FlxPath();
+		
 	}
 	
 	private function updateCooldowns() {
 		if (stunDuration > 0)
 			stunDuration--;
+	}
+	
+	public function setGoal(end:FlxPoint) {
+		endPoint = end;
+		var pathPoints:Array<FlxPoint> = map.findPath(FlxPoint.get(this.x + this.width / 2, this.y + this.height / 2), endPoint);
+		
+		// Tell unit to follow path
+		if (pathPoints != null) 
+		{
+			path.start(this,pathPoints);
+		}
 	}
 	
 	override public function update():Void 
@@ -73,23 +94,6 @@ class Enemy extends FlxSprite
 		{
 			_brain.activeState = chase;
 		}
-		else if (_idleTmr <= 0)
-		{
-			if (FlxRandom.chanceRoll(1))
-			{
-				_moveDir = -1;
-				velocity.x = velocity.y = 0;
-			}
-			else
-			{
-				_moveDir = FlxRandom.intRanged(0, 8) * 45;
-				FlxAngle.rotatePoint(speed * .5, 0, 0, 0, _moveDir, velocity);
-				
-			}
-			_idleTmr = FlxRandom.intRanged(1, 4);			
-		}
-		else
-			_idleTmr -= FlxG.elapsed;
 		
 	}
 	

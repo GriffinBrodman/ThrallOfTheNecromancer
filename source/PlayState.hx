@@ -68,6 +68,9 @@ class PlayState extends FlxState
 		_mBorders.setTileProperties(2, FlxObject.ANY);
 		add(_mBorders);
 		
+		_grpExits = new FlxTypedGroup<Exit>();
+		add(_grpExits);
+		
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
@@ -77,16 +80,17 @@ class PlayState extends FlxState
 		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
 		add(_grpSpellEffects);
 		
-		 _grpExits = new FlxTypedGroup<Exit>();
-		add(_grpExits);
-		
 		_map.loadEntities(placeEntities, "entities");
 		
+		for (i in 0..._grpEnemies.length)
+			{
+			_grpEnemies.members[i].setGoal(_grpExits.getRandom().getMidpoint());
+			}
 		add(_player);
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
 		FlxG.camera.setScale(1, 1);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
-		
+	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
 		_escapeLimit = ESCAPEE_THRESHOLD;
 		
@@ -118,7 +122,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype"))));
+				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype")), _mBorders));
 			case "exit":
 				_grpExits.add(new Exit(x, y));
 		}
