@@ -22,6 +22,7 @@ class Enemy extends FlxSprite
 	private var _idleTmr:Float;
 	private var _moveDir:Float;
 	public var seesPlayer:Bool = false;
+	public var pathing:Bool = false;
 	public var isLured:Bool = false;
 	public var playerPos(default, null):FlxPoint;
 	private var _sndStep:FlxSound;
@@ -65,12 +66,8 @@ class Enemy extends FlxSprite
 	
 	public function setGoal(end:FlxPoint) {
 		endPoint = end;
-		var pathPoints:Array<FlxPoint> = map.findPath(FlxPoint.get(this.x + this.width / 2, this.y + this.height / 2), endPoint);
-		// Tell unit to follow path
-		if (pathPoints != null) 
-		{
-			path.start(this,pathPoints);
-		}
+		
+
 	}
 	
 	override public function update():Void 
@@ -91,9 +88,24 @@ class Enemy extends FlxSprite
 	{
 		if (seesPlayer)
 		{
+			path.cancel();
+			pathing = false;
 			_brain.activeState = chase;
 		}
-		
+		else 
+		{
+			if (stunDuration > 0)
+			{
+				path.cancel();
+				pathing = false;
+			}
+			var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
+			if (pathPoints != null && !pathing) 
+			{
+				pathing = true;
+				path.start(this,pathPoints);
+			}
+		}
 	}
 	
 	public function chase():Void
