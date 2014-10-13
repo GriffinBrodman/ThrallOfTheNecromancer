@@ -45,7 +45,6 @@ class PlayState extends FlxState
 	private var _money:Int = 0;
 	private var _health:Int = 3;
 	private var _inCombat:Bool = false;
-	private var _combatHud:CombatHUD;
 	private var _won:Bool = false;
 	private var _paused:Bool;
 	private var _sndCoin:FlxSound;
@@ -59,6 +58,7 @@ class PlayState extends FlxState
 	 */
 	override public function create():Void
 	{
+		FlxG.mouse.visible = false;
 
 		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
@@ -143,7 +143,6 @@ class PlayState extends FlxState
 		_mWalls = FlxDestroyUtil.destroy(_mWalls);
 		_grpEnemies = FlxDestroyUtil.destroy(_grpEnemies);
 		_hud = FlxDestroyUtil.destroy(_hud);
-		_combatHud = FlxDestroyUtil.destroy(_combatHud);
 	}
 
 	/**
