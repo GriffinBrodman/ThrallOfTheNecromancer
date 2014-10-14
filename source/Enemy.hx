@@ -103,6 +103,8 @@ class Enemy extends FlxSprite
 				pathing = false;
 			}
 			else if (!pathing) {
+				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
+				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
 				endPoint = goals.getRandom().getMidpoint();
 				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 
