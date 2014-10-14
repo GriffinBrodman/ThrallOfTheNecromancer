@@ -125,7 +125,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x + 4, y, Std.parseInt(entityData.get("etype")), _mWalls));
+				_grpEnemies.add(new Enemy(x + 4, y, _mWalls));
 			case "exit":
 				_grpExits.add(new Exit(x, y));
 		}

@@ -19,7 +19,6 @@ class Enemy extends FlxSprite
 {
 	public var speed:Int = FlxRandom.intRanged(40, 60);
 	public var etype(default, null):Int;
-	private var _brain:FSM;
 	private var _idleTmr:Float;
 	private var _moveDir:Float;
 	public var seesPlayer:Bool = false;
@@ -34,11 +33,11 @@ class Enemy extends FlxSprite
 	private var trapped:Bool = false;
 	private var helping:Bool = false;
 	public var party:FlxTypedGroup<Enemy>;
+	private var state:String = "idle";
 	
-	public function new(X:Float=0, Y:Float=0, EType:Int, m:FlxTilemap) 
+	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
 	{
 		super(X, Y);
-		etype = EType;
 		loadGraphic("assets/images/player.png", true, 16, 16);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -50,7 +49,7 @@ class Enemy extends FlxSprite
 		height = 14;
 		offset.x = 4;
 		offset.y = 2;
-		_brain = new FSM(idle);
+		
 		_idleTmr = 0;
 		playerPos = FlxPoint.get();
 		
@@ -70,8 +69,6 @@ class Enemy extends FlxSprite
 	
 	public function setGoal(end:FlxPoint) {
 		endPoint = end;
-		
-
 	}
 	
 	override public function update():Void 
@@ -79,7 +76,8 @@ class Enemy extends FlxSprite
 		if (isFlickering())
 			return;
 		super.update();
-		_brain.update();
+		if (state == "idle") idle();
+		if (state == "chase") chase();
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
 		{
 			_sndStep.setPosition(x + _halfWidth, y + height);
@@ -90,51 +88,12 @@ class Enemy extends FlxSprite
 	
 	public function idle():Void
 	{
-		if (trapped) return;
-		if (helpComrade())
-		{
-			if (!helping)
-			{
-				helping = true;
-				pathing = false;
-				path.cancel();
-			}
-			if (stunDuration > 0)
-			{
-			path.cancel();
-			pathing = false;
-			return;
-			}
-			var trappedGuy = getTrappedComrade();
-			var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), trappedGuy.getMidpoint());
-			if (pathPoints != null && !pathing) 
-			{
-				path.cancel();
-				pathing = true;
-				path.start(this,pathPoints, speed);
-			}
-			
-			if (path.finished)
-			{
-				path.cancel();
-				pathing = false;
-				trappedGuy.trapped = false;
-			}
-			
-			
-			return;
-		}
-		if (helping)
-		{
-			helping = false;
-			path.cancel();
-			pathing = false;
-		}
+		
 		if (seesPlayer)
 		{
 			path.cancel();
 			pathing = false;
-			_brain.activeState = chase;
+			state = "chase";
 		}
 		else 
 		{
@@ -156,13 +115,12 @@ class Enemy extends FlxSprite
 	
 	public function chase():Void
 	{
-		if (trapped) return;
 		if (stunDuration > 0)
 			return;
 		
 		if (!seesPlayer)
 		{
-			_brain.activeState = idle;
+			state = "idle";
 		}
 		else if (Player.luring)
 		{
@@ -210,15 +168,6 @@ class Enemy extends FlxSprite
 		super.draw();
 	}
 	
-	public function changeEnemy(EType:Int):Void
-	{
-		if (etype != EType)
-		{
-			etype = EType;
-			loadGraphic("assets/images/enemy-" + Std.string(etype) + ".png", true, 16, 16);
-		}
-	}
-	
 	public function stopAndStun(stunDuration:Int) {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
@@ -229,29 +178,6 @@ class Enemy extends FlxSprite
 		this.stunDuration = stunDuration;
 	}
 	
-	public function trap() {
-		this.velocity.x = 0;
-		this.velocity.y = 0;
-		this.trapped = true;
-		pathing = false;
-		path.cancel();
-	}
-	
-	public function helpComrade():Bool {
-		for (i in 0...party.length)
-		{
-			if(party.members[i].trapped) return true;
-		}
-		return false;
-	}
-	
-	public function getTrappedComrade():Enemy {
-		for (i in 0...party.length)
-		{
-			if(party.members[i].trapped) return party.members[i];
-		}
-		return null;
-	}
 	
 	override public function destroy():Void 
 	{
