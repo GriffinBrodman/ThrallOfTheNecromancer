@@ -14,6 +14,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
 using flixel.util.FlxSpriteUtil;
+import entities.Exit;
 
 class Enemy extends FlxSprite
 {
@@ -29,10 +30,8 @@ class Enemy extends FlxSprite
 	private var stunDuration:Int;
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
+	private var goals:FlxTypedGroup<Exit>;
 	private var map:FlxTilemap;
-	private var trapped:Bool = false;
-	private var helping:Bool = false;
-	public var party:FlxTypedGroup<Enemy>;
 	private var state:String = "idle";
 	
 	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
@@ -67,8 +66,9 @@ class Enemy extends FlxSprite
 			stunDuration--;
 	}
 	
-	public function setGoal(end:FlxPoint) {
-		endPoint = end;
+	public function setGoal(goal:FlxTypedGroup<Exit>) {
+		goals = goal;
+		endPoint = (goals.getRandom()).getMidpoint();
 	}
 	
 	override public function update():Void 
@@ -102,7 +102,8 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			else if (!pathing){
+			else if (!pathing) {
+				endPoint = goals.getRandom().getMidpoint();
 				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 
 				{

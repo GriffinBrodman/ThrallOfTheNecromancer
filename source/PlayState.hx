@@ -87,9 +87,7 @@ class PlayState extends FlxState
 		
 		for (i in 0..._grpEnemies.length)
 		{
-			var currExit = _grpExits.getFirstAlive();
-			_grpEnemies.members[i].setGoal(new FlxPoint(currExit.x, currExit.y));
-			_grpEnemies.members[i].party =  _grpEnemies;
+			_grpEnemies.members[i].setGoal(_grpExits);
 		}
 		add(_player);
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
