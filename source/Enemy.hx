@@ -97,7 +97,7 @@ class Enemy extends FlxSprite
 			path.cancel();
 			pathing = false;
 			state = "chase";
-			fleeingTime = 30;
+			fleeingTime = 1;
 		}
 		else 
 		{
