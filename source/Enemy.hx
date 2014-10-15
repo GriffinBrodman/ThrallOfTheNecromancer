@@ -33,6 +33,7 @@ class Enemy extends FlxSprite
 	private var goals:FlxTypedGroup<Exit>;
 	private var map:FlxTilemap;
 	private var state:String = "idle";
+	private var fleeingTime:Int = 0;
 	
 	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
 	{
@@ -64,6 +65,8 @@ class Enemy extends FlxSprite
 	private function updateCooldowns() {
 		if (stunDuration > 0)
 			stunDuration--;
+		if (fleeingTime > 0)
+			fleeingTime--;
 	}
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
@@ -94,6 +97,7 @@ class Enemy extends FlxSprite
 			path.cancel();
 			pathing = false;
 			state = "chase";
+			fleeingTime = 30;
 		}
 		else 
 		{
@@ -120,24 +124,36 @@ class Enemy extends FlxSprite
 	{
 		if (stunDuration > 0)
 			return;
-		
-		if (!seesPlayer)
+		if (fleeingTime == 0)
 		{
 			state = "idle";
 		}
-		else if (Player.luring)
+		/*else if (Player.luring)
 		{
 			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(speed));
-		}
+		}*/
 		else 
 		{
 			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(-speed));
 		}
 	}
 	
+		
+	public function canSee(player:Player):Bool
+	{
+		if (this.facing == FlxObject.LEFT)
+		return player.x < this.x;
+		if (this.facing == FlxObject.RIGHT)
+		return player.x > this.x;
+		if (this.facing == FlxObject.UP)
+		return player.y < this.y;
+		else
+		return player.y > this.y;
+	}
+	
 	override public function draw():Void 
 	{
-		if ((velocity.x != 0 || velocity.y != 0) && touching != FlxObject.NONE)
+		if ((velocity.x != 0 || velocity.y != 0) )
 		{
 			
 			if (Math.abs(velocity.x) > Math.abs(velocity.y))

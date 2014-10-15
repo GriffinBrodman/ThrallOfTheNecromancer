@@ -60,7 +60,7 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 
-		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
+		_map = new FlxOgmoLoader(AssetPaths.room_002__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
@@ -198,7 +198,8 @@ class PlayState extends FlxState
 	
 	private function checkEnemyVision(e:Enemy):Void
 	{
-		if (FlxMath.isDistanceWithin(e, _player, ENEMY_SIGHT_RANGE) && _mWalls.ray(e.getMidpoint(), _player.getMidpoint()))
+		if (FlxMath.isDistanceWithin(e, _player, ENEMY_SIGHT_RANGE) && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
+		&& e.canSee(_player))
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
