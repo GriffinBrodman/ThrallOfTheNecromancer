@@ -60,7 +60,7 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 
-		_map = new FlxOgmoLoader(AssetPaths.room_002__oel);
+		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
 		_mWalls.setTileProperties(1, FlxObject.NONE);
 		_mWalls.setTileProperties(2, FlxObject.ANY);
