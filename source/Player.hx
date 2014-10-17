@@ -12,6 +12,8 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxPoint;
+import lime.math.Vector2;
 
 class Player extends FlxSprite
 {
@@ -22,17 +24,20 @@ class Player extends FlxSprite
 	private static var RIGHT_INPUT:Array<String> = ["RIGHT", "D"];
 	private static var SCREECH_INPUT:Array<String> = ["SPACE", "J"];
 	private static var LURE_INPUT:Array<String> = ["Z", "K"];
-	
+
 	private static var SCREECH_WIDTH:Int = 64;
 	private static var SCREECH_HEIGHT:Int = 64;
 	private static var SCREECH_COOLDOWN:Int = 180;
 	private static var SCREECH_STUN_DURATION:Int = 120;
 	private static var SCREECH_RANGE:Int = 100;
-	
+
 	private static var LURE_COOLDOWN:Int = 300;
 	
+	private static var MAX_SPEED:Float = 8;	//Completely random
+	private static var MAX_ANGLE:Float = 2; //Because radians. Just trust me.
+
 	public static var luring:Bool = false;
-	public var speed:Float = 200;
+
 	private var _sndStep:FlxSound;
 	private var screechCooldown:Int;
 	private var lureCooldown:Int;
@@ -40,10 +45,27 @@ class Player extends FlxSprite
 	private var walls:FlxTilemap;
 	private var addSprite:FlxSprite -> Void;
 	
-	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void) 
+	//Variables for player input
+	private var  up:Bool = false;		//}
+	private var  down:Bool = false;		//}These are kinda self-explanatory. 
+	private var  left:Bool = false;		//}True when respective key is pressed, false otherwise
+	private var  right:Bool = false;	//}
+	
+	//Variables for player movement
+	private var speed:Float = 0;		//Speed
+	private var accel:Float = .15;		//Acceleration
+	private var decel:Float = .90;		//Deceleration
+	private var friction:Float = .95;	//Slowdown factor
+	
+	//Variables for turning
+	private var turnAngle:Float = 0;		//Basically the direction the player is facing	
+	private var turnAccel:Float = .15;		//Rate at which player turns
+	private var turnFriction:Float = .98;	//For smoothness
+	
+	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void)
 	{
 		super(X, Y);
-		
+
 		loadGraphic("assets/images/enemy-0.png", true, 16, 16);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
@@ -55,119 +77,126 @@ class Player extends FlxSprite
 		drag.x = drag.y = 1600;
 		setSize(8, 14);
 		offset.set(4, 2);
-		
+
 		this.grpEnemies = grpEnemies;
 		this.walls = walls;
 		this.addSprite = add;
-		
+
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
 	}
-	
+
 	private function movement():Void
 	{
-		var _up:Bool = false;
-		var _down:Bool = false;
-		var _left:Bool = false;
-		var _right:Bool = false;
-		
+		//Determines the state of the input keys
 		#if !FLX_NO_KEYBOARD
-		_up = FlxG.keys.anyPressed(UP_INPUT);
-		_down = FlxG.keys.anyPressed(DOWN_INPUT);
-		_left = FlxG.keys.anyPressed(LEFT_INPUT);
-		_right = FlxG.keys.anyPressed(RIGHT_INPUT);
+		up = FlxG.keys.anyPressed(UP_INPUT);
+		down = FlxG.keys.anyPressed(DOWN_INPUT);
+		left = FlxG.keys.anyPressed(LEFT_INPUT);
+		right = FlxG.keys.anyPressed(RIGHT_INPUT);
 		#end
+		
+		//Portability!
 		#if mobile
-		_up = _up || PlayState.virtualPad.buttonUp.status == FlxButton.PRESSED;
-		_down = _down || PlayState.virtualPad.buttonDown.status == FlxButton.PRESSED;
-		_left  = _left || PlayState.virtualPad.buttonLeft.status == FlxButton.PRESSED;
-		_right = _right || PlayState.virtualPad.buttonRight.status == FlxButton.PRESSED;
+		up = up || PlayState.virtualPad.buttonUp.status == FlxButton.PRESSED;
+		down = down || PlayState.virtualPad.buttonDown.status == FlxButton.PRESSED;
+		left  = left || PlayState.virtualPad.buttonLeft.status == FlxButton.PRESSED;
+		right = right || PlayState.virtualPad.buttonRight.status == FlxButton.PRESSED;
 		#end
 		
-		if (_up && _down)
-			_up = _down = false;
-		if (_left && _right)
-			_left = _right = false;
-		
-		if ( _up || _down || _left || _right)
-		{
-			var mA:Float = 0;
-			if (_up)
+		//Determines speed based on user input		
+		//Speeds up until MAX_SPEED is hit
+		if (up)
 			{
-				mA = -90;
-				if (_left)
-					mA -= 45;
-				else if (_right)
-					mA += 45;
-					
-				facing = FlxObject.UP;
+				speed = Math.min(MAX_SPEED, speed += accel);
 			}
-			else if (_down)
+		//Slows down until your speed is ZERO
+		if (down)
+		{
+			speed = Math.max(0, speed -= decel);
+		}
+		
+		//Turns you left (relative)
+		if (left)
+		{
+			turnAngle = Math.min(MAX_ANGLE, turnAngle -= turnAccel);
+		}
+		//Turns you right (relative)
+		if (right)
+		{
+			turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel);
+		}
+		
+		// If no input, slow down naturally
+		speed *= friction;	
+		
+		//Prevents weirdness
+		if(speed > 0 && speed < 0.05)
+		{
+			speed = 0;
+		}
+		
+		// Prevent turn weirdness 
+		if(turnAngle > 0) //(right)
+		{
+			// check if turnAngle value is really low, set to 0
+			if(turnAngle < 0.05)
 			{
-				mA = 90;
-				if (_left)
-					mA += 45;
-				else if (_right)
-					mA -= 45;
+				turnAngle = 0;
+			}		
+		}		
+		else if(turnAngle < 0) //(left)
+		{
+			//Same deal
+			if(turnAngle > -0.05)
+			{
+				turnAngle = 0;
+			}		
+		}
+		
+		// Update position based on speed. Because if you want things done right you do them yourself.
+		//Although I may find a way to make the actual velocity field work...eventually.
+		this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
+		this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
+
+		
+		// Makes you go straight after you stop turning. Took forever to realize not having this caused a major bug.
+		//fap, fap, fap, fap
+		turnAngle -= (turnAngle * 0.1); //Just take a moment to appreciate how wonderful this line is
 				
-				facing = FlxObject.DOWN;
-			}
-			else if (_left)
-			{
-				mA = 180;
-				facing = FlxObject.LEFT;
-			}
-			else if (_right)
-			{
-				mA = 0;
-				facing = FlxObject.RIGHT;
-			}
-			FlxAngle.rotatePoint(speed, 0, 0, 0, mA, velocity);
-		}
+		//Apply turn friction
+		turnAngle = turnAngle * turnFriction;	//Becuase why not. I think the turn speed is too low 
+												//to matter now but it might come in handy later one
 		
-		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
-		{
-			_sndStep.play();
-			
-			switch(facing)
-			{
-				case FlxObject.LEFT, FlxObject.RIGHT:
-					animation.play("lr");
-					
-				case FlxObject.UP:
-					animation.play("u");
-					
-				case FlxObject.DOWN:
-					animation.play("d");
-			}
-		}
-	}
-	
+		//Rotate sprite
+		this.angle += turnAngle * speed; //Bae caught me turnin'
+	}	
+
 	public function lure() {
 		if (FlxG.keys.anyJustPressed(LURE_INPUT) && lureCooldown <= 0) {
 			lureCooldown = LURE_COOLDOWN;
 			animation.play("lure");
-			
+
 			var lureSprite = new Lure(this.getMidpoint().x, this.getMidpoint().y, grpEnemies);
 			addSprite(lureSprite);
 		}
 	}
-	
+
 	private function screech() {
 		if (FlxG.keys.anyJustPressed(SCREECH_INPUT) && screechCooldown <= 0) {
 			screechCooldown = SCREECH_COOLDOWN;
 			animation.play("screech");
-			
+
 			var screechSprite = new FlxSprite(this.getMidpoint().x - SCREECH_WIDTH / 2, this.getMidpoint().y - SCREECH_HEIGHT / 2);
 			screechSprite.loadGraphic(AssetPaths.screech__png, false, SCREECH_WIDTH, SCREECH_HEIGHT);
 			screechSprite.scale.x = 0;
 			screechSprite.scale.y = 0;
 			addSprite(screechSprite);
-			FlxTween.tween(screechSprite.scale, { x: 2 * SCREECH_RANGE / SCREECH_WIDTH, y: 2 * SCREECH_RANGE / SCREECH_HEIGHT}, 0.2, 
+			FlxTween.tween(screechSprite.scale, { x: 2 * SCREECH_RANGE / SCREECH_WIDTH, y: 2 * SCREECH_RANGE / SCREECH_HEIGHT}, 0.2,
 			{ complete: function (f:FlxTween) {
 				screechSprite.destroy();
 			}});
 			FlxTween.tween(screechSprite, { alpha: 0.5 }, 0.2);
-			
+
 			grpEnemies.forEachAlive(function(e:Enemy) {
 				if (FlxMath.isDistanceWithin(this, e, SCREECH_RANGE)){
 					e.stopAndStun(SCREECH_STUN_DURATION);
@@ -175,8 +204,8 @@ class Player extends FlxSprite
 			});
 		}
 	}
-	
-	override public function update():Void 
+
+	override public function update():Void
 	{
 		movement();
 		screech();
@@ -184,18 +213,18 @@ class Player extends FlxSprite
 		handleCooldowns();
 		super.update();
 	}
-	
+
 	private function handleCooldowns() {
 		if (screechCooldown > 0)
 			screechCooldown--;
 		if (lureCooldown > 0)
 			lureCooldown--;
 	}
-	
-	override public function destroy():Void 
+
+	override public function destroy():Void
 	{
 		super.destroy();
-		
+
 		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 }
