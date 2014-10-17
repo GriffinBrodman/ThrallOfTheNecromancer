@@ -111,7 +111,7 @@ class Enemy extends FlxSprite
 			else if (!pathing) {
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
-				endPoint = goals.getRandom().getMidpoint();
+				endPoint = newEnd;
 				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 
 				{
