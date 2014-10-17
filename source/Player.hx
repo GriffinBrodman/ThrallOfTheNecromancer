@@ -13,7 +13,6 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
-import lime.math.Vector2;
 
 class Player extends FlxSprite
 {

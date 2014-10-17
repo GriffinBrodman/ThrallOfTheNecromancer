@@ -18,7 +18,7 @@ import entities.Exit;
 
 class Enemy extends FlxSprite
 {
-	public var speed:Int = FlxRandom.intRanged(40, 60);
+	public var speed:Int = FlxRandom.intRanged(30, 40);
 	public var etype(default, null):Int;
 	private var _idleTmr:Float;
 	private var _moveDir:Float;
@@ -35,6 +35,7 @@ class Enemy extends FlxSprite
 	private var map:FlxTilemap;
 	private var state:String = "idle";
 	private var fleeingTime:Int = 0;
+	private var scaredTime:Int = 0;
 	
 	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
 	{
@@ -67,6 +68,12 @@ class Enemy extends FlxSprite
 			stunDuration--;
 		if (fleeingTime > 0)
 			fleeingTime--;
+		if (scaredTime > 0)
+		{
+			scaredTime--;
+			if (scaredTime == 0) speed -=30;
+		}
+			
 	}
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
@@ -92,13 +99,15 @@ class Enemy extends FlxSprite
 	public function idle():Void
 	{
 		
-		if (seesPlayer)
+		if (seesPlayer && scaredTime == 0)
 		{
 			isLured = false;
 			path.cancel();
 			pathing = false;
 			state = "chase";
 			fleeingTime = 1;
+			scaredTime = 100;
+			speed += 30;
 		}
 		else 
 		{
