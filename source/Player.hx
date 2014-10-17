@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
+import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxAngle;
 import flixel.util.FlxColor;
@@ -20,19 +21,26 @@ class Player extends FlxSprite
 	private static var LEFT_INPUT:Array<String> = ["LEFT", "A"];
 	private static var RIGHT_INPUT:Array<String> = ["RIGHT", "D"];
 	private static var SCREECH_INPUT:Array<String> = ["SPACE", "J"];
+	private static var LURE_INPUT:Array<String> = ["Z", "K"];
 	
+	private static var SCREECH_WIDTH:Int = 64;
+	private static var SCREECH_HEIGHT:Int = 64;
 	private static var SCREECH_COOLDOWN:Int = 180;
 	private static var SCREECH_STUN_DURATION:Int = 120;
 	private static var SCREECH_RANGE:Int = 100;
+	
+	private static var LURE_COOLDOWN:Int = 300;
 	
 	public static var luring:Bool = false;
 	public var speed:Float = 200;
 	private var _sndStep:FlxSound;
 	private var screechCooldown:Int;
+	private var lureCooldown:Int;
 	private var grpEnemies:FlxTypedGroup<Enemy>;
+	private var walls:FlxTilemap;
 	private var addSprite:FlxSprite -> Void;
 	
-	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, add:FlxSprite -> Void) 
+	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void) 
 	{
 		super(X, Y);
 		
@@ -43,11 +51,13 @@ class Player extends FlxSprite
 		animation.add("lr", [3, 4, 3, 5], 6, false);
 		animation.add("u", [6, 7, 6, 8], 6, false);
 		animation.add("screech", [0], 6, false);
+		animation.add("lure", [0], 6, false);
 		drag.x = drag.y = 1600;
 		setSize(8, 14);
 		offset.set(4, 2);
 		
 		this.grpEnemies = grpEnemies;
+		this.walls = walls;
 		this.addSprite = add;
 		
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
@@ -133,7 +143,13 @@ class Player extends FlxSprite
 	}
 	
 	public function lure() {
-		luring = FlxG.keys.anyPressed(["Space"]);
+		if (FlxG.keys.anyJustPressed(LURE_INPUT) && lureCooldown <= 0) {
+			lureCooldown = LURE_COOLDOWN;
+			animation.play("lure");
+			
+			var lureSprite = new Lure(this.getMidpoint().x, this.getMidpoint().y, grpEnemies);
+			addSprite(lureSprite);
+		}
 	}
 	
 	private function screech() {
@@ -141,14 +157,12 @@ class Player extends FlxSprite
 			screechCooldown = SCREECH_COOLDOWN;
 			animation.play("screech");
 			
-			var screechSprite = new FlxSprite(this.getMidpoint().x, this.getMidpoint().y);
-			screechSprite.loadGraphic(AssetPaths.screech__png, false, 64, 64);
-			screechSprite.x -= screechSprite.width / 2;
-			screechSprite.y -= screechSprite.height / 2;
+			var screechSprite = new FlxSprite(this.getMidpoint().x - SCREECH_WIDTH / 2, this.getMidpoint().y - SCREECH_HEIGHT / 2);
+			screechSprite.loadGraphic(AssetPaths.screech__png, false, SCREECH_WIDTH, SCREECH_HEIGHT);
 			screechSprite.scale.x = 0;
 			screechSprite.scale.y = 0;
 			addSprite(screechSprite);
-			FlxTween.tween(screechSprite.scale, { x: 2 * SCREECH_RANGE / 64, y: 2 * SCREECH_RANGE / 64}, 0.2, 
+			FlxTween.tween(screechSprite.scale, { x: 2 * SCREECH_RANGE / SCREECH_WIDTH, y: 2 * SCREECH_RANGE / SCREECH_HEIGHT}, 0.2, 
 			{ complete: function (f:FlxTween) {
 				screechSprite.destroy();
 			}});
@@ -156,7 +170,7 @@ class Player extends FlxSprite
 			
 			grpEnemies.forEachAlive(function(e:Enemy) {
 				if (FlxMath.isDistanceWithin(this, e, SCREECH_RANGE)){
-					e.stun(SCREECH_STUN_DURATION);
+					e.stopAndStun(SCREECH_STUN_DURATION);
 				}
 			});
 		}
@@ -174,6 +188,8 @@ class Player extends FlxSprite
 	private function handleCooldowns() {
 		if (screechCooldown > 0)
 			screechCooldown--;
+		if (lureCooldown > 0)
+			lureCooldown--;
 	}
 	
 	override public function destroy():Void 

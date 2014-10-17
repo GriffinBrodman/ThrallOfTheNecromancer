@@ -77,7 +77,7 @@ class PlayState extends FlxState
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
-		_player = new Player(0, 0, _grpEnemies, this.add);
+		_player = new Player(0, 0, _grpEnemies, _mWalls, this.add);
 		_spellbook = new SpellBook([new TrapSpell(), new YellSpell(), new BatsSpell()]);
 		
 		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();

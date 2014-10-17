@@ -24,6 +24,7 @@ class Enemy extends FlxSprite
 	private var _moveDir:Float;
 	public var seesPlayer:Bool = false;
 	public var pathing:Bool = false;
+	public var isTriedLured:Bool = false;
 	public var isLured:Bool = false;
 	public var playerPos(default, null):FlxPoint;
 	private var _sndStep:FlxSound;
@@ -55,7 +56,6 @@ class Enemy extends FlxSprite
 		
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav,.4);
 		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width * .6);
-		
 		
 		map = m;
 		path = new FlxPath();
@@ -94,6 +94,7 @@ class Enemy extends FlxSprite
 		
 		if (seesPlayer)
 		{
+			isLured = false;
 			path.cancel();
 			pathing = false;
 			state = "chase";
@@ -103,6 +104,7 @@ class Enemy extends FlxSprite
 		{
 			if (stunDuration > 0)
 			{
+				isLured = false;
 				path.cancel();
 				pathing = false;
 			}
@@ -134,7 +136,7 @@ class Enemy extends FlxSprite
 		}*/
 		else 
 		{
-			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(-speed));
+			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int( -speed));
 		}
 	}
 	
@@ -197,6 +199,29 @@ class Enemy extends FlxSprite
 		this.stunDuration = stunDuration;
 	}
 	
+	public function lure(x:Float, y:Float, range:Int):Void {
+		if (isLured)
+			return;
+
+		isTriedLured = true;
+		var lured:Bool = FlxMath.isDistanceToPointWithin(this, new FlxPoint(x, y), range);
+		if (!isTriedLured)
+			lured = lured || Math.random() < 0.5;
+		if (lured) {
+			isLured = true;
+			var pathPoints:Array<FlxPoint> = map.findPath(this.getMidpoint(), new FlxPoint(x, y));
+			if (pathPoints != null) {
+				path.cancel();
+				path.start(this, pathPoints, speed);
+			}
+		}
+	}
+	
+	public function unlure() {
+		isLured = false;
+		path.cancel();
+		pathing = false;
+	}
 	
 	override public function destroy():Void 
 	{
