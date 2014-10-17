@@ -58,7 +58,7 @@ class Player extends FlxSprite
 	
 	//Variables for turning
 	private var turnAngle:Float = 0;		//Basically the direction the player is facing	
-	private var turnAccel:Float = .15;		//Rate at which player turns
+	private var turnAccel:Float = .3;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
 	
 	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void)
