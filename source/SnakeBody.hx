@@ -13,15 +13,18 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
+import flixel.group.FlxGroup;
 
 class SnakeBody extends FlxSprite
 {
 
-	var next:Player;
+	var next:FlxSprite;
+	var prevAng:Array<Float>;
+	var nextAng:Int;
+	var sizeOfBuffer:Int;
 	
 	
-	
-	public function new(p:Player)
+	public function new(p:FlxSprite)
 	{
 		super(p.x, p.y);
 
@@ -31,14 +34,27 @@ class SnakeBody extends FlxSprite
 		offset = new FlxPoint(112, 112);
 
 		next = p;
+		prevAng = new Array<Float>();
+		sizeOfBuffer = 7;
+		for (i in 0...sizeOfBuffer) 
+		{
+			prevAng[i] = 0;
+		}
+		nextAng = 0;
+		
 	}
 
 	private function movement():Void
 	{
 		var ang = next.angle;
-		angle = ang;
-		ang += 90;
-		setPosition(next.x + 32* Math.cos(ang * Math.PI / 180), next.y + 32* Math.sin(ang * Math.PI / 180)); 
+		angle = prevAng[nextAng];
+		prevAng[nextAng] = ang;
+		nextAng++;
+		nextAng = nextAng % sizeOfBuffer;
+		
+		var currAng = angle;
+		currAng += 90;
+		setPosition(next.x + 22* Math.cos(currAng * Math.PI / 180), next.y + 22* Math.sin(currAng * Math.PI / 180)); 
 		
 		
 	}	

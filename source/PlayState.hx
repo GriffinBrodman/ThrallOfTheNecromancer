@@ -89,9 +89,15 @@ class PlayState extends FlxState
 		{
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
-		add(_player);
 		var b:SnakeBody = new SnakeBody(_player);
+		var c:SnakeBody = new SnakeBody(b);
+		var d:SnakeBody = new SnakeBody(c);
+		
+		add(d);
+		add(c);
 		add(b);
+		add(_player);
+		
 		
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
 		FlxG.camera.setScale(1, 1);
