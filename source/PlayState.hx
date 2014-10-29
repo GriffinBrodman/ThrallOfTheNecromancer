@@ -16,10 +16,10 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import spellEffects.SpellEffect;
-import spells.BatsSpell;
-import spells.TrapSpell;
 import spells.YellSpell;
 import flixel.util.FlxMath;
+import flixel.text.FlxText;
+import SnakeBody;
 using flixel.util.FlxSpriteUtil;
 
 import spells.SpellBook;
@@ -52,6 +52,7 @@ class PlayState extends FlxState
 	private var _timer:Int;
 	private var _escapeLimit:Int;			//Limits number of humans we can let escape
 	private var _numEscaped = 0;
+	private var debug:FlxText;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -78,7 +79,6 @@ class PlayState extends FlxState
 		add(_grpEnemies);
 		
 		_player = new Player(0, 0, _grpEnemies, _mWalls, this.add);
-		_spellbook = new SpellBook([new TrapSpell(), new YellSpell(), new BatsSpell()]);
 		
 		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
 		add(_grpSpellEffects);
@@ -90,6 +90,9 @@ class PlayState extends FlxState
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
 		add(_player);
+		var b:SnakeBody = new SnakeBody(_player);
+		add(b);
+		
 		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
 		FlxG.camera.setScale(1, 1);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
@@ -100,7 +103,8 @@ class PlayState extends FlxState
 		_hud = new HUD(_timer);
 		add(_hud);
 		
-		
+		debug = new FlxText();
+		add(debug);
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
@@ -168,11 +172,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		
-		_spellbook.update();
-		if (_spellbook.getEffectToBeAdded() != null){
-			_grpSpellEffects.add(_spellbook.getEffectToBeAdded());
-			_spellbook.wipeEffectToBeAdded();
-		}
+		debug.text = Std.string(_player.angle);
 	}
 	
 	private function doneFadeOut():Void 
@@ -198,13 +198,17 @@ class PlayState extends FlxState
 	
 	private function checkEnemyVision(e:Enemy):Void
 	{
-		if (FlxMath.isDistanceWithin(e, _player, ENEMY_SIGHT_RANGE) && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
+		var dx = e.getMidpoint().x - _player.getMidpoint().x;
+		var dy = e.getMidpoint().y - _player.getMidpoint().y;
+		if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
 		&& e.canSee(_player))
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
+			debug.text += "can see";
 		}
 		else
 			e.seesPlayer = false;		
+			
 	}
 }

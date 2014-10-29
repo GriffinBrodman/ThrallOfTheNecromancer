@@ -57,7 +57,7 @@ class Player extends FlxSprite
 	private var friction:Float = .95;	//Slowdown factor
 	
 	//Variables for turning
-	private var turnAngle:Float = 0;		//Basically the direction the player is facing	
+	public var turnAngle:Float = 0;		//Basically the direction the player is facing	
 	private var turnAccel:Float = .3;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
 	
@@ -65,23 +65,22 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 
-		loadGraphic("assets/images/enemy-0.png", true, 16, 16);
+		loadGraphic("assets/images/head.png", true, 256, 256);
+		scale = new FlxPoint(.125, .125);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
-		animation.add("lr", [3, 4, 3, 5], 6, false);
-		animation.add("u", [6, 7, 6, 8], 6, false);
 		animation.add("screech", [0], 6, false);
 		animation.add("lure", [0], 6, false);
 		drag.x = drag.y = 1600;
-		setSize(8, 14);
-		offset.set(4, 2);
+		setSize(32, 32);
+		offset = new FlxPoint(112, 112);
+		
 
 		this.grpEnemies = grpEnemies;
 		this.walls = walls;
 		this.addSprite = add;
 
-		_sndStep = FlxG.sound.load(AssetPaths.step__wav);
+
 	}
 
 	private function movement():Void
@@ -168,6 +167,8 @@ class Player extends FlxSprite
 		
 		//Rotate sprite
 		this.angle += turnAngle * speed; //Bae caught me turnin'
+		
+		this.angle = this.angle % 360;
 	}	
 
 	public function lure() {

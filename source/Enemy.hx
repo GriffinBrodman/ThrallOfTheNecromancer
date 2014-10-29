@@ -33,7 +33,7 @@ class Enemy extends FlxSprite
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
 	private var map:FlxTilemap;
-	private var state:String = "idle";
+	public var state:String = "idle";
 	private var fleeingTime:Int = 0;
 	private var scaredTime:Int = 0;
 	
@@ -67,11 +67,9 @@ class Enemy extends FlxSprite
 		if (stunDuration > 0)
 			stunDuration--;
 		if (fleeingTime > 0)
-			fleeingTime--;
-		if (scaredTime > 0)
 		{
-			scaredTime--;
-			if (scaredTime == 0) speed -=30;
+			fleeingTime--;
+			if (fleeingTime == 0) speed -=30;
 		}
 			
 	}
@@ -83,6 +81,7 @@ class Enemy extends FlxSprite
 	
 	override public function update():Void 
 	{
+		
 		if (isFlickering())
 			return;
 		super.update();
@@ -99,14 +98,13 @@ class Enemy extends FlxSprite
 	public function idle():Void
 	{
 		
-		if (seesPlayer && scaredTime == 0)
+		if (seesPlayer)
 		{
 			isLured = false;
 			path.cancel();
 			pathing = false;
 			state = "chase";
-			fleeingTime = 1;
-			scaredTime = 100;
+			fleeingTime = 100;
 			speed += 30;
 		}
 		else 
@@ -145,7 +143,25 @@ class Enemy extends FlxSprite
 		}*/
 		else 
 		{
-			//FlxVelocity.moveTowardsPoint(this, playerPos, Std.int( -speed));
+				
+			if (stunDuration > 0)
+			{
+				isLured = false;
+				path.cancel();
+				pathing = false;
+			}
+			else if (!pathing) {
+				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
+				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
+				endPoint = newEnd;
+				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
+				if (pathPoints != null && !pathing) 
+				{
+					pathing = true;
+					path.start(this,pathPoints, speed);
+				}
+			}
+		
 		}
 	}
 	
