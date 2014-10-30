@@ -6,11 +6,20 @@ package entities;
  */
 class Exit extends Entity
 {
-
-	public function new(X:Float=0, Y:Float=0) 
+	var escape = false;
+	public function new(X:Float=0, Y:Float=0, escapable:Bool) 
 	{
 		super(X, Y);
-		loadGraphic("assets/images/exit.png", false, 16, 16);
+		
+		escape = escapable;
+		if (escape)
+			loadGraphic("assets/images/exit.png", false, 32, 32);
+		else
+			loadGraphic(AssetPaths.ground_tile__png, false, 32, 32);
 	}
 	
+	public function canEscape():Bool
+	{
+		return escape;
+	}
 }

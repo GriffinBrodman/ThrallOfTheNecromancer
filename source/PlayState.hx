@@ -38,7 +38,8 @@ class PlayState extends FlxState
 	private var _spellbook:SpellBook;
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
-	private var _mBorders:FlxTilemap;
+	private var _ground:FlxTilemap;
+	//private var _mBorders:FlxTilemap;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
 	private var _hud:HUD;
@@ -61,16 +62,23 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 
-		_map = new FlxOgmoLoader(AssetPaths.room_001__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.tiles__png, 16, 16, "walls");
-		_mWalls.setTileProperties(1, FlxObject.NONE);
-		_mWalls.setTileProperties(2, FlxObject.ANY);
+		_map = new FlxOgmoLoader(AssetPaths.testla__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.walls_tile_sheet__png, 32, 32, "walls");
+		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
+		/*trace(_mWalls.getBounds());
+		for ( i in 1...4)
+			_mWalls.setTileProperties(i, FlxObject.ANY);*/
+		add(_ground);
 		add(_mWalls);
+
+		/*for ( i in 5...8)
+			_mWalls.setTileProperties(i, FlxObject.NONE);
+		add(_mWalls);*/
 		
-		_mBorders = _map.loadTilemap(AssetPaths.Outerborder__png, 16, 16, "playerwall");
+		/*_mBorders = _map.loadTilemap(AssetPaths.Outerborder__png, 256, 256, "playerwall");
 		_mBorders.setTileProperties(1, FlxObject.ANY);
 		_mBorders.setTileProperties(2, FlxObject.ANY);
-		add(_mBorders);
+		add(_mBorders);*/
 		
 		_grpExits = new FlxTypedGroup<Exit>();
 		add(_grpExits);
@@ -99,8 +107,8 @@ class PlayState extends FlxState
 		add(_player);
 		
 		
-		FlxG.camera.setSize(FlxG.width * 2, FlxG.height * 2);
-		FlxG.camera.setScale(1, 1);
+		FlxG.camera.setSize(FlxG.width, FlxG.height);
+		FlxG.camera.setScale(0.85, 0.85);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
@@ -135,7 +143,8 @@ class PlayState extends FlxState
 			case "enemy":
 				_grpEnemies.add(new Enemy(x + 4, y, _mWalls));
 			case "exit":
-				_grpExits.add(new Exit(x, y));
+				var escapable = StringToBool(entityData.get("escapable"));
+				_grpExits.add(new Exit(x, y, escapable));
 		}
 	}
 	
@@ -171,8 +180,8 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new GameOverState(_won, _money));
 		}
-		FlxG.collide(_player, _mBorders);
-		FlxG.collide(_grpEnemies, _mWalls);
+		//FlxG.collide(_player, _mBorders);
+		//FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
@@ -196,10 +205,17 @@ class PlayState extends FlxState
 		T.touchedBy(E);
 	}
 	
-	private function humanExit(human:Enemy, exit:Entity)
+	private function humanExit(human:Enemy, exit:Exit)
 	{
-		human.kill();
-		_numEscaped++;
+		if (exit.canEscape())
+		{
+			human.kill();
+			_numEscaped++;
+		}
+		else
+		{
+			human.setGoal(_grpExits);
+		}
 	}
 	
 	private function checkEnemyVision(e:Enemy):Void
@@ -216,5 +232,10 @@ class PlayState extends FlxState
 		else
 			e.seesPlayer = false;		
 			
+	}
+	
+	function StringToBool(a:Dynamic):Bool{
+		var res:Bool = (cast (a, String).toLowerCase() == "true")?true:false;
+		return res;
 	}
 }
