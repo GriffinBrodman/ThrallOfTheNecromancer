@@ -28,11 +28,16 @@ class SnakeBody extends FlxSprite
 	
 	
 	
-	public function new(p:FlxSprite)
+	public function new(p:FlxSprite, type:Int)
 	{
 		super(p.x, p.y);
 
-		loadGraphic("assets/images/body1.png", true, 256, 256);
+		if (type == 1) loadGraphic("assets/images/subhead1.png", true, 256, 256);
+		else if (type == 2) loadGraphic("assets/images/subhead2.png", true, 256, 256);
+		else if (type == 3) loadGraphic("assets/images/body1.png", true, 256, 256);
+		else if (type == 4) loadGraphic("assets/images/body2.png", true, 256, 256);
+		else if (type == 5) loadGraphic("assets/images/tail1.png", true, 256, 256);
+		else loadGraphic("assets/images/tail2.png", true, 256, 256);
 		scale = new FlxPoint(.125, .125);
 		setSize(32, 32);
 		offset = new FlxPoint(112, 112);
