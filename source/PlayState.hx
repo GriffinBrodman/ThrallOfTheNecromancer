@@ -99,10 +99,16 @@ class PlayState extends FlxState
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
 		
-		var b:SnakeBody = new SnakeBody(_player);
-		var c:SnakeBody = new SnakeBody(b);
-		var d:SnakeBody = new SnakeBody(c);
+		var b:SnakeBody = new SnakeBody(_player, 1);
+		var c:SnakeBody = new SnakeBody(b, 2);
+		var d:SnakeBody = new SnakeBody(c, 3);
+		var e:SnakeBody = new SnakeBody(d, 4);
+		var f:SnakeBody = new SnakeBody(e, 5);
+		var g:SnakeBody = new SnakeBody(f, 6);
 		
+		add(g);
+		add(f);
+		add(e);
 		add(d);
 		add(c);
 		add(b);
@@ -111,6 +117,9 @@ class PlayState extends FlxState
 		_grpSnake = new FlxTypedGroup<SnakeBody>();
 		add(_grpSnake);
 		
+		_grpSnake.add(g);
+		_grpSnake.add(f);
+		_grpSnake.add(e);
 		_grpSnake.add(d);
 		_grpSnake.add(c);
 		_grpSnake.add(b);
