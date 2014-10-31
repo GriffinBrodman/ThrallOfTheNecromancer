@@ -24,9 +24,10 @@ class Player extends FlxSprite
 	private static var DOWN_INPUT:Array<String> = ["DOWN", "S"];
 	private static var LEFT_INPUT:Array<String> = ["LEFT", "A"];
 	private static var RIGHT_INPUT:Array<String> = ["RIGHT", "D"];
-	private static var SCREECH_INPUT:Array<String> = ["SPACE", "J"];
-	private static var LURE_INPUT:Array<String> = ["Z", "K"];
-	private static var DASH_INPUT:Array<String> = ["C", "L"];
+
+	private static var SCREECH_INPUT:Array<String> = ["Z", "J"];
+	private static var LURE_INPUT:Array<String> = ["C", "K"];
+	private static var DASH_INPUT:Array<String> = ["X", "L"];
 
 	public static var SCREECH_COOLDOWN:Int = 120;
 	public static var LURE_COOLDOWN:Int = 300;
