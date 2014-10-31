@@ -24,7 +24,6 @@ class Enemy extends FlxSprite
 	private var _moveDir:Float;
 	public var seesPlayer:Bool = false;
 	public var pathing:Bool = false;
-	public var isTriedLured:Bool = false;
 	public var isLured:Bool = false;
 	public var playerPos(default, null):FlxPoint;
 	private var _sndStep:FlxSound;
@@ -32,7 +31,7 @@ class Enemy extends FlxSprite
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
-	private var map:FlxTilemap;
+	private var walls:FlxTilemap;
 	public var state:String = "idle";
 	private var fleeingTime:Int = 0;
 	private var scaredTime:Int = 0;
@@ -58,7 +57,7 @@ class Enemy extends FlxSprite
 		_sndStep = FlxG.sound.load(AssetPaths.step__wav,.4);
 		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width * .6);
 		
-		map = m;
+		walls = m;
 		path = new FlxPath();
 		
 	}
@@ -81,10 +80,8 @@ class Enemy extends FlxSprite
 	
 	override public function update():Void 
 	{
-		
 		if (isFlickering())
 			return;
-		super.update();
 		if (state == "idle") idle();
 		if (state == "chase") chase();
 		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
@@ -93,11 +90,17 @@ class Enemy extends FlxSprite
 			_sndStep.play();
 		}
 		updateCooldowns();
+		
+		super.update();
+		
+		if (stunDuration > 0)
+			this.setColorTransform(3, 3, 1);
+		else
+			this.setColorTransform(1, 1, 1);
 	}
 	
 	public function idle():Void
 	{
-		
 		if (seesPlayer)
 		{
 			isLured = false;
@@ -119,7 +122,7 @@ class Enemy extends FlxSprite
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
 				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
+				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 
 				{
 					pathing = true;
@@ -130,9 +133,7 @@ class Enemy extends FlxSprite
 	}
 	
 	public function chase():Void
-	{
-		if (stunDuration > 0)
-			return;
+	{		
 		if (fleeingTime == 0)
 		{
 			state = "idle";
@@ -143,7 +144,6 @@ class Enemy extends FlxSprite
 		}*/
 		else 
 		{
-				
 			if (stunDuration > 0)
 			{
 				isLured = false;
@@ -154,7 +154,7 @@ class Enemy extends FlxSprite
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
 				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = map.findPath(getMidpoint(), endPoint);
+				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 
 				{
 					pathing = true;
@@ -224,17 +224,14 @@ class Enemy extends FlxSprite
 		this.stunDuration = stunDuration;
 	}
 	
-	public function lure(x:Float, y:Float, range:Int):Void {
+	public function lure(lureLocation:FlxPoint, range:Int):Void {
 		if (isLured)
 			return;
 
-		isTriedLured = true;
-		var lured:Bool = FlxMath.isDistanceToPointWithin(this, new FlxPoint(x, y), range);
-		if (!isTriedLured)
-			lured = lured || Math.random() < 0.5;
+		var lured:Bool = FlxMath.isDistanceToPointWithin(this, lureLocation, range) && walls.ray(this.getMidpoint(), lureLocation);
 		if (lured) {
 			isLured = true;
-			var pathPoints:Array<FlxPoint> = map.findPath(this.getMidpoint(), new FlxPoint(x, y));
+			var pathPoints:Array<FlxPoint> = walls.findPath(this.getMidpoint(), lureLocation);
 			if (pathPoints != null) {
 				path.cancel();
 				path.start(this, pathPoints, speed);
