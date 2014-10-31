@@ -42,6 +42,7 @@ class PlayState extends FlxState
 	private var _grpExits:FlxTypedGroup<Exit>;
 	private var _grpLure:FlxTypedGroup<Lure>;
 	private var _grpUI:FlxTypedGroup<FlxSprite>;
+	private var _grpSnake:FlxTypedGroup<SnakeBody>;
 	private var _hud:HUD;
 	private var _money:Int = 0;
 	private var _health:Int = 3;
@@ -61,8 +62,8 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 
-		_map = new FlxOgmoLoader(AssetPaths.testla__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.walls_tile_sheet__png, 32, 32, "walls");
+		_map = new FlxOgmoLoader(AssetPaths.room1__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
 		/*trace(_mWalls.getBounds());
 		for ( i in 1...4)
@@ -99,18 +100,36 @@ class PlayState extends FlxState
 		{
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
-		var b:SnakeBody = new SnakeBody(_player);
-		var c:SnakeBody = new SnakeBody(b);
-		var d:SnakeBody = new SnakeBody(c);
 		
+		var b:SnakeBody = new SnakeBody(_player, 1);
+		var c:SnakeBody = new SnakeBody(b, 2);
+		var d:SnakeBody = new SnakeBody(c, 3);
+		var e:SnakeBody = new SnakeBody(d, 4);
+		var f:SnakeBody = new SnakeBody(e, 5);
+		var g:SnakeBody = new SnakeBody(f, 6);
+		
+		add(g);
+		add(f);
+		add(e);
 		add(d);
 		add(c);
 		add(b);
 		add(_player);
 		
+		_grpSnake = new FlxTypedGroup<SnakeBody>();
+		add(_grpSnake);
+		
+		_grpSnake.add(g);
+		_grpSnake.add(f);
+		_grpSnake.add(e);
+		_grpSnake.add(d);
+		_grpSnake.add(c);
+		_grpSnake.add(b);
+		
+		
 		
 		FlxG.camera.setSize(FlxG.width, FlxG.height);
-		FlxG.camera.setScale(0.85, 0.85);
+		//FlxG.camera.setScale(0.85, 0.85);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
@@ -183,13 +202,13 @@ class PlayState extends FlxState
 			FlxG.switchState(new GameOverState(_won, _money));
 		}
 		//FlxG.collide(_player, _mBorders);
-		//FlxG.collide(_grpEnemies, _mWalls);
+		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		FlxG.collide(_mWalls, _grpLure);
 		
-		debug.text = Std.string(_player.angle);
+		//debug.text = Std.string(_player.angle);
 	}
 	
 	private function doneFadeOut():Void 
@@ -217,6 +236,8 @@ class PlayState extends FlxState
 	
 	private function checkEnemyVision(e:Enemy):Void
 	{
+		e.seesPlayer = false;
+		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
@@ -224,11 +245,22 @@ class PlayState extends FlxState
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
-			debug.text += "can see";
+			//debug.text += "can see";
 		}
-		else
-			e.seesPlayer = false;		
-			
+		
+		for (i in 0..._grpSnake.length)
+		{
+			dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
+			dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
+			if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
+			&& e.canSee(_grpSnake.members[i]))
+			{
+				e.seesPlayer = true;
+				e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
+				//debug.text += "can see";
+			}
+		}
+		
 	}
 	
 	function StringToBool(a:Dynamic):Bool{

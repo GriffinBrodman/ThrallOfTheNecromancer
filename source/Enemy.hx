@@ -39,16 +39,31 @@ class Enemy extends FlxSprite
 	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
 	{
 		super(X, Y);
-		loadGraphic("assets/images/player.png", true, 16, 16);
+		if(Std.random(2) == 0)
+		{
+			loadGraphic(AssetPaths.redsweater__png, true, 32, 32);
+			width = 20;
+			height = 30;
+			offset.x = 6;
+			offset.y = 2;
+		}
+		else
+		{
+			loadGraphic(AssetPaths.greenjacket__png, true, 32, 32);
+			width = 21;
+			height = 32;
+			offset.x = 4;
+			offset.y = 0;
+		}
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
-		animation.add("lr", [3, 4, 3, 5], 6, false);
-		animation.add("u", [6, 7, 6, 8], 6, false);
+		//animation.add("d", [0, 1, 0, 2], 6, false);
+		//animation.add("lr", [3, 4, 3, 5], 6, false);
+		//animation.add("u", [6, 7, 6, 8], 6, false);
 		drag.x = drag.y = 10;
-		width = 8;
-		height = 14;
-		offset.x = 4;
+		width = 20;
+		height = 30;
+		offset.x = 6;
 		offset.y = 2;
 		
 		_idleTmr = 0;
@@ -107,18 +122,25 @@ class Enemy extends FlxSprite
 			path.cancel();
 			pathing = false;
 			state = "chase";
-			fleeingTime = 100;
+			fleeingTime = 50;
 			speed += 30;
 		}
 		else 
 		{
-			if (stunDuration > 0)
+			if (path.finished)
 			{
 				isLured = false;
 				path.cancel();
 				pathing = false;
 			}
-			else if (!pathing) {
+			else if (stunDuration > 0)
+			{
+				isLured = false;
+				path.cancel();
+				pathing = false;
+			}
+			
+			if (pathing==false) {
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
 				endPoint = newEnd;
@@ -150,7 +172,7 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			else if (!pathing) {
+			else if (pathing == false ) {
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
 				endPoint = newEnd;
@@ -166,7 +188,7 @@ class Enemy extends FlxSprite
 	}
 	
 		
-	public function canSee(player:Player):Bool
+	public function canSee(player:FlxSprite):Bool
 	{
 		if (this.facing == FlxObject.LEFT)
 		return player.x < this.x;
@@ -201,13 +223,13 @@ class Enemy extends FlxSprite
 			switch(facing)
 			{
 				case FlxObject.LEFT, FlxObject.RIGHT:
-					animation.play("lr");
+					//animation.play("lr");
 					
 				case FlxObject.UP:
-					animation.play("u");
+					//animation.play("u");
 					
 				case FlxObject.DOWN:
-					animation.play("d");
+					//animation.play("d");
 			}
 		}
 			
@@ -228,7 +250,7 @@ class Enemy extends FlxSprite
 		if (isLured)
 			return;
 
-		var lured:Bool = FlxMath.isDistanceToPointWithin(this, lureLocation, range) && walls.ray(this.getMidpoint(), lureLocation);
+		var lured:Bool = !seesPlayer && FlxMath.isDistanceToPointWithin(this, lureLocation, range) && walls.ray(this.getMidpoint(), lureLocation);
 		if (lured) {
 			isLured = true;
 			var pathPoints:Array<FlxPoint> = walls.findPath(this.getMidpoint(), lureLocation);
