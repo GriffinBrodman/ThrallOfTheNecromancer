@@ -28,7 +28,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtTimer.alignment = "center";
 		_txtTimer.x = FlxG.width;// / 2; // - 12 - _txtTimer.width - 4;
 
-		add(_txtTimer);
+		this.add(_txtTimer);
 		forEach(function(spr:FlxSprite) {
 			spr.scrollFactor.set();
 		});
