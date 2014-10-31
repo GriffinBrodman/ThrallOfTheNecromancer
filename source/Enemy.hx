@@ -40,16 +40,31 @@ class Enemy extends FlxSprite
 	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
 	{
 		super(X, Y);
-		loadGraphic("assets/images/player.png", true, 16, 16);
+		if(Std.random(2) == 0)
+		{
+			loadGraphic(AssetPaths.redsweater__png, true, 32, 32);
+			width = 20;
+			height = 30;
+			offset.x = 6;
+			offset.y = 2;
+		}
+		else
+		{
+			loadGraphic(AssetPaths.greenjacket__png, true, 32, 32);
+			width = 21;
+			height = 32;
+			offset.x = 4;
+			offset.y = 0;
+		}
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("d", [0, 1, 0, 2], 6, false);
-		animation.add("lr", [3, 4, 3, 5], 6, false);
-		animation.add("u", [6, 7, 6, 8], 6, false);
+		//animation.add("d", [0, 1, 0, 2], 6, false);
+		//animation.add("lr", [3, 4, 3, 5], 6, false);
+		//animation.add("u", [6, 7, 6, 8], 6, false);
 		drag.x = drag.y = 10;
-		width = 8;
-		height = 14;
-		offset.x = 4;
+		width = 20;
+		height = 30;
+		offset.x = 6;
 		offset.y = 2;
 		
 		_idleTmr = 0;
