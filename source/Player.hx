@@ -53,13 +53,13 @@ class Player extends FlxSprite
 	
 	//Variables for player movement
 	private var speed:Float = 0;		//Speed
-	private var accel:Float = .15;		//Acceleration
+	private var accel:Float = .18;		//Acceleration
 	private var decel:Float = .90;		//Deceleration
 	private var friction:Float = .95;	//Slowdown factor
 	
 	//Variables for turning
 	public var turnAngle:Float = 0;		//Basically the direction the player is facing	
-	private var turnAccel:Float = .3;		//Rate at which player turns
+	private var turnAccel:Float = .15;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
 	
 	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, grpLure:FlxTypedGroup<Lure>, add:FlxSprite -> Void)
