@@ -104,7 +104,7 @@ class Enemy extends FlxSprite
 			path.cancel();
 			pathing = false;
 			state = "chase";
-			fleeingTime = 100;
+			fleeingTime = 50;
 			speed += 30;
 		}
 		else 
@@ -166,7 +166,7 @@ class Enemy extends FlxSprite
 	}
 	
 		
-	public function canSee(player:Player):Bool
+	public function canSee(player:FlxSprite):Bool
 	{
 		if (this.facing == FlxObject.LEFT)
 		return player.x < this.x;

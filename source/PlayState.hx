@@ -42,6 +42,7 @@ class PlayState extends FlxState
 	//private var _mBorders:FlxTilemap;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
+	private var _grpSnake:FlxTypedGroup<SnakeBody>;
 	private var _hud:HUD;
 	private var _money:Int = 0;
 	private var _health:Int = 3;
@@ -97,6 +98,7 @@ class PlayState extends FlxState
 		{
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
+		
 		var b:SnakeBody = new SnakeBody(_player);
 		var c:SnakeBody = new SnakeBody(b);
 		var d:SnakeBody = new SnakeBody(c);
@@ -105,6 +107,14 @@ class PlayState extends FlxState
 		add(c);
 		add(b);
 		add(_player);
+		
+		_grpSnake = new FlxTypedGroup<SnakeBody>();
+		add(_grpSnake);
+		
+		_grpSnake.add(d);
+		_grpSnake.add(c);
+		_grpSnake.add(b);
+		
 		
 		
 		FlxG.camera.setSize(FlxG.width, FlxG.height);
@@ -220,18 +230,31 @@ class PlayState extends FlxState
 	
 	private function checkEnemyVision(e:Enemy):Void
 	{
-		var dx = e.getMidpoint().x - _player.getMidpoint().x;
+		e.seesPlayer = false;
+		
+		/*var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
 		&& e.canSee(_player))
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
-			debug.text += "can see";
+			//debug.text += "can see";
 		}
-		else
-			e.seesPlayer = false;		
-			
+		*/
+		for (i in 0..._grpSnake.length)
+		{
+			var dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
+			var dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
+			if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
+			&& e.canSee(_grpSnake.members[i]))
+			{
+				e.seesPlayer = true;
+				e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
+				//debug.text += "can see";
+			}
+		}
+		
 	}
 	
 	function StringToBool(a:Dynamic):Bool{

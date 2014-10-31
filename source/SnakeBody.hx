@@ -23,6 +23,10 @@ class SnakeBody extends FlxSprite
 	var nextAng:Int;
 	var sizeOfBuffer:Int;
 	
+	var prevPos:Array<FlxPoint>;
+	var nextPos:Int;
+	
+	
 	
 	public function new(p:FlxSprite)
 	{
@@ -35,12 +39,20 @@ class SnakeBody extends FlxSprite
 
 		next = p;
 		prevAng = new Array<Float>();
-		sizeOfBuffer = 7;
+		sizeOfBuffer = 16;
 		for (i in 0...sizeOfBuffer) 
 		{
 			prevAng[i] = 0;
 		}
 		nextAng = 0;
+		
+		prevPos = new Array<FlxPoint>();
+		for (i in 0...sizeOfBuffer) 
+		{
+			prevPos[i] = new FlxPoint(p.x, p.y);
+		}
+		nextPos = 0;
+		
 		
 	}
 
@@ -52,9 +64,19 @@ class SnakeBody extends FlxSprite
 		nextAng++;
 		nextAng = nextAng % sizeOfBuffer;
 		
+		var pozz = new FlxPoint(next.x, next.y);
+		setPosition(prevPos[nextPos].x, prevPos[nextPos].y);
+		prevPos[nextPos] = pozz;
+		nextPos++;
+		nextPos = nextPos % sizeOfBuffer;
+		
+		
+		/*
 		var currAng = angle;
 		currAng += 90;
-		setPosition(next.x + 22* Math.cos(currAng * Math.PI / 180), next.y + 22* Math.sin(currAng * Math.PI / 180)); 
+		setPosition(next.x + 22* Math.cos(currAng * Math.PI / 180), next.y + 22* Math.sin(currAng * Math.PI / 180));
+		*/
+		
 		
 		
 	}	

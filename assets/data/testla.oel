@@ -39,7 +39,7 @@
     <exit id="1" x="416" y="544" escapable="True" />
     <exit id="2" x="0" y="480" escapable="True" />
     <exit id="9" x="736" y="256" escapable="True" />
-    <player id="10" x="448" y="160" />
+    <player id="10" x="0" y="0" />
     <exit id="0" x="0" y="32" escapable="True" />
     <exit id="11" x="576" y="192" escapable="False" />
     <exit id="12" x="64" y="288" escapable="False" />
