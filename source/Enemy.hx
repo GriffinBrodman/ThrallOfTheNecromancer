@@ -159,7 +159,7 @@ class Enemy extends FlxSprite
 	}
 	
 	public function chase():Void
-	{		
+	{
 		if (fleeingTime == 0)
 		{
 			state = "idle";
@@ -170,7 +170,7 @@ class Enemy extends FlxSprite
 		}*/
 		else 
 		{
-			if (stunDuration > 0)
+			if (stunDuration > 0 || isLured)
 			{
 				isLured = false;
 				path.cancel();

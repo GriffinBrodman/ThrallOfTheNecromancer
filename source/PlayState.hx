@@ -31,8 +31,8 @@ class PlayState extends FlxState
 	public static var NUM_SECONDS = 60;
 	public static var FRAMES_PER_SECOND = 60;
 	public static var ESCAPEE_THRESHOLD = 3;	//TODO
-	public static var ENEMY_SIGHT_RANGE = 100;
-	public static var ENEMY_DETECTION_RANGE = 20;
+	public static var ENEMY_SIGHT_RANGE = 200;
+	public static var ENEMY_DETECTION_RANGE = 40;
 	
 	private var _player:Player;
 	private var _map:FlxOgmoLoader;
