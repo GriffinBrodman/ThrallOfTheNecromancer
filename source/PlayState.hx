@@ -62,8 +62,8 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 
-		_map = new FlxOgmoLoader(AssetPaths.testla__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.walls_tile_sheet__png, 32, 32, "walls");
+		_map = new FlxOgmoLoader(AssetPaths.room1__oel);
+		_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
 		/*trace(_mWalls.getBounds());
 		for ( i in 1...4)
@@ -108,7 +108,7 @@ class PlayState extends FlxState
 		
 		
 		FlxG.camera.setSize(FlxG.width, FlxG.height);
-		FlxG.camera.setScale(0.85, 0.85);
+		//FlxG.camera.setScale(0.85, 0.85);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
@@ -181,7 +181,7 @@ class PlayState extends FlxState
 			FlxG.switchState(new GameOverState(_won, _money));
 		}
 		//FlxG.collide(_player, _mBorders);
-		//FlxG.collide(_grpEnemies, _mWalls);
+		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
