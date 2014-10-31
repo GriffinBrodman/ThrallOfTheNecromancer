@@ -136,7 +136,7 @@ class PlayState extends FlxState
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
 		_escapeLimit = ESCAPEE_THRESHOLD;
 		
-		_hud = new HUD(_timer, _player);
+		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped);
 		add(_hud);
 		
 		debug = new FlxText();
@@ -191,7 +191,7 @@ class PlayState extends FlxState
 	{
 		super.update();
 		_timer--;
-		_hud.updateHUD(getSecs(_timer));
+		_hud.updateHUD(getSecs(_timer), _escapeLimit, _numEscaped);
 		
 		if (_timer <= 0)
 		{

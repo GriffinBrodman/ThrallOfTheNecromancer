@@ -12,29 +12,35 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var BAR_WIDTH:Int = 250;
 	
 	private var _txtTimer:FlxText;
+	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechCooldownBar:FlxSprite;
 	private var lureCooldownBar:FlxSprite;
 	
-	public function new(timer:Int, player:Player) 
+	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int) 
 	{
 		super();
 		this.player = player;
 
 		var secs:String = Std.string(timer);
-		_txtTimer = new FlxText(0, 2, 0, secs, 8);
+		_txtTimer = new FlxText(0, 2, 40, secs, 16);
 		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 
 		_txtTimer.alignment = "center";
-		_txtTimer.x = FlxG.width;// / 2; // - 12 - _txtTimer.width - 4;
+		_txtTimer.x = FlxG.width / 2;
 
 		add(_txtTimer);
 		forEach(function(spr:FlxSprite) {
 			spr.scrollFactor.set();
 		});
 		
-		screechCooldownBar = createBar(20, FlxG.height - 35, BAR_WIDTH, 20, FlxColor.YELLOW);
-		lureCooldownBar = createBar(20, FlxG.height - 60, BAR_WIDTH, 20, FlxColor.AZURE);
+		screechCooldownBar = createBar(20, 5, BAR_WIDTH, 20, FlxColor.YELLOW);
+		lureCooldownBar = createBar(20, 20, BAR_WIDTH, 20, FlxColor.AZURE);
+		
+		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
+		_txtEscaped = new FlxText(FlxG.width - 250, 2, 250, escaped, 16);
+		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
+		add(_txtEscaped);
 	}
 	
 	public function createBar(X:Float=20, Y:Float=20, width:Int=500, height:Int=20, color:Int=0xffff0000):FlxSprite {
@@ -65,10 +71,17 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		bar.scale.x = val * width / cap;
 	}
 	
-	public function updateHUD(timer:Int):Void
+	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
 		_txtTimer.text = Std.string(timer);
-		_txtTimer.x = FlxG.width;// - 12 - _txtTimer.width - 4;
+		_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;
+		
+		var escaped = "Game over if " + Std.string(escapeLimit - escapees) + " escape";
+		if (escapeLimit - escapees == 1)
+			escaped += "s!";
+		else
+			escaped += "!";
+		_txtEscaped.text = escaped;
 		
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
 		updateBar(lureCooldownBar, Player.LURE_COOLDOWN - player.getLureCooldown(), Player.LURE_COOLDOWN, BAR_WIDTH);

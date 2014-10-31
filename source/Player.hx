@@ -26,9 +26,11 @@ class Player extends FlxSprite
 	private static var RIGHT_INPUT:Array<String> = ["RIGHT", "D"];
 	private static var SCREECH_INPUT:Array<String> = ["SPACE", "J"];
 	private static var LURE_INPUT:Array<String> = ["Z", "K"];
+	private static var DASH_INPUT:Array<String> = ["C", "L"];
 
 	public static var SCREECH_COOLDOWN:Int = 120;
 	public static var LURE_COOLDOWN:Int = 300;
+	public static var DASH_COOLDOWN:Int = 150;
 	
 	private static var MAX_SPEED:Float = 8;	//Completely random
 	private static var MAX_ANGLE:Float = 2; //Because radians. Just trust me.
@@ -36,6 +38,7 @@ class Player extends FlxSprite
 	private var _sndStep:FlxSound;
 	private var screechCooldown:Int;
 	private var lureCooldown:Int;
+	private var dashCooldown:Int;
 	private var grpEnemies:FlxTypedGroup<Enemy>;
 	private var grpLure:FlxTypedGroup<Lure>;
 	private var walls:FlxTilemap;
@@ -152,8 +155,11 @@ class Player extends FlxSprite
 		// Update position based on speed. Because if you want things done right you do them yourself.
 		//Although I may find a way to make the actual velocity field work...eventually.
 		this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
+		this.x = Math.max(this.x, 0);
+		this.x = Math.min(this.x, FlxG.width);
 		this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
-
+		this.y = Math.max(this.y, 0);
+		this.y = Math.min(this.y, FlxG.height);
 		
 		// Makes you go straight after you stop turning. Took forever to realize not having this caused a major bug.
 		//fap, fap, fap, fap
@@ -187,12 +193,25 @@ class Player extends FlxSprite
 			addSprite(new Screech(this.getMidpoint().x, this.getMidpoint().y, grpEnemies));
 		}
 	}
+	
+	private function dash() {
+		if (FlxG.keys.anyJustPressed(DASH_INPUT) && dashCooldown <= 0) {
+			dashCooldown = DASH_COOLDOWN;
+			this.x += Math.sin (this.angle * Math.PI / 180) * speed * 8;  //Position.x += Velocity.x
+			this.x = Math.max(this.x, 0);
+			this.x = Math.min(this.x, FlxG.width);
+			this.y += Math.cos (this.angle * Math.PI / 180) * -speed * 8; //Position.y += Velocity.y
+			this.y = Math.max(this.y, 0);
+			this.y = Math.min(this.y, FlxG.height);
+		}
+	}
 
 	override public function update():Void
 	{
 		movement();
 		screech();
 		lure();
+		dash();
 		handleCooldowns();
 		super.update();
 	}
@@ -202,6 +221,8 @@ class Player extends FlxSprite
 			screechCooldown--;
 		if (lureCooldown > 0)
 			lureCooldown--;
+		if (dashCooldown > 0)
+			dashCooldown--;
 	}
 
 	override public function destroy():Void

@@ -18,7 +18,7 @@ import entities.Exit;
 
 class Enemy extends FlxSprite
 {
-	public var speed:Int = FlxRandom.intRanged(10, 20);
+	public var speed:Int = FlxRandom.intRanged(50, 60);
 	public var etype(default, null):Int;
 	private var _idleTmr:Float;
 	private var _moveDir:Float;
