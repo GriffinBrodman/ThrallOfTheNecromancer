@@ -222,13 +222,13 @@ class Enemy extends FlxSprite
 			switch(facing)
 			{
 				case FlxObject.LEFT, FlxObject.RIGHT:
-					animation.play("lr");
+					//animation.play("lr");
 					
 				case FlxObject.UP:
-					animation.play("u");
+					//animation.play("u");
 					
 				case FlxObject.DOWN:
-					animation.play("d");
+					//animation.play("d");
 			}
 		}
 			
