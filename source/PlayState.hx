@@ -3,6 +3,7 @@ package;
 import entities.Entity;
 import entities.Exit;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -10,19 +11,17 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
+import flixel.tile.FlxTile;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
-import spellEffects.SpellEffect;
-import spells.YellSpell;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
 import SnakeBody;
 using flixel.util.FlxSpriteUtil;
-
-import spells.SpellBook;
+import spells.Lure;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -31,17 +30,19 @@ class PlayState extends FlxState
 {
 	public static var NUM_SECONDS = 60;
 	public static var FRAMES_PER_SECOND = 60;
-	public static var ESCAPEE_THRESHOLD = 2;
-	public static var ENEMY_SIGHT_RANGE = 100;
+	public static var ESCAPEE_THRESHOLD = 3;	//TODO
+	public static var ENEMY_SIGHT_RANGE = 200;
+	public static var ENEMY_DETECTION_RANGE = 40;
 	
 	private var _player:Player;
-	private var _spellbook:SpellBook;
 	private var _map:FlxOgmoLoader;
 	private var _mWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
 	//private var _mBorders:FlxTilemap;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
+	private var _grpLure:FlxTypedGroup<Lure>;
+	private var _grpUI:FlxTypedGroup<FlxSprite>;
 	private var _grpSnake:FlxTypedGroup<SnakeBody>;
 	private var _hud:HUD;
 	private var _money:Int = 0;
@@ -50,7 +51,6 @@ class PlayState extends FlxState
 	private var _won:Bool = false;
 	private var _paused:Bool;
 	private var _sndCoin:FlxSound;
-	private var _grpSpellEffects:FlxTypedGroup<SpellEffect>;
 	private var _timer:Int;
 	private var _escapeLimit:Int;			//Limits number of humans we can let escape
 	private var _numEscaped = 0;
@@ -87,10 +87,13 @@ class PlayState extends FlxState
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
-		_player = new Player(0, 0, _grpEnemies, _mWalls, this.add);
+		_grpLure = new FlxTypedGroup<Lure>();
+		add(_grpLure);
 		
-		_grpSpellEffects = new FlxTypedGroup<SpellEffect>();
-		add(_grpSpellEffects);
+		_grpUI = new FlxTypedGroup<FlxSprite>();
+		add(_grpUI);
+		
+		_player = new Player(0, 0, _grpEnemies, _mWalls, _grpLure, this.add);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
@@ -133,7 +136,7 @@ class PlayState extends FlxState
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
 		_escapeLimit = ESCAPEE_THRESHOLD;
 		
-		_hud = new HUD(_timer);
+		_hud = new HUD(_timer, _player);
 		add(_hud);
 		
 		debug = new FlxText();
@@ -203,8 +206,8 @@ class PlayState extends FlxState
 		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
-		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
+		FlxG.collide(_mWalls, _grpLure);
 		
 		//debug.text = Std.string(_player.angle);
 	}
@@ -217,11 +220,6 @@ class PlayState extends FlxState
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
 		
-	}
-	
-	private function enemyTouchTrap(E:Enemy, T:SpellEffect):Void
-	{
-		T.touchedBy(E);
 	}
 	
 	private function humanExit(human:Enemy, exit:Exit)
@@ -243,24 +241,26 @@ class PlayState extends FlxState
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
-		if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& e.canSee(_player))
+		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
+		&& e.canSee(_player)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
 			//debug.text += "can see";
 		}
-		
-		for (i in 0..._grpSnake.length)
-		{
-			dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
-			dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
-			if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-			&& e.canSee(_grpSnake.members[i]))
+		else {
+			for (i in 0..._grpSnake.length)
 			{
-				e.seesPlayer = true;
-				e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
-				//debug.text += "can see";
+				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
+				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
+				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
+				&& e.canSee(_grpSnake.members[i])) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+				{
+					e.seesPlayer = true;
+					e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
+					break;
+					//debug.text += "can see";
+				}
 			}
 		}
 		
