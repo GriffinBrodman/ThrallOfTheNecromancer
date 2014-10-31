@@ -109,13 +109,19 @@ class Enemy extends FlxSprite
 		}
 		else 
 		{
-			if (stunDuration > 0)
+			if (path.finished)
+			{
+				path.cancel();
+				pathing = false;
+			}
+			else if (stunDuration > 0)
 			{
 				isLured = false;
 				path.cancel();
 				pathing = false;
 			}
-			else if (!pathing) {
+			
+			if (pathing==false) {
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
 				endPoint = newEnd;
