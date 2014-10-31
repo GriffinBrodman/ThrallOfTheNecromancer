@@ -110,6 +110,10 @@ class Enemy extends FlxSprite
 		
 		if (stunDuration > 0)
 			this.setColorTransform(3, 3, 1);
+		else if (seesPlayer)
+			this.setColorTransform(3, 1, 1);
+		else if (isLured)
+			this.setColorTransform(1, 1, 3);
 		else
 			this.setColorTransform(1, 1, 1);
 	}

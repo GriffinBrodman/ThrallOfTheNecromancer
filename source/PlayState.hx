@@ -32,6 +32,7 @@ class PlayState extends FlxState
 	public static var FRAMES_PER_SECOND = 60;
 	public static var ESCAPEE_THRESHOLD = 3;	//TODO
 	public static var ENEMY_SIGHT_RANGE = 100;
+	public static var ENEMY_DETECTION_RANGE = 20;
 	
 	private var _player:Player;
 	private var _map:FlxOgmoLoader;
@@ -240,24 +241,26 @@ class PlayState extends FlxState
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
-		if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& e.canSee(_player))
+		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
+		&& e.canSee(_player)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
 			//debug.text += "can see";
 		}
-		
-		for (i in 0..._grpSnake.length)
-		{
-			dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
-			dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
-			if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-			&& e.canSee(_grpSnake.members[i]))
+		else {
+			for (i in 0..._grpSnake.length)
 			{
-				e.seesPlayer = true;
-				e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
-				//debug.text += "can see";
+				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
+				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
+				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
+				&& e.canSee(_grpSnake.members[i])) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+				{
+					e.seesPlayer = true;
+					e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
+					break;
+					//debug.text += "can see";
+				}
 			}
 		}
 		

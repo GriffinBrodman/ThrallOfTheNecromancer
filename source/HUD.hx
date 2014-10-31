@@ -9,7 +9,7 @@ using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
 {
-	private static var BAR_WIDTH:Int = 150;
+	private static var BAR_WIDTH:Int = 250;
 	
 	private var _txtTimer:FlxText;
 	private var player:Player;
