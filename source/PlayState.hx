@@ -197,7 +197,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_grpEnemies, _grpSpellEffects, enemyTouchTrap);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		
-		debug.text = Std.string(_player.angle);
+		//debug.text = Std.string(_player.angle);
 	}
 	
 	private function doneFadeOut():Void 
@@ -232,7 +232,7 @@ class PlayState extends FlxState
 	{
 		e.seesPlayer = false;
 		
-		/*var dx = e.getMidpoint().x - _player.getMidpoint().x;
+		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
 		&& e.canSee(_player))
@@ -241,11 +241,11 @@ class PlayState extends FlxState
 			e.playerPos.copyFrom(_player.getMidpoint());
 			//debug.text += "can see";
 		}
-		*/
+		
 		for (i in 0..._grpSnake.length)
 		{
-			var dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
-			var dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
+			dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
+			dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
 			if ( dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
 			&& e.canSee(_grpSnake.members[i]))
 			{
