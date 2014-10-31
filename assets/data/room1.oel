@@ -76,11 +76,14 @@
     <exit id="13" x="352" y="32" escapable="False" />
     <exit id="14" x="480" y="32" escapable="False" />
     <exit id="15" x="288" y="768" escapable="False" />
-    <player id="16" x="416" y="480" />
-    <enemy id="17" x="672" y="320" etype="0" />
     <enemy id="18" x="672" y="288" etype="0" />
     <enemy id="19" x="704" y="288" etype="0" />
     <enemy id="20" x="640" y="320" etype="0" />
     <enemy id="21" x="608" y="320" etype="0" />
+    <player id="22" x="448" y="384" />
+    <enemy id="23" x="224" y="800" etype="0" />
+    <enemy id="24" x="224" y="768" etype="0" />
+    <enemy id="25" x="256" y="832" etype="0" />
+    <enemy id="26" x="288" y="832" etype="0" />
   </entities>
 </level>
