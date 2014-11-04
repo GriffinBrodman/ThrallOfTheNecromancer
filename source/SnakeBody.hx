@@ -44,7 +44,7 @@ class SnakeBody extends FlxSprite
 
 		next = p;
 		prevAng = new Array<Float>();
-		sizeOfBuffer = 16;
+		sizeOfBuffer = 7;
 		for (i in 0...sizeOfBuffer) 
 		{
 			prevAng[i] = 0;
