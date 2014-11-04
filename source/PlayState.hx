@@ -235,7 +235,7 @@ class PlayState extends FlxState
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
-			//debug.text += "can see";
+			
 		}
 		else {
 			for (i in 0..._grpSnake.length)
@@ -248,7 +248,6 @@ class PlayState extends FlxState
 					e.seesPlayer = true;
 					e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
 					break;
-					//debug.text += "can see";
 				}
 			}
 		}
