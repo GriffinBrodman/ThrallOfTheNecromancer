@@ -25,7 +25,7 @@ class GameOverState extends FlxState
 	 * @param	Win		true if the player beat the boss, false if they died
 	 * @param	Score	the number of coins collected
 	 */
-	public function new(Win:Bool, Score:Int) 
+	public function new(Win:Bool) 
 	{
 		_win = Win;
 		_score = Score;

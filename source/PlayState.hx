@@ -43,7 +43,6 @@ class PlayState extends FlxState
 	private var _grpUI:FlxTypedGroup<FlxSprite>;
 	private var _grpSnake:FlxTypedGroup<SnakeBody>;
 	private var _hud:HUD;
-	private var _money:Int = 0;
 	private var _health:Int = 3;
 	private var _inCombat:Bool = false;
 	private var _won:Bool = false;
@@ -181,11 +180,11 @@ class PlayState extends FlxState
 		if (_timer <= 0)
 		{
 			_won = true;
-			FlxG.switchState(new GameOverState(_won, _money));
+			FlxG.switchState(new GameOverState(_won));
 		}
 		if (_numEscaped >= _escapeLimit)
 		{
-			FlxG.switchState(new GameOverState(_won, _money));
+			FlxG.switchState(new GameOverState(_won));
 		}
 		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
@@ -197,7 +196,7 @@ class PlayState extends FlxState
 	
 	private function doneFadeOut():Void 
 	{
-		FlxG.switchState(new GameOverState(_won, _money));
+		FlxG.switchState(new GameOverState(_won));
 	}
 	
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
@@ -227,7 +226,7 @@ class PlayState extends FlxState
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
-		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
+		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE &_mWalls.ray(e.getMidpoint(), _player.getMidpoint())
 		&& e.canSee(_player)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
 			e.seesPlayer = true;
