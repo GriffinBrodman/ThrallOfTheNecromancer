@@ -14,7 +14,6 @@ import flixel.util.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
 import spells.Screech;
-import spells.Lure;
 import flixel.util.FlxAngle;
 
 class Player extends FlxSprite
@@ -26,11 +25,9 @@ class Player extends FlxSprite
 	private static var RIGHT_INPUT:Array<String> = ["RIGHT", "D"];
 
 	private static var SCREECH_INPUT:Array<String> = ["Z", "J"];
-	private static var LURE_INPUT:Array<String> = ["C", "K"];
 	private static var DASH_INPUT:Array<String> = ["X", "L"];
 
 	public static var SCREECH_COOLDOWN:Int = 120;
-	public static var LURE_COOLDOWN:Int = 300;
 	public static var DASH_COOLDOWN:Int = 150;
 	
 	private static var MAX_SPEED:Float = 8;	//Completely random
@@ -38,10 +35,8 @@ class Player extends FlxSprite
 
 	
 	private var screechCooldown:Int;
-	private var lureCooldown:Int;
 	private var dashCooldown:Int;
 	private var grpEnemies:FlxTypedGroup<Enemy>;
-	private var grpLure:FlxTypedGroup<Lure>;
 	private var walls:FlxTilemap;
 	private var addSprite:FlxSprite -> Void;
 	
@@ -62,7 +57,7 @@ class Player extends FlxSprite
 	private var turnAccel:Float = .15;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
 	
-	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, grpLure:FlxTypedGroup<Lure>, add:FlxSprite -> Void)
+	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void)
 	{
 		super(X, Y);
 
@@ -71,13 +66,11 @@ class Player extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("screech", [0], 6, false);
-		animation.add("lure", [0], 6, false);
 		drag.x = drag.y = 1600;
 		setSize(32, 32);
 		offset = new FlxPoint(112, 112);
 		
 		this.grpEnemies = grpEnemies;
-		this.grpLure = grpLure;
 		this.walls = walls;
 		this.addSprite = add;
 
@@ -174,16 +167,6 @@ class Player extends FlxSprite
 		this.angle = this.angle % 360;
 	}	
 
-	public function lure() {
-		if (FlxG.keys.anyJustPressed(LURE_INPUT) && lureCooldown <= 0) {
-			lureCooldown = LURE_COOLDOWN;
-			animation.play("lure");
-			
-			var lureOffset:FlxPoint = FlxAngle.rotatePoint(0, 20, 0, 0, angle);
-			grpLure.add(new Lure(this.getMidpoint().x + lureOffset.x, this.getMidpoint().y + lureOffset.y, angle - 90, grpEnemies));	// + 90 cause angles are different everywhere
-		}
-	}
-
 	private function screech() {
 		if (FlxG.keys.anyJustPressed(SCREECH_INPUT) && screechCooldown <= 0) {
 			screechCooldown = SCREECH_COOLDOWN;
@@ -209,7 +192,6 @@ class Player extends FlxSprite
 	{
 		movement();
 		screech();
-		lure();
 		dash();
 		handleCooldowns();
 		super.update();
@@ -218,8 +200,6 @@ class Player extends FlxSprite
 	private function handleCooldowns() {
 		if (screechCooldown > 0)
 			screechCooldown--;
-		if (lureCooldown > 0)
-			lureCooldown--;
 		if (dashCooldown > 0)
 			dashCooldown--;
 	}
@@ -232,8 +212,5 @@ class Player extends FlxSprite
 	public function getScreechCooldown():Int {
 		return screechCooldown;
 	}
-	
-	public function getLureCooldown():Int {
-		return lureCooldown;
-	}
+
 }

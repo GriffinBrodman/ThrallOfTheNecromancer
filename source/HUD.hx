@@ -15,7 +15,6 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechCooldownBar:FlxSprite;
-	private var lureCooldownBar:FlxSprite;
 	
 	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int) 
 	{
@@ -35,7 +34,6 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		});
 		
 		screechCooldownBar = createBar(20, 5, BAR_WIDTH, 20, FlxColor.YELLOW);
-		lureCooldownBar = createBar(20, 20, BAR_WIDTH, 20, FlxColor.AZURE);
 		
 		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
 		_txtEscaped = new FlxText(FlxG.width - 250, 2, 250, escaped, 16);
@@ -84,6 +82,5 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtEscaped.text = escaped;
 		
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
-		updateBar(lureCooldownBar, Player.LURE_COOLDOWN - player.getLureCooldown(), Player.LURE_COOLDOWN, BAR_WIDTH);
 	}
 }
