@@ -21,7 +21,6 @@ import flixel.util.FlxMath;
 import flixel.text.FlxText;
 import SnakeBody;
 using flixel.util.FlxSpriteUtil;
-import spells.Lure;
 
 /**
  * A FlxState which can be used for the actual gameplay.
@@ -41,7 +40,6 @@ class PlayState extends FlxState
 	//private var _mBorders:FlxTilemap;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
-	private var _grpLure:FlxTypedGroup<Lure>;
 	private var _grpUI:FlxTypedGroup<FlxSprite>;
 	private var _grpSnake:FlxTypedGroup<SnakeBody>;
 	private var _hud:HUD;
@@ -76,13 +74,10 @@ class PlayState extends FlxState
 		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
-		_grpLure = new FlxTypedGroup<Lure>();
-		add(_grpLure);
-		
 		_grpUI = new FlxTypedGroup<FlxSprite>();
 		add(_grpUI);
 		
-		_player = new Player(0, 0, _grpEnemies, _mWalls, _grpLure, this.add);
+		_player = new Player(0, 0, _grpEnemies, _mWalls, this.add);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
@@ -196,7 +191,6 @@ class PlayState extends FlxState
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
-		FlxG.collide(_mWalls, _grpLure);
 		
 		//debug.text = Std.string(_player.angle);
 	}
