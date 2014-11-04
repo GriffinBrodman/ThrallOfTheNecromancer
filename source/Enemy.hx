@@ -25,7 +25,6 @@ class Enemy extends FlxSprite
 	public var seesPlayer:Bool = false;
 	public var pathing:Bool = false;
 	public var playerPos(default, null):FlxPoint;
-	private var _sndStep:FlxSound;
 	private var stunDuration:Int;
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
@@ -56,9 +55,6 @@ class Enemy extends FlxSprite
 		}
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		//animation.add("d", [0, 1, 0, 2], 6, false);
-		//animation.add("lr", [3, 4, 3, 5], 6, false);
-		//animation.add("u", [6, 7, 6, 8], 6, false);
 		drag.x = drag.y = 10;
 		width = 20;
 		height = 30;
@@ -67,9 +63,6 @@ class Enemy extends FlxSprite
 		
 		_idleTmr = 0;
 		playerPos = FlxPoint.get();
-		
-		_sndStep = FlxG.sound.load(AssetPaths.step__wav,.4);
-		_sndStep.proximity(x, y, FlxG.camera.target, FlxG.width * .6);
 		
 		walls = m;
 		path = new FlxPath();
@@ -98,11 +91,7 @@ class Enemy extends FlxSprite
 			return;
 		if (state == "idle") idle();
 		if (state == "chase") chase();
-		if ((velocity.x != 0 || velocity.y != 0) && touching == FlxObject.NONE)
-		{
-			_sndStep.setPosition(x + _halfWidth, y + height);
-			_sndStep.play();
-		}
+		
 		updateCooldowns();
 		
 		super.update();
@@ -158,10 +147,7 @@ class Enemy extends FlxSprite
 		{
 			state = "idle";
 		}
-		/*else if (Player.luring)
-		{
-			FlxVelocity.moveTowardsPoint(this, playerPos, Std.int(speed));
-		}*/
+
 		else 
 		{
 			if (stunDuration > 0)

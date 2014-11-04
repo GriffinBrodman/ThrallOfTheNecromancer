@@ -64,20 +64,9 @@ class PlayState extends FlxState
 		_map = new FlxOgmoLoader(AssetPaths.room1__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
-		/*trace(_mWalls.getBounds());
-		for ( i in 1...4)
-			_mWalls.setTileProperties(i, FlxObject.ANY);*/
+
 		add(_ground);
 		add(_mWalls);
-
-		/*for ( i in 5...8)
-			_mWalls.setTileProperties(i, FlxObject.NONE);
-		add(_mWalls);*/
-		
-		/*_mBorders = _map.loadTilemap(AssetPaths.Outerborder__png, 256, 256, "playerwall");
-		_mBorders.setTileProperties(1, FlxObject.ANY);
-		_mBorders.setTileProperties(2, FlxObject.ANY);
-		add(_mBorders);*/
 		
 		_grpExits = new FlxTypedGroup<Exit>();
 		add(_grpExits);
@@ -97,7 +86,9 @@ class PlayState extends FlxState
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
 		
-		
+		/**
+		 * Parts of the snake initialized
+		 */
 		var subhead:SnakeBody = new SnakeBody(_player, 1);
 		var subhead2:SnakeBody = new SnakeBody(subhead, 2);
 		var body:SnakeBody = new SnakeBody(subhead2, 3);
@@ -119,6 +110,7 @@ class PlayState extends FlxState
 		
 		FlxG.camera.setSize(FlxG.width, FlxG.height);
 		//FlxG.camera.setScale(0.85, 0.85);
+		//We will use the following line for the bigger scale, don't delete
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
@@ -133,14 +125,19 @@ class PlayState extends FlxState
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		super.create();	
-		
 	}
 	
+	/** Function to get number of seconds passed
+	 */
 	private function getSecs(_timer:Int):Int
 	{
 		return Std.int(_timer / FRAMES_PER_SECOND);
 	}
 	
+	
+	/**
+	 * Callback function for placing entities from map file
+	 */
 	private function placeEntities(entityName:String, entityData:Xml):Void
 	{
 		var x:Int = Std.parseInt(entityData.get("x"));
@@ -151,7 +148,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x + 4, y, _mWalls));
+				_grpEnemies.add(new Enemy(x, y, _mWalls));
 			case "exit":
 				var escapable = StringToBool(entityData.get("escapable"));
 				_grpExits.add(new Exit(x, y, escapable));
@@ -205,7 +202,6 @@ class PlayState extends FlxState
 	
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
-		
 	}
 	
 	private function humanExit(human:Enemy, exit:Exit)
@@ -220,7 +216,11 @@ class PlayState extends FlxState
 			human.setGoal(_grpExits);
 		}
 	}
-	
+
+	/**
+	 * Function that returns whether an enemy sees the player based on position and raycasting
+	 * @param	e
+	 */
 	private function checkEnemyVision(e:Enemy):Void
 	{
 		e.seesPlayer = false;
@@ -248,9 +248,13 @@ class PlayState extends FlxState
 				}
 			}
 		}
-		
 	}
 	
+	/**
+	 * Utility function to convert a boolean to a String
+	 * @param	a
+	 * @return
+	 */
 	function StringToBool(a:Dynamic):Bool{
 		var res:Bool = (cast (a, String).toLowerCase() == "true")?true:false;
 		return res;
