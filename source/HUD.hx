@@ -17,6 +17,10 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var screechCooldownBar:FlxSprite;
 	private var lureCooldownBar:FlxSprite;
 	
+	/** 
+	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
+	 * escape, and number that have escaped.
+	 */
 	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int) 
 	{
 		super();
@@ -42,7 +46,16 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 		add(_txtEscaped);
 	}
-	
+
+	/**
+	 * Create bar for various possible attributes e.g. Health, cooldown
+	 * @param	X
+	 * @param	Y
+	 * @param	width
+	 * @param	height
+	 * @param	color
+	 * @return
+	 */
 	public function createBar(X:Float=20, Y:Float=20, width:Int=500, height:Int=20, color:Int=0xffff0000):FlxSprite {
 
 		var frame:FlxSprite = new FlxSprite(X-2, Y-2);
@@ -65,12 +78,26 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		return bar;
 	}
 
+	/**
+	 * Update function for bars
+	 * @param	bar
+	 * @param	val
+	 * @param	cap
+	 * @param	width
+	 * @param	tween
+	 */
 	public static function updateBar(bar:FlxSprite, val:Int, cap:Int, width:Int, tween:Float=0) {
 		val = val > 0 ? val : 0;
 		
 		bar.scale.x = val * width / cap;
 	}
 	
+	/**
+	 * Updates rest of UI, such as timer and number of escapees
+	 * @param	timer
+	 * @param	escapeLimit
+	 * @param	escapees
+	 */
 	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
 		_txtTimer.text = Std.string(timer);
