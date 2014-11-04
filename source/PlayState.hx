@@ -130,7 +130,6 @@ class PlayState extends FlxState
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		super.create();	
-		
 	}
 	
 	/** Function to get number of seconds passed
@@ -154,7 +153,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x + 4, y, _mWalls));
+				_grpEnemies.add(new Enemy(x, y, _mWalls));
 			case "exit":
 				var escapable = StringToBool(entityData.get("escapable"));
 				_grpExits.add(new Exit(x, y, escapable));
@@ -223,7 +222,11 @@ class PlayState extends FlxState
 			human.setGoal(_grpExits);
 		}
 	}
-	
+
+	/**
+	 * Function that returns whether an enemy sees the player based on position and raycasting
+	 * @param	e
+	 */
 	private function checkEnemyVision(e:Enemy):Void
 	{
 		e.seesPlayer = false;
@@ -253,6 +256,11 @@ class PlayState extends FlxState
 		}
 	}
 	
+	/**
+	 * Utility function to convert a boolean to a String
+	 * @param	a
+	 * @return
+	 */
 	function StringToBool(a:Dynamic):Bool{
 		var res:Bool = (cast (a, String).toLowerCase() == "true")?true:false;
 		return res;
