@@ -28,7 +28,6 @@ class GameOverState extends FlxState
 	public function new(Win:Bool) 
 	{
 		_win = Win;
-		_score = Score;
 		super();
 	}
 	
