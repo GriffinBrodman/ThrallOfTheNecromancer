@@ -19,6 +19,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
+import openfl.utils.ObjectInput;
 import SnakeBody;
 using flixel.util.FlxSpriteUtil;
 
@@ -43,12 +44,8 @@ class PlayState extends FlxState
 	private var _grpUI:FlxTypedGroup<FlxSprite>;
 	private var _grpSnake:FlxTypedGroup<SnakeBody>;
 	private var _hud:HUD;
-	private var _money:Int = 0;
-	private var _health:Int = 3;
-	private var _inCombat:Bool = false;
 	private var _won:Bool = false;
 	private var _paused:Bool;
-	private var _sndCoin:FlxSound;
 	private var _timer:Int;
 	private var _escapeLimit:Int;			//Limits number of humans we can let escape
 	private var _numEscaped = 0;
@@ -120,6 +117,7 @@ class PlayState extends FlxState
 		add(_hud);
 		
 		debug = new FlxText();
+		debug.setPosition(0, FlxG.height - 30);
 		add(debug);
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
@@ -177,7 +175,7 @@ class PlayState extends FlxState
 		super.update();
 		_timer--;
 		_hud.updateHUD(getSecs(_timer), _escapeLimit, _numEscaped);
-		
+				
 		if (_timer <= 0)
 		{
 			_won = true;

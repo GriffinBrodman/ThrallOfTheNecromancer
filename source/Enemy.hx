@@ -233,6 +233,5 @@ class Enemy extends FlxSprite
 	{
 		super.destroy();
 		
-		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 }
