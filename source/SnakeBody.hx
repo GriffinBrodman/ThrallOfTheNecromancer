@@ -18,11 +18,14 @@ import flixel.group.FlxGroup;
 class SnakeBody extends FlxSprite
 {
 
-	var next:FlxSprite;
-	var prevAng:Array<Float>;
-	var nextAng:Int;
-	var sizeOfBuffer:Int;
+	var next:FlxSprite; //Sprite to follow
+	var sizeOfBuffer:Int; //numFrames to be delayed
 	
+	//Angle to take on
+	var prevAng:Array<Float>;
+	var nextAng:Int; //Screw you Mark
+	
+	//Position to take on
 	var prevPos:Array<FlxPoint>;
 	var nextPos:Int;
 	
@@ -38,23 +41,24 @@ class SnakeBody extends FlxSprite
 		else if (type == 4) loadGraphic("assets/images/body2.png", true, 256, 256);
 		else if (type == 5) loadGraphic("assets/images/tail1.png", true, 256, 256);
 		else loadGraphic("assets/images/tail2.png", true, 256, 256);
-		scale = new FlxPoint(.125, .125);
+		scale = new FlxPoint(.125, .125); // 1/8 the size
 		setSize(32, 32);
 		offset = new FlxPoint(112, 112);
 
-		next = p;
-		prevAng = new Array<Float>();
+		next = p;//Save the thing to follow
 		sizeOfBuffer = 7;
+		
+		prevAng = new Array<Float>();
 		for (i in 0...sizeOfBuffer) 
 		{
-			prevAng[i] = 0;
+			prevAng[i] = 0; //Start facing up
 		}
 		nextAng = 0;
 		
 		prevPos = new Array<FlxPoint>();
 		for (i in 0...sizeOfBuffer) 
 		{
-			prevPos[i] = new FlxPoint(p.x, p.y);
+			prevPos[i] = new FlxPoint(p.x, p.y); //Start at position of parent
 		}
 		nextPos = 0;
 		
@@ -69,20 +73,11 @@ class SnakeBody extends FlxSprite
 		nextAng++;
 		nextAng = nextAng % sizeOfBuffer;
 		
-		var pozz = new FlxPoint(next.x, next.y);
+		var pozz = new FlxPoint(next.x, next.y); //I'm not changing this either Mark
 		setPosition(prevPos[nextPos].x, prevPos[nextPos].y);
 		prevPos[nextPos] = pozz;
 		nextPos++;
 		nextPos = nextPos % sizeOfBuffer;
-		
-		
-		/*
-		var currAng = angle;
-		currAng += 90;
-		setPosition(next.x + 22* Math.cos(currAng * Math.PI / 180), next.y + 22* Math.sin(currAng * Math.PI / 180));
-		*/
-		
-		
 		
 	}	
 
