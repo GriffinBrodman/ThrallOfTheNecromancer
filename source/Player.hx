@@ -36,7 +36,7 @@ class Player extends FlxSprite
 	private static var MAX_SPEED:Float = 8;	//Completely random
 	private static var MAX_ANGLE:Float = 2; //Because radians. Just trust me.
 
-	private var _sndStep:FlxSound;
+	
 	private var screechCooldown:Int;
 	private var lureCooldown:Int;
 	private var dashCooldown:Int;
@@ -76,7 +76,6 @@ class Player extends FlxSprite
 		setSize(32, 32);
 		offset = new FlxPoint(112, 112);
 		
-
 		this.grpEnemies = grpEnemies;
 		this.grpLure = grpLure;
 		this.walls = walls;
@@ -163,7 +162,6 @@ class Player extends FlxSprite
 		this.y = Math.min(this.y, FlxG.height);
 		
 		// Makes you go straight after you stop turning. Took forever to realize not having this caused a major bug.
-		//fap, fap, fap, fap
 		turnAngle -= (turnAngle * 0.1); //Just take a moment to appreciate how wonderful this line is
 				
 		//Apply turn friction
@@ -229,8 +227,6 @@ class Player extends FlxSprite
 	override public function destroy():Void
 	{
 		super.destroy();
-
-		_sndStep = FlxDestroyUtil.destroy(_sndStep);
 	}
 	
 	public function getScreechCooldown():Int {
