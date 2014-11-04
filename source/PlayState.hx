@@ -122,10 +122,6 @@ class PlayState extends FlxState
 		
 		add(_grpSnake);
 		
-		
-		
-		
-		
 		FlxG.camera.setSize(FlxG.width, FlxG.height);
 		//FlxG.camera.setScale(0.85, 0.85);
 		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
@@ -199,7 +195,6 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new GameOverState(_won, _money));
 		}
-		//FlxG.collide(_player, _mBorders);
 		FlxG.collide(_grpEnemies, _mWalls);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
@@ -243,7 +238,7 @@ class PlayState extends FlxState
 		{
 			e.seesPlayer = true;
 			e.playerPos.copyFrom(_player.getMidpoint());
-			//debug.text += "can see";
+			
 		}
 		else {
 			for (i in 0..._grpSnake.length)
@@ -256,7 +251,6 @@ class PlayState extends FlxState
 					e.seesPlayer = true;
 					e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
 					break;
-					//debug.text += "can see";
 				}
 			}
 		}
