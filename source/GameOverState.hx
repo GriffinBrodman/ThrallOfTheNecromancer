@@ -16,7 +16,6 @@ class GameOverState extends FlxState
 	private var _win:Bool;				// if we won or lost
 	private var _txtTitle:FlxText;		// the title text
 	private var _txtMessage:FlxText;	// the final score message text
-	private var _sprScore:FlxSprite;	// sprite for a coin icon
 	private var _txtScore:FlxText;		// text of the score
 	private var _txtHiScore:FlxText;	// text to show the hi-score
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
@@ -26,10 +25,9 @@ class GameOverState extends FlxState
 	 * @param	Win		true if the player beat the boss, false if they died
 	 * @param	Score	the number of coins collected
 	 */
-	public function new(Win:Bool, Score:Int) 
+	public function new(Win:Bool) 
 	{
 		_win = Win;
-		_score = Score;
 		super();
 	}
 	
@@ -51,10 +49,6 @@ class GameOverState extends FlxState
 		_txtMessage.alignment = "center";
 		_txtMessage.screenCenter(true, false);
 		add(_txtMessage);
-		
-		_sprScore = new FlxSprite((FlxG.width / 2) - 8, 0, AssetPaths.coin__png);
-		_sprScore.screenCenter(false, true);
-		add(_sprScore);
 		
 		_txtScore = new FlxText((FlxG.width / 2), 0, 0, Std.string(_score), 8);
 		_txtScore.screenCenter(false, true);
@@ -123,7 +117,6 @@ class GameOverState extends FlxState
 		// clean up all our objects!
 		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
 		_txtMessage = FlxDestroyUtil.destroy(_txtMessage);
-		_sprScore = FlxDestroyUtil.destroy(_sprScore);
 		_txtScore = FlxDestroyUtil.destroy(_txtScore);
 		_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 	}
