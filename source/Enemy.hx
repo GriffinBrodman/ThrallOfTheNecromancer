@@ -39,7 +39,7 @@ class Enemy extends FlxSprite
 		super(X, Y);
 		if(Std.random(2) == 0)
 		{
-			loadGraphic(AssetPaths.redsweater__png, true, 32, 32);
+			loadGraphic(AssetPaths.walkinganimation1_png, true, 32, 32);
 			width = 20;
 			height = 30;
 			offset.x = 6;
