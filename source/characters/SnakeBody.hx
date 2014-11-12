@@ -1,4 +1,4 @@
-package;
+package characters ;
 
 import flixel.FlxG;
 import flixel.FlxObject;

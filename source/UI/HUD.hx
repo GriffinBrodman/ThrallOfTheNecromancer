@@ -1,30 +1,44 @@
-package UI ;
+package ui ;
 
+import characters.Player;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import ui.FlxMinimap;
 using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
 {
+	private static var BAR_X:Int = 20;
+	private static var BAR_Y:Int = 5;
+	private static var BAR_GAP:Int = 5; // Currently unused; will use as number of pixels between bars
 	private static var BAR_WIDTH:Int = 250;
+	private static var BAR_HEIGHT:Int = 20;
+	
+	private static var MINIMAP_X:Int = 20;
+	private static var MINIMAP_Y:Int = 20;
+	private static var MINIMAP_WIDTH:Int = 200;
+	private static var MINIMAP_HEIGHT:Int = 200;
 	
 	private var _txtTimer:FlxText;
 	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechCooldownBar:FlxSprite;
+	private var minimap:FlxMinimap;
 	
 	/** 
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
 	 * escape, and number that have escaped.
 	 */
-	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int) 
+	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, tiles:FlxTilemap) 
 	{
 		super();
 		this.player = player;
 
+		// timer text
 		var secs:String = Std.string(timer);
 		_txtTimer = new FlxText(0, 2, 40, secs, 16);
 		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
@@ -37,12 +51,18 @@ class HUD extends FlxTypedGroup<FlxSprite>
 			spr.scrollFactor.set(0, 0);
 		});
 		
-		screechCooldownBar = createBar(20, 5, BAR_WIDTH, 20, FlxColor.YELLOW);
+		// cooldown bar
+		screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
 		
+		// escapee text
 		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
 		_txtEscaped = new FlxText(FlxG.width - 250, 2, 250, escaped, 16);
 		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 		add(_txtEscaped);
+		
+		// minimap
+		minimap = new FlxMinimap(tiles, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
+		this.add(minimap);
 	}
 
 	/**
@@ -109,5 +129,10 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtEscaped.text = escaped;
 		
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
+	}
+	
+	public function minimapFollow(obj:FlxSprite, color:UInt):Void 
+	{
+		minimap.follow(obj, color);
 	}
 }

@@ -1,4 +1,4 @@
-package ;
+package level ;
 import flixel.group.FlxGroup;
 import flixel.FlxState;
 import flixel.util.FlxPoint;
