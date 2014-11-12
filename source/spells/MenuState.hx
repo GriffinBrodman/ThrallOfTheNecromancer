@@ -1,4 +1,4 @@
-package;
+package spells ;
 
 import flash.system.System;
 import flixel.FlxG;

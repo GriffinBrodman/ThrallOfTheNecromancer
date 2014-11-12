@@ -1,4 +1,4 @@
-package;
+package UI ;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -34,7 +34,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 
 		this.add(_txtTimer);
 		forEach(function(spr:FlxSprite) {
-			spr.scrollFactor.set();
+			spr.scrollFactor.set(0, 0);
 		});
 		
 		screechCooldownBar = createBar(20, 5, BAR_WIDTH, 20, FlxColor.YELLOW);
