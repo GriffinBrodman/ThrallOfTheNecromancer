@@ -1,4 +1,5 @@
 package spells ;
+import characters.Enemy;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;
@@ -16,7 +17,7 @@ class Screech extends FlxSprite
 	private static var SCREECH_WIDTH:Int = 64;
 	private static var SCREECH_HEIGHT:Int = 64;
 	private static var SCREECH_STUN_DURATION:Int = 60;
-	private static var SCREECH_RANGE:Int = 100;
+	private static var SCREECH_RANGE:Int = 200;
 	private static var SCREECH_GRAPHIC_DURATION:Float = 0.4;	// in seconds
 	
 	public function new(X:Float = 0, Y:Float = 0, grpEnemies:FlxTypedGroup<Enemy>) 

@@ -1,4 +1,4 @@
-package;
+package characters ;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -231,6 +231,11 @@ class Enemy extends FlxSprite
 	
 	override public function destroy():Void 
 	{
+		if (pathing){
+			path.cancel();
+			FlxDestroyUtil.destroy(path);
+			pathing = false;
+		}
 		super.destroy();
 		
 	}

@@ -1,4 +1,4 @@
-package;
+package states ;
 
 import flash.system.System;
 import flixel.FlxG;

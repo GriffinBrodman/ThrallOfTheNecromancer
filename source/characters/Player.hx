@@ -1,4 +1,4 @@
-package;
+package characters ;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -149,10 +149,10 @@ class Player extends FlxSprite
 		//Although I may find a way to make the actual velocity field work...eventually.
 		this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
 		this.x = Math.max(this.x, 0);
-		this.x = Math.min(this.x, FlxG.width);
+		this.x = Math.min(this.x, walls.width);
 		this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
 		this.y = Math.max(this.y, 0);
-		this.y = Math.min(this.y, FlxG.height);
+		this.y = Math.min(this.y, walls.height);
 		
 		// Makes you go straight after you stop turning. Took forever to realize not having this caused a major bug.
 		turnAngle -= (turnAngle * 0.1); //Just take a moment to appreciate how wonderful this line is
@@ -181,10 +181,10 @@ class Player extends FlxSprite
 			dashCooldown = DASH_COOLDOWN;
 			this.x += Math.sin (this.angle * Math.PI / 180) * speed * 8;  //Position.x += Velocity.x
 			this.x = Math.max(this.x, 0);
-			this.x = Math.min(this.x, FlxG.width);
+			this.x = Math.min(this.x, walls.width);
 			this.y += Math.cos (this.angle * Math.PI / 180) * -speed * 8; //Position.y += Velocity.y
 			this.y = Math.max(this.y, 0);
-			this.y = Math.min(this.y, FlxG.height);
+			this.y = Math.min(this.y, walls.height);
 		}
 	}
 

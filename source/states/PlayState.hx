@@ -1,5 +1,7 @@
-package;
+package states ;
 
+import characters.Enemy;
+import characters.Player;
 import entities.Entity;
 import entities.Exit;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
@@ -20,7 +22,8 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
 import openfl.utils.ObjectInput;
-import SnakeBody;
+import characters.SnakeBody;
+import ui.HUD;
 using flixel.util.FlxSpriteUtil;
 
 /**
@@ -105,16 +108,22 @@ class PlayState extends FlxState
 		
 		add(_grpSnake);
 		
-		FlxG.camera.setSize(FlxG.width, FlxG.height);
-		//FlxG.camera.setScale(0.85, 0.85);
+		//FlxG.camera.setSize(FlxG.width, FlxG.height);
+		//FlxG.camera.setScale(1.5, 1.5);
 		//We will use the following line for the bigger scale, don't delete
-		//FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
+		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
 		_escapeLimit = ESCAPEE_THRESHOLD;
 		
-		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped);
+		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped, _mWalls);
 		add(_hud);
+		for (enemy in _grpEnemies)
+			_hud.minimapFollow(enemy, FlxColor.RED);
+		for (snakeBody in _grpSnake)
+			_hud.minimapFollow(snakeBody, FlxColor.MAGENTA);
+		_hud.minimapFollow(_player, FlxColor.MAGENTA);
+		
 		
 		debug = new FlxText();
 		debug.setPosition(0, FlxG.height - 30);
@@ -206,7 +215,7 @@ class PlayState extends FlxState
 	{
 		if (exit.canEscape())
 		{
-			human.kill();
+			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
 		}
 		else
