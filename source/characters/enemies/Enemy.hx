@@ -1,4 +1,4 @@
-package characters ;
+package characters.enemies ;
 
 import flixel.FlxG;
 import flixel.FlxObject;

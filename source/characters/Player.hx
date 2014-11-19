@@ -1,5 +1,6 @@
 package characters ;
 
+import characters.enemies.Enemy;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;

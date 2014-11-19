@@ -1,5 +1,5 @@
 package spells ;
-import characters.Enemy;
+import characters.enemies.Enemy;
 import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.group.FlxTypedGroup;

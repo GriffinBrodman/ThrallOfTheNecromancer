@@ -91,6 +91,7 @@ class FlxMinimap extends FlxSprite
 	public function follow(obj:FlxSprite, color:UInt = 0xFFFF0000):Void	{
 		var dot:FlxSprite = new FlxSprite();
 		dot.makeGraphic(dotWidth, dotHeight, color);
+		//dot.drawEllipse(dotWidth / 2, dotHeight / 2, dotWidth, dotHeight, color);
 		dot.scrollFactor = new FlxPoint();
 		dots.add(dot);
 		objects.push([obj, dot]);

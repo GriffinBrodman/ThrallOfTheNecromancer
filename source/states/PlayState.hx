@@ -1,6 +1,6 @@
 package states ;
 
-import characters.Enemy;
+import characters.enemies.Enemy;
 import characters.Player;
 import entities.Entity;
 import entities.Exit;
@@ -121,8 +121,8 @@ class PlayState extends FlxState
 		for (enemy in _grpEnemies)
 			_hud.minimapFollow(enemy, FlxColor.RED);
 		for (snakeBody in _grpSnake)
-			_hud.minimapFollow(snakeBody, FlxColor.MAGENTA);
-		_hud.minimapFollow(_player, FlxColor.MAGENTA);
+			_hud.minimapFollow(snakeBody, FlxColor.LAVENDER);
+		_hud.minimapFollow(_player, FlxColor.LAVENDER);
 		
 		
 		debug = new FlxText();
