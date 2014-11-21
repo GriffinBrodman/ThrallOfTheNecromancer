@@ -44,8 +44,8 @@ class Enemy extends FlxSprite
 			height = 30;
 			offset.x = 6;
 			offset.y = 2;
-			animation.add("run", [0, 1], 12, false);
-			animation.play("run");
+			animation.add("run", [1, 2], 12, true);
+			animation.play("run", true);
 		}
 		else
 		{
