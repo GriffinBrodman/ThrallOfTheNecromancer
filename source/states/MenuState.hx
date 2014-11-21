@@ -23,12 +23,20 @@ class MenuState extends FlxState
 	#if desktop
 	private var _btnExit:FlxButton;
 	#end
+	private var _btnFullScreen:FlxButton;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
+		
+		_btnFullScreen = new FlxButton(80, 80, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
+		_btnFullScreen.x = (FlxG.width / 2) - _btnFullScreen.width - 60;
+		_btnFullScreen.y = FlxG.height - _btnFullScreen.height - 10;
+		add(_btnFullScreen);
+		
+		
 		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
 		{
 			#if flash
@@ -64,6 +72,11 @@ class MenuState extends FlxState
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		super.create();
+	}
+	
+	private function clickFullscreen():Void
+	{
+	FlxG.fullscreen = !FlxG.fullscreen;
 	}
 	
 	#if desktop
