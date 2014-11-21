@@ -82,8 +82,8 @@ class Player extends FlxSprite
 	{
 		//Determines the state of the input keys
 		#if !FLX_NO_KEYBOARD
-		up = FlxG.keys.anyPressed(UP_INPUT);
-		down = FlxG.keys.anyPressed(DOWN_INPUT);
+		up = true;
+		down = false;
 		left = FlxG.keys.anyPressed(LEFT_INPUT);
 		right = FlxG.keys.anyPressed(RIGHT_INPUT);
 		#end
