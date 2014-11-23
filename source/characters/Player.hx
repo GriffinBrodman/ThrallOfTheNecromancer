@@ -31,8 +31,8 @@ class Player extends FlxSprite
 	public static var SCREECH_COOLDOWN:Int = 120;
 	public static var DASH_COOLDOWN:Int = 150;
 	
-	private static var MAX_SPEED:Float = 8;	//Completely random
-	private static var MAX_ANGLE:Float = 2; //Because radians. Just trust me.
+	private static var MAX_SPEED:Float = 200;	//Completely random
+	private static var MAX_ANGLE:Float = 15; 	//Because radians. Just trust me.
 
 	
 	private var screechCooldown:Int;
@@ -55,7 +55,7 @@ class Player extends FlxSprite
 	
 	//Variables for turning
 	public var turnAngle:Float = 0;		//Basically the direction the player is facing	
-	private var turnAccel:Float = .15;		//Rate at which player turns
+	private var turnAccel:Float = 0.8;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
 	
 	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void)
@@ -67,7 +67,6 @@ class Player extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("screech", [0], 6, false);
-		drag.x = drag.y = 1600;
 		setSize(32, 32);
 		offset = new FlxPoint(112, 112);
 		
@@ -82,8 +81,8 @@ class Player extends FlxSprite
 	{
 		//Determines the state of the input keys
 		#if !FLX_NO_KEYBOARD
-		up = true;
-		down = false;
+		up = FlxG.keys.anyPressed(UP_INPUT);
+		down = FlxG.keys.anyPressed(DOWN_INPUT);
 		left = FlxG.keys.anyPressed(LEFT_INPUT);
 		right = FlxG.keys.anyPressed(RIGHT_INPUT);
 		#end
@@ -96,17 +95,39 @@ class Player extends FlxSprite
 		right = right || PlayState.virtualPad.buttonRight.status == FlxButton.PRESSED;
 		#end
 		
+		/*
 		//Determines speed based on user input		
 		//Speeds up until MAX_SPEED is hit
 		if (up)
-			{
-				speed = Math.min(MAX_SPEED, speed += accel);
-			}
+		{
+			speed = Math.min(MAX_SPEED, speed += accel);
+		}
 		//Slows down until your speed is ZERO
 		if (down)
 		{
 			speed = Math.max(0, speed -= decel);
 		}
+		
+		// If no input, slow down naturally
+		speed *= friction;	
+		
+		//Prevents weirdness
+		if(speed > 0 && speed < 0.05)
+		{
+			speed = 0;
+		}
+		*/
+		
+		/*
+		// Update position based on speed. Because if you want things done right you do them yourself.
+		//Although I may find a way to make the actual velocity field work...eventually.
+		this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
+		this.x = Math.max(this.x, 0);
+		this.x = Math.min(this.x, walls.width);
+		this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
+		this.y = Math.max(this.y, 0);
+		this.y = Math.min(this.y, walls.height);
+		*/
 		
 		//Turns you left (relative)
 		if (left)
@@ -119,41 +140,10 @@ class Player extends FlxSprite
 			turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel);
 		}
 		
-		// If no input, slow down naturally
-		speed *= friction;	
-		
-		//Prevents weirdness
-		if(speed > 0 && speed < 0.05)
-		{
-			speed = 0;
+		// Prevent turn weirdness; If turnAngle value is really low, set to 0
+		if (Math.abs(turnAngle) < 0.05) {
+			turnAngle = 0;
 		}
-		
-		// Prevent turn weirdness 
-		if(turnAngle > 0) //(right)
-		{
-			// check if turnAngle value is really low, set to 0
-			if(turnAngle < 0.05)
-			{
-				turnAngle = 0;
-			}		
-		}		
-		else if(turnAngle < 0) //(left)
-		{
-			//Same deal
-			if(turnAngle > -0.05)
-			{
-				turnAngle = 0;
-			}		
-		}
-		
-		// Update position based on speed. Because if you want things done right you do them yourself.
-		//Although I may find a way to make the actual velocity field work...eventually.
-		this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
-		this.x = Math.max(this.x, 0);
-		this.x = Math.min(this.x, walls.width);
-		this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
-		this.y = Math.max(this.y, 0);
-		this.y = Math.min(this.y, walls.height);
 		
 		// Makes you go straight after you stop turning. Took forever to realize not having this caused a major bug.
 		turnAngle -= (turnAngle * 0.1); //Just take a moment to appreciate how wonderful this line is
@@ -163,10 +153,13 @@ class Player extends FlxSprite
 												//to matter now but it might come in handy later one
 		
 		//Rotate sprite
-		this.angle += turnAngle * speed; //Bae caught me turnin'
+		this.angle += turnAngle; //Bae caught me turnin'
 		
 		this.angle = this.angle % 360;
-	}	
+		
+		// Set the velocity based on angle; Constant speed
+		this.velocity = FlxAngle.rotatePoint(0, MAX_SPEED, 0, 0, this.angle);
+	}
 
 	private function screech() {
 		if (FlxG.keys.anyJustPressed(SCREECH_INPUT) && screechCooldown <= 0) {

@@ -14,6 +14,7 @@ using flixel.util.FlxSpriteUtil;
  */
 class FlxMinimap extends FlxSprite
 {
+	private static var minimapAlpha:Float = 0.75;
 
 	// bitmapdata used drawing and scaling the image of the level
 	private var bmd:BitmapData;
@@ -27,8 +28,8 @@ class FlxMinimap extends FlxSprite
 	// the tilemap we are representing
 	private var tilemap:FlxTilemap;
 	// internal placeholders for the empty and solid colors
-	private var solidColor:UInt = 0xffffff;
-	private var emptyColor:UInt = 0x000000;
+	private var solidColor:UInt = 0x000000;
+	private var emptyColor:UInt = 0xffffff;
 	private var dotWidth:Int;
 	private var dotHeight:Int;
 	
@@ -47,6 +48,8 @@ class FlxMinimap extends FlxSprite
 		scaleTo(width, height);			
 		// set pixel data
 		pixels = bmd;
+		
+		set_alpha(minimapAlpha);
 	}
 	
 	/**
@@ -90,9 +93,10 @@ class FlxMinimap extends FlxSprite
 	 */
 	public function follow(obj:FlxSprite, color:UInt = 0xFFFF0000):Void	{
 		var dot:FlxSprite = new FlxSprite();
-		dot.makeGraphic(dotWidth, dotHeight, color);
-		//dot.drawEllipse(dotWidth / 2, dotHeight / 2, dotWidth, dotHeight, color);
+		dot.makeGraphic(dotWidth, dotHeight, color - 0xAA000000);
+		dot.drawEllipse(0, 0, dotWidth, dotHeight, color);
 		dot.scrollFactor = new FlxPoint();
+		dot.set_alpha(minimapAlpha);
 		dots.add(dot);
 		objects.push([obj, dot]);
 	}

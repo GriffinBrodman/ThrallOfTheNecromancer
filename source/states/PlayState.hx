@@ -64,7 +64,7 @@ class PlayState extends FlxState
 		_map = new FlxOgmoLoader(AssetPaths.room1__oel);
 		_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
-
+		
 		add(_ground);
 		add(_mWalls);
 		
@@ -95,9 +95,7 @@ class PlayState extends FlxState
 		var body2:SnakeBody = new SnakeBody(body, 4);
 		var tail:SnakeBody = new SnakeBody(body2, 5);
 		var tail2:SnakeBody = new SnakeBody(tail, 6);
-		
-		add(_player);
-		
+				
 		_grpSnake = new FlxTypedGroup<SnakeBody>();
 		_grpSnake.add(tail2);
 		_grpSnake.add(tail);
@@ -107,6 +105,8 @@ class PlayState extends FlxState
 		_grpSnake.add(subhead);
 		
 		add(_grpSnake);
+		
+		add(_player);
 		
 		//FlxG.camera.setSize(FlxG.width, FlxG.height);
 		//FlxG.camera.setScale(1.5, 1.5);
@@ -194,7 +194,9 @@ class PlayState extends FlxState
 		{
 			FlxG.switchState(new GameOverState(_won));
 		}
-		FlxG.collide(_grpEnemies, _mWalls);
+		
+		FlxG.collide(_mWalls, _grpEnemies);
+		//FlxG.collide(_playerWalls, _player);	TODO: Add this line when we get player walls
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
