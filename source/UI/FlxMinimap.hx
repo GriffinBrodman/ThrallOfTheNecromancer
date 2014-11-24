@@ -1,9 +1,16 @@
 package ui ;
+import characters.enemies.Enemy;
+import characters.Player;
+import characters.SnakeBody;
+import entities.Exit;
 import flash.display.BitmapData;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxMath;
 import flixel.util.FlxPoint;
 import openfl.geom.Matrix;
 using flixel.util.FlxSpriteUtil;
@@ -14,7 +21,8 @@ using flixel.util.FlxSpriteUtil;
  */
 class FlxMinimap extends FlxSprite
 {
-	private static var minimapAlpha:Float = 0.75;
+	private static var MINIMAP_ALPHA:Float = 0.75;
+	private static var BLINK_DISTANCE:Int = 200;		//Maximum distance between enemy and exit for which enemy starts to blink
 
 	// bitmapdata used drawing and scaling the image of the level
 	private var bmd:BitmapData;
@@ -33,6 +41,9 @@ class FlxMinimap extends FlxSprite
 	private var dotWidth:Int;
 	private var dotHeight:Int;
 	
+	private var grpEnemies:FlxTypedGroup<Enemy>;
+	private var grpExits:FlxTypedGroup<Exit>;
+	
 	public function new(tilemap:FlxTilemap, dots:FlxTypedGroup<FlxSprite>, X:UInt, Y:UInt, W:UInt, H:UInt) {			
 		super(X, Y);
 		this.tilemap = tilemap;
@@ -49,7 +60,24 @@ class FlxMinimap extends FlxSprite
 		// set pixel data
 		pixels = bmd;
 		
-		set_alpha(minimapAlpha);
+		set_alpha(MINIMAP_ALPHA);
+	}
+	
+	public function init(player:Player, snakeBody:FlxTypedGroup<SnakeBody>, enemies:FlxTypedGroup<Enemy>, exits:FlxTypedGroup<Exit>) {
+		objects = [];
+		
+		grpEnemies = enemies;
+		grpExits = exits;
+		
+		for (exit in grpExits) {
+			if (exit.canEscape())
+				follow(exit, FlxColor.AZURE);
+		}
+		for (enemy in grpEnemies)
+			enemy.minimapDot = follow(enemy, FlxColor.RED);
+		for (snakeBody in snakeBody)
+			follow(snakeBody, FlxColor.PURPLE);
+		follow(player, FlxColor.PURPLE);
 	}
 	
 	/**
@@ -60,9 +88,28 @@ class FlxMinimap extends FlxSprite
 			if (!obj[0].exists) {
 				FlxDestroyUtil.destroy(obj[1]);
 				objects.remove(obj);
+			} else {
+				obj[1].x = x + Std.int(obj[0].x / sx) - offset.x;
+				obj[1].y = y + Std.int(obj[0].y / sy) - offset.y;
 			}
-			obj[1].x = x + Std.int(obj[0].x / sx) - offset.x;
-			obj[1].y = y + Std.int(obj[0].y / sy) - offset.y;
+		}
+		
+		for (enemy in grpEnemies) {
+			if (enemy != null && enemy.exists && enemy.minimapDot != null && !enemy.minimapDotTweening){	
+				for (exit in grpExits) {
+					if (exit.canEscape() && FlxMath.isDistanceWithin(enemy, exit, BLINK_DISTANCE)) {
+						enemy.minimapDotTweening = true;
+						FlxTween.tween(enemy.minimapDot.scale, { x:2, y:2 }, 0.25, { complete: function(f:FlxTween) {
+							if (enemy != null && enemy.exists && enemy.minimapDot != null){
+								FlxTween.tween(enemy.minimapDot.scale, { x: 1, y:1 }, 0.25, { complete: function(f:FlxTween) {
+									enemy.minimapDotTweening = false;
+								}});
+							}
+						}} );
+						break;
+					}
+				}
+			}
 		}
 		super.update();
 	}
@@ -91,14 +138,16 @@ class FlxMinimap extends FlxSprite
 	 * @param	Obj the object to follow
 	 * @param	Color the 0xAARRGGBB color of the icon representing the object on the minimap
 	 */
-	public function follow(obj:FlxSprite, color:UInt = 0xFFFF0000):Void	{
+	public function follow(obj:FlxSprite, color:UInt = 0xFFFF0000):FlxSprite{		
 		var dot:FlxSprite = new FlxSprite();
 		dot.makeGraphic(dotWidth, dotHeight, color - 0xAA000000);
 		dot.drawEllipse(0, 0, dotWidth, dotHeight, color);
 		dot.scrollFactor = new FlxPoint();
-		dot.set_alpha(minimapAlpha);
+		//dot.set_alpha(minimapAlpha);
 		dots.add(dot);
 		objects.push([obj, dot]);
+		
+		return dot;
 	}
 	
 	/**

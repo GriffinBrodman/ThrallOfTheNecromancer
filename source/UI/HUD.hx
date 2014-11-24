@@ -1,6 +1,9 @@
 package ui ;
 
+import characters.enemies.Enemy;
 import characters.Player;
+import characters.SnakeBody;
+import entities.Exit;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
@@ -131,8 +134,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
 	}
 	
-	public function minimapFollow(obj:FlxSprite, color:UInt):Void 
-	{
-		minimap.follow(obj, color);
+	public function minimapInit(player:Player, snakeBody:FlxTypedGroup<SnakeBody>, enemies:FlxTypedGroup<Enemy>, exits:FlxTypedGroup<Exit>) {
+		minimap.init(player, snakeBody, enemies, exits);
 	}
+	
 }

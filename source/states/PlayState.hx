@@ -118,12 +118,7 @@ class PlayState extends FlxState
 		
 		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped, _mWalls);
 		add(_hud);
-		for (enemy in _grpEnemies)
-			_hud.minimapFollow(enemy, FlxColor.RED);
-		for (snakeBody in _grpSnake)
-			_hud.minimapFollow(snakeBody, FlxColor.LAVENDER);
-		_hud.minimapFollow(_player, FlxColor.LAVENDER);
-		
+		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
 		
 		debug = new FlxText();
 		debug.setPosition(0, FlxG.height - 30);

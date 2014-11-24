@@ -33,6 +33,8 @@ class Enemy extends FlxSprite
 	public var state:String = "idle";
 	private var fleeingTime:Int = 0;
 	private var scaredTime:Int = 0;
+	public var minimapDot:FlxSprite;	// Reference to dot on minimap to blink when necessary; Used by minimap
+	public var minimapDotTweening:Bool;
 	
 	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
 	{
