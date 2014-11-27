@@ -50,10 +50,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtTimer.x = FlxG.width / 2;
 
 		this.add(_txtTimer);
-		forEach(function(spr:FlxSprite) {
-			spr.scrollFactor.set(0, 0);
-		});
-		
+
+				
 		// cooldown bar
 		screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
 		
@@ -66,6 +64,10 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		// minimap
 		minimap = new FlxMinimap(tiles, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
 		this.add(minimap);
+		
+		forEach(function(spr:FlxSprite) {
+			spr.scrollFactor.set(0, 0);
+		});
 	}
 
 	/**
