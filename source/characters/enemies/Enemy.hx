@@ -24,6 +24,7 @@ class Enemy extends FlxSprite
 	public var pathing:Bool;
 	public var snakePos(default, null):FlxPoint;
 
+	private var map:Array<Array<Int>>;
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
