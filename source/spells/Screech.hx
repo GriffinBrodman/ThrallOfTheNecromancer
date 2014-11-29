@@ -34,7 +34,7 @@ class Screech extends FlxSprite
 
 		grpEnemies.forEachAlive(function(e:Enemy) {
 			if (FlxMath.isDistanceToPointWithin(e, this.getMidpoint(), SCREECH_RANGE)) {
-				e.stopAndStun(SCREECH_STUN_DURATION);
+				e.stun(SCREECH_STUN_DURATION);
 			}
 		});
 	}

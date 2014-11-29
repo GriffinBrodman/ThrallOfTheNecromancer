@@ -230,15 +230,15 @@ class PlayState extends FlxState
 	 */
 	private function checkEnemyVision(e:Enemy):Void
 	{
-		e.seesPlayer = false;
+		e.scared = false;
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& e.canSee(_player)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+		&& e.inLOS(_player.X, _player.Y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
-			e.seesPlayer = true;
-			e.playerPos.copyFrom(_player.getMidpoint());
+			e.scared = true;
+			e.snakePos.copyFrom(_player.getMidpoint());
 			
 		}
 		else {
@@ -247,10 +247,10 @@ class PlayState extends FlxState
 				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
 				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
 				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-				&& e.canSee(_grpSnake.members[i])) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+				&& e.inLOS(_grpSnake.members[i].X, _grpSnake.members[i].Y )) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 				{
-					e.seesPlayer = true;
-					e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
+					e.scared = true;
+					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
 					break;
 				}
 			}
