@@ -44,7 +44,7 @@ class Enemy extends FlxSprite
 			height = 30;
 			offset.x = 6;
 			offset.y = 2;
-			animation.add("run", [1, 2], 12, true);
+			animation.add("run", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 8, true);
 			animation.play("run", true);
 		}
 		else
@@ -55,8 +55,7 @@ class Enemy extends FlxSprite
 			offset.x = 4;
 			offset.y = 0;
 		}
-		setFacingFlip(FlxObject.LEFT, false, false);
-		setFacingFlip(FlxObject.RIGHT, true, false);
+		setFacingFlip(FlxObject.UP, false, true);
 		drag.x = drag.y = 10;
 		width = 20;
 		height = 30;
