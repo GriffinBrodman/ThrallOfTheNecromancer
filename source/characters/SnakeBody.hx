@@ -21,10 +21,6 @@ class SnakeBody extends FlxSprite
 	var next:FlxSprite; //Sprite to follow
 	var sizeOfBuffer:Int; //numFrames to be delayed
 	
-	//Angle to take on
-	var prevAng:Array<Float>;
-	var nextAng:Int; //Screw you Mark
-	
 	//Position to take on
 	var prevPos:Array<FlxPoint>;
 	var nextPos:Int;
@@ -47,14 +43,7 @@ class SnakeBody extends FlxSprite
 
 		next = p;//Save the thing to follow
 		sizeOfBuffer = 7;
-		
-		prevAng = new Array<Float>();
-		for (i in 0...sizeOfBuffer) 
-		{
-			prevAng[i] = 0; //Start facing up
-		}
-		nextAng = 0;
-		
+				
 		prevPos = new Array<FlxPoint>();
 		for (i in 0...sizeOfBuffer) 
 		{
@@ -67,11 +56,7 @@ class SnakeBody extends FlxSprite
 
 	private function movement():Void
 	{
-		var ang = next.angle;
-		angle = prevAng[nextAng];
-		prevAng[nextAng] = ang;
-		nextAng++;
-		nextAng = nextAng % sizeOfBuffer;
+		angle = FlxAngle.angleBetween(this, next, true) + 90;
 		
 		var pozz = new FlxPoint(next.x, next.y); //I'm not changing this either Mark
 		setPosition(prevPos[nextPos].x, prevPos[nextPos].y);

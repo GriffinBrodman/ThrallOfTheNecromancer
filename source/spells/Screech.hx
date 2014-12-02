@@ -14,8 +14,8 @@ import flixel.util.FlxMath;
  */
 class Screech extends FlxSprite
 {
-	private static var SCREECH_WIDTH:Int = 64;
-	private static var SCREECH_HEIGHT:Int = 64;
+	private static var SCREECH_WIDTH:Int = 400;
+	private static var SCREECH_HEIGHT:Int = 400;
 	private static var SCREECH_STUN_DURATION:Int = 60;
 	private static var SCREECH_RANGE:Int = 200;
 	private static var SCREECH_GRAPHIC_DURATION:Float = 0.4;	// in seconds
@@ -26,7 +26,7 @@ class Screech extends FlxSprite
 		loadGraphic(AssetPaths.screech__png, false, SCREECH_WIDTH, SCREECH_HEIGHT);
 		scale.x = 0;
 		scale.y = 0;
-		FlxTween.tween(scale, { x: 2 * SCREECH_RANGE / SCREECH_WIDTH, y: 2 * SCREECH_RANGE / SCREECH_HEIGHT }, SCREECH_GRAPHIC_DURATION / 2);
+		FlxTween.tween(scale, { x: 2 * SCREECH_RANGE / SCREECH_WIDTH, y: 2 * SCREECH_RANGE / SCREECH_HEIGHT }, SCREECH_GRAPHIC_DURATION / 4);
 		FlxTween.tween(this, { alpha: 0.3 }, SCREECH_GRAPHIC_DURATION,
 		{ complete: function (f:FlxTween) {
 			this.destroy();
