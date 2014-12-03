@@ -183,7 +183,7 @@ class Enemy extends FlxSprite
 	}
 	
 		
-	public function inLOS(X:Int, Y:Int):Bool
+	public function inLOS(X:Float, Y:Float):Bool
 	{
 		if (this.facing == FlxObject.LEFT)
 		{
