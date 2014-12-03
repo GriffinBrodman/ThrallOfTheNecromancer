@@ -21,7 +21,6 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
-import openfl.utils.ObjectInput;
 import characters.SnakeBody;
 import ui.HUD;
 using flixel.util.FlxSpriteUtil;
@@ -65,10 +64,9 @@ class PlayState extends FlxState
 		_map = new FlxOgmoLoader(AssetPaths.room01Big__oel);
 		
 		_mWalls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
-		//_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
-		//_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
+		_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
 		
-		//add(_ground);
+		add(_ground);
 		add(_mWalls);
 		
 		_grpExits = new FlxTypedGroup<Exit>();
