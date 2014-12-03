@@ -60,12 +60,15 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-
-		_map = new FlxOgmoLoader(AssetPaths.room1__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
-		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
+		var bg = new FlxSprite(0, 0, AssetPaths.room01Big__png);
+		add(bg);
+		_map = new FlxOgmoLoader(AssetPaths.room01Big__oel);
 		
-		add(_ground);
+		_mWalls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
+		//_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
+		//_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
+		
+		//add(_ground);
 		add(_mWalls);
 		
 		_grpExits = new FlxTypedGroup<Exit>();
