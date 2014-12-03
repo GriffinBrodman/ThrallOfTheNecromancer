@@ -20,6 +20,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
+import level.LevelLoader;
 //import openfl.utils.ObjectInput;
 import characters.SnakeBody;
 import ui.HUD;
@@ -41,6 +42,7 @@ class PlayState extends FlxState
 	private var _mWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
 	//private var _mBorders:FlxTilemap;
+	private var loader:LevelLoader;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
 	private var _grpUI:FlxTypedGroup<FlxSprite>;
@@ -51,6 +53,7 @@ class PlayState extends FlxState
 	private var _timer:Int;
 	private var _escapeLimit:Int;			//Limits number of humans we can let escape
 	private var _numEscaped = 0;
+	private var _bg:FlxSprite;
 	private var debug:FlxText;
 	
 	/**
@@ -59,26 +62,35 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-		var bg = new FlxSprite(0, 0, AssetPaths.room01Big__png);
+		
+		/*bg = new FlxSprite(0, 0, AssetPaths.room01Big__png);
 		add(bg);
+		
 		_map = new FlxOgmoLoader(AssetPaths.room01Big__oel);
 		
 		_mWalls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
-		_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
+		_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");*/
 		
+		loader = new LevelLoader();
+		
+		_bg = loader.getBackground();
+		_map = loader.getMap();
+		_mWalls = loader.getWalls();
+		_ground = loader.getGround();
+		_grpExits = loader.getExits();
+		_grpEnemies = loader.getEnemies();
+		
+		add(_bg);
 		add(_ground);
 		add(_mWalls);
-		
-		_grpExits = new FlxTypedGroup<Exit>();
 		add(_grpExits);
-		
-		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
 		_grpUI = new FlxTypedGroup<FlxSprite>();
 		add(_grpUI);
 		
-		_player = new Player(0, 0, _grpEnemies, _mWalls, this.add);
+		var tempPlayer = loader.getPlayer();
+		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _mWalls, this.add);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
