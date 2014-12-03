@@ -2,7 +2,6 @@ package states ;
 
 import characters.enemies.Enemy;
 import characters.Player;
-import entities.Entity;
 import entities.Exit;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.FlxBasic;
@@ -21,7 +20,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
-import openfl.utils.ObjectInput;
+//import openfl.utils.ObjectInput;
 import characters.SnakeBody;
 import ui.HUD;
 using flixel.util.FlxSpriteUtil;
