@@ -33,6 +33,8 @@ class Player extends FlxSprite
 	
 	private static var MAX_SPEED:Float = 200;	//Completely random
 	private static var MAX_ANGLE:Float = 15; 	//Because radians. Just trust me.
+	private static var DASH_MULTIPLIER:Float = 1.2;
+	private static var TURN_REDUCTION = .05;
 
 	
 	private var screechCooldown:Int;
@@ -57,6 +59,8 @@ class Player extends FlxSprite
 	public var turnAngle:Float = 0;		//Basically the direction the player is facing	
 	private var turnAccel:Float = 0.8;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
+	
+	private var dashing:Bool = false;
 	
 	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void)
 	{
@@ -132,12 +136,14 @@ class Player extends FlxSprite
 		//Turns you left (relative)
 		if (left)
 		{
-			turnAngle = Math.min(MAX_ANGLE, turnAngle -= turnAccel);
+			if (!dashing)	turnAngle = Math.min(MAX_ANGLE, turnAngle -= turnAccel);
+			else turnAngle = Math.min(MAX_ANGLE, turnAngle -= turnAccel * TURN_REDUCTION);
 		}
 		//Turns you right (relative)
 		if (right)
 		{
-			turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel);
+			if (!dashing) turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel);
+			else turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel * TURN_REDUCTION);
 		}
 		
 		// Prevent turn weirdness; If turnAngle value is really low, set to 0
@@ -158,7 +164,8 @@ class Player extends FlxSprite
 		this.angle = this.angle % 360;
 		
 		// Set the velocity based on angle; Constant speed
-		this.velocity = FlxAngle.rotatePoint(0, MAX_SPEED, 0, 0, this.angle);
+		if (!dashing) this.velocity = FlxAngle.rotatePoint(0, MAX_SPEED, 0, 0, this.angle);
+		else this.velocity = FlxAngle.rotatePoint(0, MAX_SPEED * DASH_MULTIPLIER, 0, 0, this.angle);
 	}
 
 	private function screech() {
@@ -173,12 +180,7 @@ class Player extends FlxSprite
 	private function dash() {
 		if (FlxG.keys.anyJustPressed(DASH_INPUT) && dashCooldown <= 0) {
 			dashCooldown = DASH_COOLDOWN;
-			this.x += Math.sin (this.angle * Math.PI / 180) * speed * 8;  //Position.x += Velocity.x
-			this.x = Math.max(this.x, 0);
-			this.x = Math.min(this.x, walls.width);
-			this.y += Math.cos (this.angle * Math.PI / 180) * -speed * 8; //Position.y += Velocity.y
-			this.y = Math.max(this.y, 0);
-			this.y = Math.min(this.y, walls.height);
+			dashing = true;
 		}
 	}
 
@@ -196,6 +198,10 @@ class Player extends FlxSprite
 			screechCooldown--;
 		if (dashCooldown > 0)
 			dashCooldown--;
+			if (dashCooldown == 0)
+			{
+				dashing = false;
+			}
 	}
 
 	override public function destroy():Void
