@@ -77,7 +77,7 @@ class LevelLoader
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_enemies.add(new Enemy(x, y, _walls));
+				_enemies.add(new Enemy(x, y, _walls, _ground));
 			case "exit":
 				var escapable = StringToBool(entityData.get("escapable"));
 				_exits.add(new Exit(x, y, escapable));
