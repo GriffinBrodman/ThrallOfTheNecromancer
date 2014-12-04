@@ -27,6 +27,7 @@ class Enemy extends FlxSprite
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
 	private var walls:FlxTilemap;
+	private var ground:FlxTilemap;
 	public var state:String;
 	
 	private var stunDuration:Int;
@@ -36,7 +37,7 @@ class Enemy extends FlxSprite
 	public var minimapDot:FlxSprite;	// Reference to dot on minimap to blink when necessary; Used by minimap
 	public var minimapDotTweening:Bool;
 	
-	public function new(X:Float=0, Y:Float=0, map:FlxTilemap)
+	public function new(X:Float=0, Y:Float=0, map:FlxTilemap, ground:FlxTilemap)
 	{
 		super(X, Y);
 		if(Std.random(2) == 0)

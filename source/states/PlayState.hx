@@ -1,6 +1,7 @@
 package states ;
 
 import characters.enemies.Enemy;
+import characters.enemies.DFSEnemy;
 import characters.Player;
 import entities.Exit;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
@@ -163,7 +164,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x, y, _mWalls));
+				_grpEnemies.add(new DFSEnemy(x, y, _mWalls, _ground));
 			case "exit":
 				var escapable = StringToBool(entityData.get("escapable"));
 				_grpExits.add(new Exit(x, y, escapable));
