@@ -1,16 +1,16 @@
 package entities;
+import flixel.FlxSprite;
 
 /**
  * ...
  * @author ...
  */
-class Exit extends Entity
+class Exit extends FlxSprite
 {
 	var escape = false;
 	public function new(X:Float=0, Y:Float=0, escapable:Bool) 
 	{
-		super(X, Y);
-		
+		super(X, Y);		
 		escape = escapable;
 		if (escape)
 			loadGraphic("assets/images/exit.png", false, 32, 32);

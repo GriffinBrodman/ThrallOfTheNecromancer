@@ -1,8 +1,8 @@
 package states ;
 
 import characters.enemies.Enemy;
+import characters.enemies.DFSEnemy;
 import characters.Player;
-import entities.Entity;
 import entities.Exit;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.FlxBasic;
@@ -21,7 +21,8 @@ import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
-import openfl.utils.ObjectInput;
+import level.LevelLoader;
+//import openfl.utils.ObjectInput;
 import characters.SnakeBody;
 import ui.HUD;
 using flixel.util.FlxSpriteUtil;
@@ -42,6 +43,7 @@ class PlayState extends FlxState
 	private var _mWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
 	//private var _mBorders:FlxTilemap;
+	private var loader:LevelLoader;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
 	private var _grpUI:FlxTypedGroup<FlxSprite>;
@@ -52,6 +54,7 @@ class PlayState extends FlxState
 	private var _timer:Int;
 	private var _escapeLimit:Int;			//Limits number of humans we can let escape
 	private var _numEscaped = 0;
+	private var _bg:FlxSprite;
 	private var debug:FlxText;
 	
 	/**
@@ -60,24 +63,35 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.mouse.visible = false;
-
-		_map = new FlxOgmoLoader(AssetPaths.room1__oel);
-		_mWalls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
-		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
 		
+		/*bg = new FlxSprite(0, 0, AssetPaths.room01Big__png);
+		add(bg);
+		
+		_map = new FlxOgmoLoader(AssetPaths.room01Big__oel);
+		
+		_mWalls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
+		_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");*/
+		
+		loader = new LevelLoader();
+		
+		_bg = loader.getBackground();
+		_map = loader.getMap();
+		_mWalls = loader.getWalls();
+		_ground = loader.getGround();
+		_grpExits = loader.getExits();
+		_grpEnemies = loader.getEnemies();
+		
+		add(_bg);
 		add(_ground);
 		add(_mWalls);
-		
-		_grpExits = new FlxTypedGroup<Exit>();
 		add(_grpExits);
-		
-		_grpEnemies = new FlxTypedGroup<Enemy>();
 		add(_grpEnemies);
 		
 		_grpUI = new FlxTypedGroup<FlxSprite>();
 		add(_grpUI);
 		
-		_player = new Player(0, 0, _grpEnemies, _mWalls, this.add);
+		var tempPlayer = loader.getPlayer();
+		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _mWalls, this.add);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
@@ -150,7 +164,7 @@ class PlayState extends FlxState
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_grpEnemies.add(new Enemy(x, y, _mWalls));
+				_grpEnemies.add(new DFSEnemy(x, y, _mWalls, _ground));
 			case "exit":
 				var escapable = StringToBool(entityData.get("escapable"));
 				_grpExits.add(new Exit(x, y, escapable));
@@ -227,15 +241,15 @@ class PlayState extends FlxState
 	 */
 	private function checkEnemyVision(e:Enemy):Void
 	{
-		e.seesPlayer = false;
+		e.scared = false;
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& e.canSee(_player)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+		&& e.inLOS(_player.x, _player.y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
-			e.seesPlayer = true;
-			e.playerPos.copyFrom(_player.getMidpoint());
+			e.scared = true;
+			e.snakePos.copyFrom(_player.getMidpoint());
 			
 		}
 		else {
@@ -244,10 +258,10 @@ class PlayState extends FlxState
 				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
 				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
 				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-				&& e.canSee(_grpSnake.members[i])) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+				&& e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y )) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 				{
-					e.seesPlayer = true;
-					e.playerPos.copyFrom(_grpSnake.members[i].getMidpoint());
+					e.scared = true;
+					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
 					break;
 				}
 			}

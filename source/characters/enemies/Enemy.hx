@@ -18,25 +18,26 @@ import entities.Exit;
 
 class Enemy extends FlxSprite
 {
-	public var speed:Int = 65; 		//TODO MAKE CONSTANT
-	public var etype(default, null):Int;
-	private var _idleTmr:Float;
-	private var _moveDir:Float;
-	public var seesPlayer:Bool = false;
-	public var pathing:Bool = false;
-	public var playerPos(default, null):FlxPoint;
-	private var stunDuration:Int;
+	public var speed:Int; 		
+	public var scared:Bool;
+	public var pathing:Bool;
+	public var snakePos(default, null):FlxPoint;
+
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
 	private var walls:FlxTilemap;
-	public var state:String = "idle";
-	private var fleeingTime:Int = 0;
-	private var scaredTime:Int = 0;
+	private var ground:FlxTilemap;
+	public var state:String;
+	
+	private var stunDuration:Int;
+	private var fleeingTime:Int;
+	private var scaredTime:Int;
+	
 	public var minimapDot:FlxSprite;	// Reference to dot on minimap to blink when necessary; Used by minimap
 	public var minimapDotTweening:Bool;
 	
-	public function new(X:Float=0, Y:Float=0, m:FlxTilemap) 
+	public function new(X:Float=0, Y:Float=0, map:FlxTilemap, ground:FlxTilemap)
 	{
 		super(X, Y);
 		if(Std.random(2) == 0)
@@ -64,23 +65,21 @@ class Enemy extends FlxSprite
 		offset.x = 6;
 		offset.y = 2;
 		
-		_idleTmr = 0;
-		playerPos = FlxPoint.get();
+		snakePos = FlxPoint.get();
 		
-		walls = m;
+		walls = map;
 		path = new FlxPath();
-		
 	}
 	
-	private function updateCooldowns() {
+	public function updateCooldowns() 
+	{
 		if (stunDuration > 0)
 			stunDuration--;
 		if (fleeingTime > 0)
 		{
 			fleeingTime--;
 			if (fleeingTime == 0) speed -=30;
-		}
-			
+		}			
 	}
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
@@ -91,9 +90,17 @@ class Enemy extends FlxSprite
 	override public function update():Void 
 	{
 		if (isFlickering())
+		{
 			return;
-		if (state == "idle") idle();
-		if (state == "chase") chase();
+		}
+		if (state == "idle") 
+		{
+			idle();
+		}
+		if (state == "chase") 
+		{
+			chase();
+		}
 		
 		updateCooldowns();
 		
@@ -101,7 +108,7 @@ class Enemy extends FlxSprite
 		
 		if (stunDuration > 0)
 			this.setColorTransform(3, 3, 1);
-		else if (seesPlayer)
+		else if (scared)
 			this.setColorTransform(3, 1, 1);
 		else
 			this.setColorTransform(1, 1, 1);
@@ -109,7 +116,7 @@ class Enemy extends FlxSprite
 	
 	public function idle():Void
 	{
-		if (seesPlayer)
+		if (scared)
 		{
 			path.cancel();
 			pathing = false;
@@ -150,7 +157,6 @@ class Enemy extends FlxSprite
 		{
 			state = "idle";
 		}
-
 		else 
 		{
 			if (stunDuration > 0)
@@ -158,9 +164,13 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			else if (pathing == false ) {
+			else if (pathing == false ) 
+			{
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
-				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
+				while (newEnd == endPoint) 
+				{
+					newEnd = goals.getRandom().getMidpoint();
+				}
 				endPoint = newEnd;
 				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 
@@ -168,22 +178,29 @@ class Enemy extends FlxSprite
 					pathing = true;
 					path.start(this,pathPoints, speed);
 				}
-			}
-		
+			}		
 		}
 	}
 	
 		
-	public function canSee(player:FlxSprite):Bool
+	public function inLOS(X:Float, Y:Float):Bool
 	{
 		if (this.facing == FlxObject.LEFT)
-		return player.x < this.x;
+		{
+			return X < this.x;
+		}
 		if (this.facing == FlxObject.RIGHT)
-		return player.x > this.x;
+		{
+			return X > this.x;
+		}
 		if (this.facing == FlxObject.UP)
-		return player.y < this.y;
+		{
+			return Y < this.y;
+		}
 		else
-		return player.y > this.y;
+		{
+			return Y > this.y;
+		}
 	}
 	
 	override public function draw():Void 
@@ -222,15 +239,11 @@ class Enemy extends FlxSprite
 		super.draw();
 	}
 	
-	public function stopAndStun(stunDuration:Int) {
+	public function stun(duration:Int) {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
-		stun(stunDuration);
-	}
-	
-	public function stun(stunDuration:Int) {
-		this.stunDuration = stunDuration;
-	}
+		this.stunDuration = duration;
+	}	
 	
 	override public function destroy():Void 
 	{
@@ -239,7 +252,6 @@ class Enemy extends FlxSprite
 			FlxDestroyUtil.destroy(path);
 			pathing = false;
 		}
-		super.destroy();
-		
+		super.destroy();		
 	}
 }
