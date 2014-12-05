@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.system.FlxSound;
+import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxAngle;
 import flixel.util.FlxDestroyUtil;
@@ -39,11 +40,12 @@ class Enemy extends FlxSprite
 	
 	private var oldFacing:Int;
 	
+	public var debug:FlxText = new FlxText();
+	
 	public function new(X:Float=0, Y:Float=0, map:FlxTilemap, ground:FlxTilemap)
 	{
 		super(X, Y);
-		if(Std.random(2) == 0)
-		{
+
 			loadGraphic(AssetPaths.walkinganimation1__png, true, 32, 32);
 			width = 20;
 			height = 30;
@@ -52,15 +54,7 @@ class Enemy extends FlxSprite
 			animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8, true);
 			animation.add("lr", [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 8, true);
 			animation.play("run", true);
-		}
-		else
-		{
-			loadGraphic(AssetPaths.greenjacket__png, true, 32, 32);
-			width = 21;
-			height = 32;
-			offset.x = 4;
-			offset.y = 0;
-		}
+		
 		setFacingFlip(FlxObject.UP, false, true);
 		drag.x = drag.y = 10;
 		width = 20;
@@ -234,24 +228,28 @@ class Enemy extends FlxSprite
 					{
 						animation.pause();
 						animation.play("lr");
+						trace("left");
 					}
 				case FlxObject.RIGHT:
 					if (facing != oldFacing)
 					{
 						animation.pause();
 						animation.play("lr");
+						trace("right");
 					}
 				case FlxObject.UP:
 					if (facing != oldFacing)
 					{
 						animation.pause();
 						animation.play("run");
+						trace("up");
 					}
 				case FlxObject.DOWN:	
 					if (facing != oldFacing)
 					{
 						animation.pause();
 						animation.play("run");
+						trace("down");
 					}
 
 			}

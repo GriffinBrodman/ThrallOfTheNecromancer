@@ -139,11 +139,10 @@ class PlayState extends FlxState
 		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
 		
 		debug = new FlxText();
-		debug.setPosition(0, FlxG.height - 30);
+		debug.setPosition(100, FlxG.height - 30);
 		add(debug);
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
-		
 		super.create();	
 	}
 	
@@ -214,7 +213,7 @@ class PlayState extends FlxState
 		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		
-		//debug.text = Std.string(_player.angle);
+		debug.text = _grpEnemies.getFirstAlive().debug.text;
 	}
 	
 	private function doneFadeOut():Void 
