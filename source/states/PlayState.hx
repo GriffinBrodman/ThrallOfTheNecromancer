@@ -37,7 +37,7 @@ class PlayState extends FlxState
 	public static var ESCAPEE_THRESHOLD = 3;	//TODO
 	public static var ENEMY_SIGHT_RANGE = 200;
 	public static var ENEMY_DETECTION_RANGE = 40;
-	public static var NUM_SNAKE_PARTS = 8;
+	public static var NUM_SNAKE_PARTS = 9;
 	
 	private var _player:Player;
 	private var _map:FlxOgmoLoader;
@@ -94,9 +94,10 @@ class PlayState extends FlxState
 		var tempPlayer = loader.getPlayer();
 		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _mWalls, this.add);
 		_grpSnake = new FlxTypedGroup<SnakeBody>();
-		var lastPart:FlxSprite = _player;
+		var lastPart:SnakeBody = null;
 		for (i in 0...NUM_SNAKE_PARTS) {
-			_grpSnake.add(new SnakeBody(lastPart, i));
+			lastPart = new SnakeBody(lastPart == null ? _player : lastPart, i);
+			_grpSnake.add(lastPart);
 			/*
 			var subhead:SnakeBody = new SnakeBody(_player, 1);
 			var subhead2:SnakeBody = new SnakeBody(subhead, 2);

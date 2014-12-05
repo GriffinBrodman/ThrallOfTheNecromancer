@@ -17,7 +17,9 @@ using flixel.util.FlxSpriteUtil;
  */
 class MenuState extends FlxState
 {
-	private var _txtTitle:FlxText;
+	private var _background:FlxSprite;
+	
+	//private var _txtTitle:FlxText;
 	private var _btnOptions:FlxButton;
 	private var _btnPlay:FlxButton;
 	#if desktop
@@ -30,12 +32,13 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
+		_background = new FlxSprite(0, 0, AssetPaths.menuBackground__jpg);
+		add(_background);
 		
 		_btnFullScreen = new FlxButton(80, 80, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
-		_btnFullScreen.x = (FlxG.width / 2) - _btnFullScreen.width - 60;
-		_btnFullScreen.y = FlxG.height - _btnFullScreen.height - 10;
+		_btnFullScreen.x = 10;
+		_btnFullScreen.y = 10;
 		add(_btnFullScreen);
-		
 		
 		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
 		{
@@ -46,10 +49,12 @@ class MenuState extends FlxState
 			#end
 		}
 		
+		/*
 		_txtTitle = new FlxText(0, 20, 0, "HaxeFlixel\nTutorial\nGame", 22);
 		_txtTitle.alignment = "center";
 		_txtTitle.screenCenter(true, false);
 		add(_txtTitle);
+		*/
 		
 		_btnPlay = new FlxButton(0, 0, "Play", clickPlay);
 		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width - 10;
@@ -76,7 +81,8 @@ class MenuState extends FlxState
 	
 	private function clickFullscreen():Void
 	{
-	FlxG.fullscreen = !FlxG.fullscreen;
+		FlxG.fullscreen = !FlxG.fullscreen;
+		_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
 	}
 	
 	#if desktop
@@ -107,7 +113,7 @@ class MenuState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
-		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
+		//_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
 		_btnPlay = FlxDestroyUtil.destroy(_btnPlay);
 		_btnOptions = FlxDestroyUtil.destroy(_btnOptions);
 		#if desktop
