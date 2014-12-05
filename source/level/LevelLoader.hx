@@ -21,18 +21,19 @@ class LevelLoader
 	var _enemies:FlxTypedGroup<Enemy>;
 	var _exits:FlxTypedGroup<Exit>;
 	var _bg:FlxSprite;
-	private var _levelnum = 1;
+	private var _levelnum:Int;
 	private var levelPathFrag = "assets/data/room";
 	private var levelExtension = ".oel";//"Big.oel";
 	private var levelBGFrag = "assets/images/room";
 	private var levelBGExtension = ".png";// Big.png";
 	private var escapee_threshold:Int;
 	
-	public function new()
+	public function new(levelNum:Int)
 	{
 		_player = new Player(0, 0, null, null, null);
 		_enemies = new FlxTypedGroup<Enemy>();
 		_exits = new FlxTypedGroup<Exit>();
+		_levelnum = levelNum;
 		loadLevel(_levelnum);
 	}
 	
@@ -44,16 +45,8 @@ class LevelLoader
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
 		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
-		Util.clearGroup(_enemies);
-		Util.clearGroup(_exits);
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
-	}
-	
-	public function nextLevel()
-	{
-		_levelnum++;
-		loadLevel(_levelnum);
 	}
 	
 	private function getLevelPath(levelNum:Int):String
