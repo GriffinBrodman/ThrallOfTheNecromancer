@@ -17,6 +17,7 @@ using flixel.util.FlxSpriteUtil;
  */
 class MenuState extends FlxState
 {
+	private var STARTLEVEL = 1;
 	private var _background:FlxSprite;
 	
 	//private var _txtTitle:FlxText;
@@ -95,7 +96,7 @@ class MenuState extends FlxState
 	private function clickPlay():Void
 	{
 		FlxG.camera.fade(FlxColor.BLACK,.33, false, function() {
-			FlxG.switchState(new PlayState());
+			FlxG.switchState(new PlayState(STARTLEVEL));
 		});
 	}
 	

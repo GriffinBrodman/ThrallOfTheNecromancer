@@ -26,6 +26,7 @@ class LevelLoader
 	private var levelExtension = ".oel";//"Big.oel";
 	private var levelBGFrag = "assets/images/room";
 	private var levelBGExtension = ".png";// Big.png";
+	private var escapee_threshold:Int;
 	
 	public function new()
 	{
@@ -43,7 +44,10 @@ class LevelLoader
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
 		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
+		Util.clearGroup(_enemies);
+		Util.clearGroup(_exits);
 		_map.loadEntities(placeEntities, "entities");
+		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
 	}
 	
 	public function nextLevel()
@@ -120,6 +124,16 @@ class LevelLoader
 	public function getBackground():FlxSprite
 	{
 		return _bg;
+	}
+	
+	public function getEscapeeThreshold():Int
+	{
+		return escapee_threshold;
+	}
+	
+	public function getCurrLevel()
+	{
+		return _levelnum;
 	}
 
 	/**

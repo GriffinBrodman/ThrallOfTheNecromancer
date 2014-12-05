@@ -32,9 +32,8 @@ using flixel.util.FlxSpriteUtil;
  */
 class PlayState extends FlxState
 {
-	public static var NUM_SECONDS = 60;
+	public static var NUM_SECONDS = 30;
 	public static var FRAMES_PER_SECOND = 60;
-	public static var ESCAPEE_THRESHOLD = 5;	//TODO
 	public static var ENEMY_SIGHT_RANGE = 200;
 	public static var ENEMY_DETECTION_RANGE = 40;
 	public static var NUM_SNAKE_PARTS = 9;
@@ -57,6 +56,14 @@ class PlayState extends FlxState
 	private var _numEscaped = 0;
 	private var _bg:FlxSprite;
 	private var debug:FlxText;
+	private var _currLevel:Int;
+	private var _numLevels = 3;
+	
+	public function new(levelNum:Int) 
+	{
+		super();
+		_currLevel = levelNum;
+	}
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -65,22 +72,8 @@ class PlayState extends FlxState
 	{
 		FlxG.mouse.visible = false;
 		
-		/*bg = new FlxSprite(0, 0, AssetPaths.room01Big__png);
-		add(bg);
-		
-		_map = new FlxOgmoLoader(AssetPaths.room01Big__oel);
-		
-		_mWalls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
-		_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");*/
-		
-		loader = new LevelLoader();
-		
-		//_bg = loader.getBackground();
-		_map = loader.getMap();
-		_mWalls = loader.getWalls();
-		_ground = loader.getGround();
-		_grpExits = loader.getExits();
-		_grpEnemies = loader.getEnemies();
+		loader = new LevelLoader(_currLevel);
+		loadLevel();
 		
 		//add(_bg);
 		add(_ground);
@@ -130,7 +123,7 @@ class PlayState extends FlxState
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 	
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
-		_escapeLimit = ESCAPEE_THRESHOLD;
+
 		
 		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped, _mWalls);
 		add(_hud);
@@ -142,6 +135,17 @@ class PlayState extends FlxState
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		super.create();	
+	}
+	
+	private function loadLevel()
+	{
+		_map = loader.getMap();
+		_mWalls = loader.getWalls();
+		_ground = loader.getGround();
+		_grpExits = loader.getExits();
+		_grpEnemies = loader.getEnemies();
+		_escapeLimit = loader.getEscapeeThreshold();
+		//_bg = loader.getBackground();
 	}
 	
 	/** Function to get number of seconds passed
@@ -176,21 +180,18 @@ class PlayState extends FlxState
 				
 		if (_timer <= 0)
 		{
-			_won = true;
-			FlxG.switchState(new GameOverState(_won));
+			if (loader.getCurrLevel() >= _numLevels)
+			{
+				_won = true;
+				FlxG.switchState(new GameOverState(_won));
+			}
+			else
+				FlxG.switchState(new PlayState(_currLevel + 1));
 		}
-		if (_numEscaped >= _escapeLimit)
-		{
-			FlxG.switchState(new GameOverState(_won));
-		}
-		
 		FlxG.collide(_mWalls, _grpEnemies);
 		//FlxG.collide(_playerWalls, _player);	TODO: Add this line when we get player walls
 		_grpEnemies.forEachAlive(checkEnemyVision);
-		FlxG.overlap(_player, _grpEnemies, playerTouchEnemy);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
-		
-		debug.text = _grpEnemies.getFirstAlive().debug.text;
 	}
 	
 	private function doneFadeOut():Void 
@@ -209,7 +210,11 @@ class PlayState extends FlxState
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
 			
-			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
+			FlxG.camera.flash(FlxColor.RED, 0.5, 0, null, true);
+			if (_numEscaped >= _escapeLimit)
+			{
+				FlxG.switchState(new GameOverState(_won));
+			}
 		}
 		else
 		{
