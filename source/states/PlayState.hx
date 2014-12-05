@@ -34,7 +34,7 @@ class PlayState extends FlxState
 {
 	public static var NUM_SECONDS = 60;
 	public static var FRAMES_PER_SECOND = 60;
-	public static var ESCAPEE_THRESHOLD = 3;	//TODO
+	public static var ESCAPEE_THRESHOLD = 5;	//TODO
 	public static var ENEMY_SIGHT_RANGE = 200;
 	public static var ENEMY_DETECTION_RANGE = 40;
 	public static var NUM_SNAKE_PARTS = 9;
@@ -118,9 +118,7 @@ class PlayState extends FlxState
 		add(_grpSnake);
 		
 		add(_player);
-		
-		_map.loadEntities(placeEntities, "entities");
-		
+				
 		for (i in 0..._grpEnemies.length)
 		{
 			_grpEnemies.members[i].setGoal(_grpExits);
@@ -151,27 +149,6 @@ class PlayState extends FlxState
 	private function getSecs(_timer:Int):Int
 	{
 		return Std.int(_timer / FRAMES_PER_SECOND);
-	}
-	
-	
-	/**
-	 * Callback function for placing entities from map file
-	 */
-	private function placeEntities(entityName:String, entityData:Xml):Void
-	{
-		var x:Int = Std.parseInt(entityData.get("x"));
-		var y:Int = Std.parseInt(entityData.get("y"));
-		switch(entityName)
-		{
-			case "player":
-				_player.x = x;
-				_player.y = y;
-			case "enemy":
-				_grpEnemies.add(new DFSEnemy(x, y, _mWalls, _ground));
-			case "exit":
-				var escapable = StringToBool(entityData.get("escapable"));
-				_grpExits.add(new Exit(x, y, escapable));
-		}
 	}
 	
 	
@@ -225,12 +202,14 @@ class PlayState extends FlxState
 	{
 	}
 	
-	private function humanExit(human:Enemy, exit:Exit)
+	private function humanExit(human:Enemy, exit:Exit):Void
 	{
 		if (exit.canEscape())
 		{
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
+			
+			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 		}
 		else
 		{

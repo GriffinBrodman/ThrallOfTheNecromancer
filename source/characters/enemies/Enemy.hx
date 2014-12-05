@@ -262,7 +262,7 @@ class Enemy extends FlxSprite
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 		this.stunDuration = duration;
-	}	
+	}
 	
 	override public function destroy():Void 
 	{
