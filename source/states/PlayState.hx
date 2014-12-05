@@ -75,14 +75,14 @@ class PlayState extends FlxState
 		
 		loader = new LevelLoader();
 		
-		_bg = loader.getBackground();
+		//_bg = loader.getBackground();
 		_map = loader.getMap();
 		_mWalls = loader.getWalls();
 		_ground = loader.getGround();
 		_grpExits = loader.getExits();
 		_grpEnemies = loader.getEnemies();
 		
-		add(_bg);
+		//add(_bg);
 		add(_ground);
 		add(_mWalls);
 		add(_grpExits);

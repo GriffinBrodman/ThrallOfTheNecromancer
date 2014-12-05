@@ -122,16 +122,15 @@ class Player extends FlxSprite
 		}
 		*/
 		
-		/*
+		
 		// Update position based on speed. Because if you want things done right you do them yourself.
 		//Although I may find a way to make the actual velocity field work...eventually.
-		this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
+		//this.x += Math.sin (this.angle * Math.PI / 180) * speed;  //Position.x += Velocity.x
 		this.x = Math.max(this.x, 0);
-		this.x = Math.min(this.x, walls.width);
-		this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
+		this.x = Math.min(this.x, walls.width - this.width);
+		//this.y += Math.cos (this.angle * Math.PI / 180) * -speed; //Position.y += Velocity.y
 		this.y = Math.max(this.y, 0);
-		this.y = Math.min(this.y, walls.height);
-		*/
+		this.y = Math.min(this.y, walls.height - this.height);
 		
 		//Turns you left (relative)
 		if (left)

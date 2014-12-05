@@ -37,6 +37,8 @@ class Enemy extends FlxSprite
 	public var minimapDot:FlxSprite;	// Reference to dot on minimap to blink when necessary; Used by minimap
 	public var minimapDotTweening:Bool;
 	
+	private var oldFacing:Int;
+	
 	public function new(X:Float=0, Y:Float=0, map:FlxTilemap, ground:FlxTilemap)
 	{
 		super(X, Y);
@@ -47,7 +49,8 @@ class Enemy extends FlxSprite
 			height = 30;
 			offset.x = 6;
 			offset.y = 2;
-			animation.add("run", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 8, true);
+			animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8, true);
+			animation.add("lr", [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 8, true);
 			animation.play("run", true);
 		}
 		else
@@ -205,6 +208,7 @@ class Enemy extends FlxSprite
 	
 	override public function draw():Void 
 	{
+		oldFacing = facing;
 		if ((velocity.x != 0 || velocity.y != 0) )
 		{
 			
@@ -225,14 +229,31 @@ class Enemy extends FlxSprite
 			
 			switch(facing)
 			{
-				case FlxObject.LEFT, FlxObject.RIGHT:
-					//animation.play("lr");
-					
+				case FlxObject.LEFT:
+					if (facing != oldFacing)
+					{
+						animation.pause();
+						animation.play("lr");
+					}
+				case FlxObject.RIGHT:
+					if (facing != oldFacing)
+					{
+						animation.pause();
+						animation.play("lr");
+					}
 				case FlxObject.UP:
-					//animation.play("u");
-					
-				case FlxObject.DOWN:
-					//animation.play("d");
+					if (facing != oldFacing)
+					{
+						animation.pause();
+						animation.play("run");
+					}
+				case FlxObject.DOWN:	
+					if (facing != oldFacing)
+					{
+						animation.pause();
+						animation.play("run");
+					}
+
 			}
 		}
 			
