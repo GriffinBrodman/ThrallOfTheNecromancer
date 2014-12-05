@@ -37,6 +37,7 @@ class PlayState extends FlxState
 	public static var ESCAPEE_THRESHOLD = 3;	//TODO
 	public static var ENEMY_SIGHT_RANGE = 200;
 	public static var ENEMY_DETECTION_RANGE = 40;
+	public static var NUM_SNAKE_PARTS = 8;
 	
 	private var _player:Player;
 	private var _map:FlxOgmoLoader;
@@ -92,6 +93,30 @@ class PlayState extends FlxState
 		
 		var tempPlayer = loader.getPlayer();
 		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _mWalls, this.add);
+		_grpSnake = new FlxTypedGroup<SnakeBody>();
+		var lastPart:FlxSprite = _player;
+		for (i in 0...NUM_SNAKE_PARTS) {
+			_grpSnake.add(new SnakeBody(lastPart, i));
+			/*
+			var subhead:SnakeBody = new SnakeBody(_player, 1);
+			var subhead2:SnakeBody = new SnakeBody(subhead, 2);
+			var body:SnakeBody = new SnakeBody(subhead2, 3);
+			var body2:SnakeBody = new SnakeBody(body, 4);
+			var tail:SnakeBody = new SnakeBody(body2, 5);
+			var tail2:SnakeBody = new SnakeBody(tail, 6);
+			
+			_grpSnake.add(tail2);
+			_grpSnake.add(tail);
+			_grpSnake.add(body2);
+			_grpSnake.add(body);
+			_grpSnake.add(subhead2);
+			_grpSnake.add(subhead);
+			*/
+		}
+		
+		add(_grpSnake);
+		
+		add(_player);
 		
 		_map.loadEntities(placeEntities, "entities");
 		
@@ -99,28 +124,6 @@ class PlayState extends FlxState
 		{
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
-		
-		/**
-		 * Parts of the snake initialized
-		 */
-		var subhead:SnakeBody = new SnakeBody(_player, 1);
-		var subhead2:SnakeBody = new SnakeBody(subhead, 2);
-		var body:SnakeBody = new SnakeBody(subhead2, 3);
-		var body2:SnakeBody = new SnakeBody(body, 4);
-		var tail:SnakeBody = new SnakeBody(body2, 5);
-		var tail2:SnakeBody = new SnakeBody(tail, 6);
-				
-		_grpSnake = new FlxTypedGroup<SnakeBody>();
-		_grpSnake.add(tail2);
-		_grpSnake.add(tail);
-		_grpSnake.add(body2);
-		_grpSnake.add(body);
-		_grpSnake.add(subhead2);
-		_grpSnake.add(subhead);
-		
-		add(_grpSnake);
-		
-		add(_player);
 		
 		//FlxG.camera.setSize(FlxG.width, FlxG.height);
 		//FlxG.camera.setScale(1.5, 1.5);

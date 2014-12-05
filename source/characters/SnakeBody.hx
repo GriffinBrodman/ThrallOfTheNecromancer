@@ -14,6 +14,7 @@ import flixel.util.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
 import flixel.group.FlxGroup;
+import states.PlayState;
 
 class SnakeBody extends FlxSprite
 {
@@ -31,18 +32,18 @@ class SnakeBody extends FlxSprite
 	{
 		super(p.x, p.y);
 
-		if (type == 1) loadGraphic("assets/images/subhead1.png", true, 256, 256);
-		else if (type == 2) loadGraphic("assets/images/subhead2.png", true, 256, 256);
-		else if (type == 3) loadGraphic("assets/images/body1.png", true, 256, 256);
-		else if (type == 4) loadGraphic("assets/images/body2.png", true, 256, 256);
-		else if (type == 5) loadGraphic("assets/images/tail1.png", true, 256, 256);
-		else loadGraphic("assets/images/tail2.png", true, 256, 256);
+		if (type == 0) loadGraphic("assets/images/subhead1.png", true, 256, 256);
+		else if (type == 1) loadGraphic("assets/images/subhead2.png", true, 256, 256);
+		else if (type == 2) loadGraphic("assets/images/body1.png", true, 256, 256);
+		else if (type == PlayState.NUM_SNAKE_PARTS - 2) loadGraphic("assets/images/tail1.png", true, 256, 256);
+		else if (type == PlayState.NUM_SNAKE_PARTS - 1) loadGraphic("assets/images/tail2.png", true, 256, 256);
+		else loadGraphic("assets/images/body2.png", true, 256, 256);
 		scale = new FlxPoint(.125, .125); // 1/8 the size
 		setSize(32, 32);
 		offset = new FlxPoint(112, 112);
 
 		next = p;//Save the thing to follow
-		sizeOfBuffer = 7;
+		sizeOfBuffer = 5;
 				
 		prevPos = new Array<FlxPoint>();
 		for (i in 0...sizeOfBuffer) 

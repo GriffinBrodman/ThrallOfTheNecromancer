@@ -33,8 +33,8 @@ class Player extends FlxSprite
 	
 	private static var MAX_SPEED:Float = 200;	//Completely random
 	private static var MAX_ANGLE:Float = 15; 	//Because radians. Just trust me.
-	private static var DASH_MULTIPLIER:Float = 1.2;
-	private static var TURN_REDUCTION = .05;
+	private static var DASH_MULTIPLIER:Float = 1.5;
+	private static var DASH_TURN_MULTIPLIER = .5;
 
 	
 	private var screechCooldown:Int;
@@ -136,14 +136,14 @@ class Player extends FlxSprite
 		//Turns you left (relative)
 		if (left)
 		{
-			if (!dashing)	turnAngle = Math.min(MAX_ANGLE, turnAngle -= turnAccel);
-			else turnAngle = Math.min(MAX_ANGLE, turnAngle -= turnAccel * TURN_REDUCTION);
+			if (!dashing)	turnAngle = Math.min(MAX_ANGLE, turnAngle - turnAccel);
+			else turnAngle = Math.min(MAX_ANGLE, turnAngle - turnAccel * DASH_TURN_MULTIPLIER);
 		}
 		//Turns you right (relative)
 		if (right)
 		{
-			if (!dashing) turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel);
-			else turnAngle = Math.max( -MAX_ANGLE, turnAngle += turnAccel * TURN_REDUCTION);
+			if (!dashing) turnAngle = Math.max( -MAX_ANGLE, turnAngle + turnAccel);
+			else turnAngle = Math.max( -MAX_ANGLE, turnAngle + turnAccel * DASH_TURN_MULTIPLIER);
 		}
 		
 		// Prevent turn weirdness; If turnAngle value is really low, set to 0
