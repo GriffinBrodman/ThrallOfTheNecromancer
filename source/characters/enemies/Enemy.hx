@@ -275,4 +275,36 @@ class Enemy extends FlxSprite
 		}
 		super.destroy();		
 	}
+	
+	public function tileType(map:FlxTilemap,X:Float, Y:Float):Int 
+	{
+		return map.getTile(Std.int(X/128), Std.int(Y /128.0));
+	}
+	
+	public function getNeighborTiles(map:FlxTilemap, X:Float, Y:Float):Array<FlxPoint> 
+	{
+		var neighbors = new Array<FlxPoint>();
+		if (tileType(map, X, Y + 1) == 0) 
+		{
+			var n1 =  new FlxPoint(X, Y + 1);
+			neighbors.push(n1);
+		}
+		if (tileType(map, X, Y - 1) == 0) 
+		{
+			var n2 =  new FlxPoint(X, Y - 1);
+			neighbors.push(n2);
+		}
+		if (tileType(map, X + 1, Y) == 0) 
+		{
+			var n3 =  new FlxPoint(X + 1, Y);
+			neighbors.push(n3);
+		}
+		if (tileType(map, X - 1, Y) == 0) 
+		{
+			var n4 =  new FlxPoint(X - 1, Y);
+			neighbors.push(n4);
+		}
+		return neighbors;
+	}
+	
 }
