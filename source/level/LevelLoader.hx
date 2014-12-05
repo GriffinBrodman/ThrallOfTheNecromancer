@@ -22,9 +22,9 @@ class LevelLoader
 	var _bg:FlxSprite;
 	private var _levelnum = 1;
 	private var levelPathFrag = "assets/data/room";
-	private var levelExtension = "Big.oel";
+	private var levelExtension = ".oel";//"Big.oel";
 	private var levelBGFrag = "assets/images/room";
-	private var levelBGExtension = "Big.png";
+	private var levelBGExtension = ".png";// Big.png";
 	
 	public function new()
 	{
@@ -37,9 +37,11 @@ class LevelLoader
 	private function loadLevel(levelNum:Int)
 	{
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
-		_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
-		_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
-		_bg = new FlxSprite(0, 0, getBGPath(levelNum));
+		_walls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
+		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
+		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
+		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
+		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
 		_map.loadEntities(placeEntities, "entities");
 	}
 	
