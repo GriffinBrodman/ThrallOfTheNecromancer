@@ -18,6 +18,7 @@ import entities.Exit;
 
 class DFSEnemy extends Enemy
 {
+	
 
 
 	override public function new(X:Float=0, Y:Float=0, walls:FlxTilemap, ground:FlxTilemap) 
@@ -28,6 +29,7 @@ class DFSEnemy extends Enemy
 		pathing= false;
 		state = "idle";
 		scaredTime = 0;
+		
 	}
 	
 	//public function DFS():Array<FlxPoint>
