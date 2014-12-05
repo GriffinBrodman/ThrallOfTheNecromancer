@@ -24,6 +24,7 @@ class Enemy extends FlxSprite
 	public var pathing:Bool;
 	public var snakePos(default, null):FlxPoint;
 
+	private var map:Array<Array<Int>>;
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
@@ -46,16 +47,19 @@ class Enemy extends FlxSprite
 	{
 		super(X, Y);
 
-			loadGraphic(AssetPaths.walkinganimation1__png, true, 32, 32);
-			width = 20;
-			height = 30;
-			offset.x = 6;
-			offset.y = 2;
-			animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8, true);
-			animation.add("lr", [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 8, true);
-			animation.play("run", true);
+		loadGraphic(AssetPaths.walkinganimation1__png, true, 32, 32);
+		width = 20;
+		height = 30;
+		offset.x = 6;
+		offset.y = 2;
+		animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8, true);
+		animation.add("lr", [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 8, true);
+		animation.play("run", true);
 		
+		setFacingFlip(FlxObject.DOWN, false, false);
 		setFacingFlip(FlxObject.UP, false, true);
+		setFacingFlip(FlxObject.LEFT, false, false);
+		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
 		width = 20;
 		height = 30;
