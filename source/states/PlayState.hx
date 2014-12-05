@@ -34,7 +34,7 @@ class PlayState extends FlxState
 {
 	public static var NUM_SECONDS = 60;
 	public static var FRAMES_PER_SECOND = 60;
-	public static var ESCAPEE_THRESHOLD = 3;	//TODO
+	public static var ESCAPEE_THRESHOLD = 5;	//TODO
 	public static var ENEMY_SIGHT_RANGE = 200;
 	public static var ENEMY_DETECTION_RANGE = 40;
 	public static var NUM_SNAKE_PARTS = 9;
@@ -226,12 +226,15 @@ class PlayState extends FlxState
 	{
 	}
 	
-	private function humanExit(human:Enemy, exit:Exit)
+	private function humanExit(human:Enemy, exit:Exit):Void
 	{
-		if (exit.canEscape())
+		if (exit.canEscape() && !human.getEscaped())
 		{
+			human.setEscaped();
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
+			
+			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 		}
 		else
 		{

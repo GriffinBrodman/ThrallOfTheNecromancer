@@ -29,6 +29,7 @@ class Enemy extends FlxSprite
 	private var walls:FlxTilemap;
 	private var ground:FlxTilemap;
 	public var state:String;
+	private var escaped:Bool;
 	
 	private var stunDuration:Int;
 	private var fleeingTime:Int;
@@ -72,6 +73,7 @@ class Enemy extends FlxSprite
 		
 		walls = map;
 		path = new FlxPath();
+		escaped = false;
 	}
 	
 	public function updateCooldowns() 
@@ -264,7 +266,15 @@ class Enemy extends FlxSprite
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 		this.stunDuration = duration;
-	}	
+	}
+	
+	public function setEscaped():Void {
+		escaped = true;
+	}
+	
+	public function getEscaped():Bool {
+		return escaped;
+	}
 	
 	override public function destroy():Void 
 	{
