@@ -67,12 +67,12 @@ class Player extends FlxSprite
 		super(X, Y);
 
 		loadGraphic("assets/images/head.png", true, 256, 256);
-		scale = new FlxPoint(.125, .125);
+		scale = new FlxPoint(.25, .25);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("screech", [0], 6, false);
-		setSize(32, 32);
-		offset = new FlxPoint(112, 112);
+		setSize(64, 64);
+		offset = new FlxPoint(224, 224);
 		
 		this.grpEnemies = grpEnemies;
 		this.walls = walls;

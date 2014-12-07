@@ -23,7 +23,7 @@ class LevelLoader
 	var _bg:FlxSprite;
 	private var _levelnum:Int;
 	private var levelPathFrag = "assets/data/room";
-	private var levelExtension = ".oel";//"Big.oel";
+	private var levelExtension = "Medium.oel";
 	private var levelBGFrag = "assets/images/room";
 	private var levelBGExtension = ".png";// Big.png";
 	private var escapee_threshold:Int;
@@ -40,11 +40,12 @@ class LevelLoader
 	private function loadLevel(levelNum:Int)
 	{
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
-		_walls = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "walls");
+		_walls = _map.loadTilemap(AssetPaths.wall_tile_sheet_small__png, 64, 64, "walls");
 		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
-		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 32, 32, "ground");
+		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 64, 64, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
 		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
+		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
 	}
