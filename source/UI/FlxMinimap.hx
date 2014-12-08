@@ -34,9 +34,13 @@ class FlxMinimap extends FlxSprite
 	private var sx:Float;
 	private var sy:Float;
 	// the tilemap we are representing
-	private var tilemap:FlxTilemap;
+	private var humanTilemap:FlxTilemap;
+	private var playerTilemap:FlxTilemap;
+	private var humanPlayerTilemap:FlxTilemap;
 	// internal placeholders for the empty and solid colors
-	private var solidColor:UInt = 0x000000;
+	private var humanWallColor:UInt = 0x000000;
+	private var playerWallColor:UInt = 0x0000ff;
+	private var humanPlayerWallColor:UInt = 0x000077;
 	private var emptyColor:UInt = 0xffffff;
 	private var dotWidth:Int;
 	private var dotHeight:Int;
@@ -44,14 +48,16 @@ class FlxMinimap extends FlxSprite
 	private var grpEnemies:FlxTypedGroup<Enemy>;
 	private var grpExits:FlxTypedGroup<Exit>;
 	
-	public function new(tilemap:FlxTilemap, dots:FlxTypedGroup<FlxSprite>, X:UInt, Y:UInt, W:UInt, H:UInt) {			
+	public function new(humanTilemap:FlxTilemap, playerTilemap:FlxTilemap, humanPlayerTilemap:FlxTilemap, dots:FlxTypedGroup<FlxSprite>, X:UInt, Y:UInt, W:UInt, H:UInt) {			
 		super(X, Y);
-		this.tilemap = tilemap;
+		this.humanTilemap = humanTilemap;
+		this.playerTilemap = playerTilemap;
+		this.humanPlayerTilemap = humanPlayerTilemap;
 		this.dots = dots;
 		width = W;
 		height = H;
-		dotWidth = Std.int(W / tilemap.widthInTiles);
-		dotHeight = Std.int(H / tilemap.heightInTiles);
+		dotWidth = Std.int(W / humanTilemap.widthInTiles);
+		dotHeight = Std.int(H / humanTilemap.heightInTiles);
 		// don't scroll with the camera
 		scrollFactor = new FlxPoint();	
 		// read the level data and scale to correct size
@@ -140,7 +146,7 @@ class FlxMinimap extends FlxSprite
 	 */
 	public function follow(obj:FlxSprite, color:UInt = 0xFFFF0000):FlxSprite{		
 		var dot:FlxSprite = new FlxSprite();
-		dot.makeGraphic(dotWidth, dotHeight, color - 0xAA000000);
+		dot.makeGraphic(dotWidth, dotHeight, color - 0xEE000000);
 		dot.drawEllipse(0, 0, dotWidth, dotHeight, color);
 		dot.scrollFactor = new FlxPoint();
 		//dot.set_alpha(minimapAlpha);
@@ -158,10 +164,10 @@ class FlxMinimap extends FlxSprite
 	 */
 	private function scaleTo(W:Float, H:Float):Void {
 		// compute scale
-		var s:Int = Math.round(W / tilemap.widthInTiles);
-		if (tilemap.heightInTiles > tilemap.widthInTiles) {
+		var s:Int = Math.round(W / humanTilemap.widthInTiles);
+		if (humanTilemap.heightInTiles > humanTilemap.widthInTiles) {
 			// keep the longest side within the minimap bounds
-			s = Math.round(H / tilemap.heightInTiles);
+			s = Math.round(H / humanTilemap.heightInTiles);
 		}
 		// construct the scaling matrix
 		var matrix:Matrix = new Matrix();
@@ -170,8 +176,8 @@ class FlxMinimap extends FlxSprite
 		scaled.draw(bmd, matrix, null, null, null, true);
 		bmd = scaled;
 		// scale factor pre compute for objects
-		sx = tilemap.width / bmd.width;
-		sy = tilemap.height / bmd.height;
+		sx = humanTilemap.width / bmd.width;
+		sy = humanTilemap.height / bmd.height;
 		// offset needed to center the minimap
 		offset.x = -((W / 2) - (bmd.width / 2));
 		offset.y = -((H / 2) - (bmd.height / 2));
@@ -183,11 +189,15 @@ class FlxMinimap extends FlxSprite
 	 */
 	private function read():Void {
 		// draw unscaled
-		bmd = new BitmapData(tilemap.widthInTiles, tilemap.heightInTiles, true, 0xff000000);			
+		bmd = new BitmapData(humanTilemap.widthInTiles, humanTilemap.heightInTiles, true, 0xff000000);			
 		for (y in 0...bmd.height) {
 			for (x in 0...bmd.width) {
-				if(tilemap.getTile(x, y) > 0) {
-					bmd.setPixel(x, y, solidColor);
+				if (humanPlayerTilemap.getTile(x, y) > 0) {
+					bmd.setPixel(x, y, humanPlayerWallColor);
+				} else if (playerTilemap.getTile(x, y) > 0) {
+					bmd.setPixel(x, y, playerWallColor);
+				} else if (humanTilemap.getTile(x, y) > 0) {
+					bmd.setPixel(x, y, humanWallColor);
 				} else {
 					bmd.setPixel(x, y, emptyColor);
 				}

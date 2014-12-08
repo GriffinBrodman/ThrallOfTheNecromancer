@@ -18,13 +18,14 @@ import entities.Exit;
 
 class DFSEnemy extends Enemy
 {
-	
-
+	private static var NORMAL_SPEED:Int = 200;
+	private static var SCARED_SPEED:Int = 300;
 
 	override public function new(X:Float=0, Y:Float=0, walls:FlxTilemap, ground:FlxTilemap) 
 	{
-		super(X,Y, walls, ground);
-		speed = 65;		
+		normalSpeed = NORMAL_SPEED;
+		scaredSpeed = SCARED_SPEED;
+		super(X, Y, walls, ground);
 		scared = false;
 		pathing= false;
 		state = "idle";

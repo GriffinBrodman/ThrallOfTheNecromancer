@@ -38,9 +38,10 @@ class SnakeBody extends FlxSprite
 		else if (type == PlayState.NUM_SNAKE_PARTS - 2) loadGraphic("assets/images/tail1.png", true, 256, 256);
 		else if (type == PlayState.NUM_SNAKE_PARTS - 1) loadGraphic("assets/images/tail2.png", true, 256, 256);
 		else loadGraphic("assets/images/body2.png", true, 256, 256);
-		scale = new FlxPoint(.25, .25); // 1/8 the size
-		setSize(64, 64);
-		offset = new FlxPoint(112, 112);
+		scale = new FlxPoint(.25, .25); // 1/4 the size
+		updateHitbox();
+		//setSize(64, 64);
+		//offset = new FlxPoint(112, 112);
 
 		next = p;//Save the thing to follow
 		sizeOfBuffer = 5;

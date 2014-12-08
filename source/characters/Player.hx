@@ -31,8 +31,8 @@ class Player extends FlxSprite
 	public static var SCREECH_COOLDOWN:Int = 120;
 	public static var DASH_COOLDOWN:Int = 150;
 	
-	private static var MAX_SPEED:Float = 200;	//Completely random
-	private static var MAX_ANGLE:Float = 15; 	//Because radians. Just trust me.
+	private static var MAX_SPEED:Float = 400;	//Completely random
+	private static var MAX_ANGLE:Float = 15;
 	private static var DASH_MULTIPLIER:Float = 1.5;
 	private static var DASH_TURN_MULTIPLIER = .5;
 
@@ -71,8 +71,9 @@ class Player extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("screech", [0], 6, false);
-		setSize(64, 64);
-		offset = new FlxPoint(224, 224);
+		updateHitbox();
+		//setSize(64, 64);
+		//offset = new FlxPoint(224, 224);
 		
 		this.grpEnemies = grpEnemies;
 		this.walls = walls;

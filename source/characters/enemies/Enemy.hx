@@ -19,7 +19,9 @@ import entities.Exit;
 
 class Enemy extends FlxSprite
 {
-	public var speed:Int; 		
+	private var normalSpeed:Int;
+	private var scaredSpeed:Int;
+	private var curSpeed:Int;
 	public var scared:Bool;
 	public var pathing:Bool;
 	public var snakePos(default, null):FlxPoint;
@@ -47,11 +49,11 @@ class Enemy extends FlxSprite
 	{
 		super(X, Y);
 
-		loadGraphic(AssetPaths.walkinganimation1__png, true, 32, 32);
+		loadGraphic(AssetPaths.walkinganimation1__png, true, 64, 64);
 		width = 20;
 		height = 30;
 		offset.x = 6;
-		offset.y = 2;
+		offset.y = 1;
 		animation.add("run", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8, true);
 		animation.add("lr", [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21], 8, true);
 		animation.play("run", true);
@@ -61,10 +63,7 @@ class Enemy extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
-		width = 20;
-		height = 30;
-		offset.x = 6;
-		offset.y = 2;
+		curSpeed = normalSpeed;
 		
 		snakePos = FlxPoint.get();
 		
@@ -79,7 +78,10 @@ class Enemy extends FlxSprite
 		if (fleeingTime > 0)
 		{
 			fleeingTime--;
-			if (fleeingTime == 0) speed -=30;
+			if (fleeingTime == 0){
+				curSpeed = normalSpeed;
+				path.speed = normalSpeed;
+			}
 		}			
 	}
 	
@@ -123,7 +125,8 @@ class Enemy extends FlxSprite
 			pathing = false;
 			state = "chase";
 			fleeingTime = 50;
-			speed += 30;
+			curSpeed = scaredSpeed;
+			path.speed = scaredSpeed;
 		}
 		else 
 		{
@@ -146,7 +149,7 @@ class Enemy extends FlxSprite
 				if (pathPoints != null && !pathing) 
 				{
 					pathing = true;
-					path.start(this,pathPoints, speed);
+					path.start(this,pathPoints, curSpeed);
 				}
 			}
 		}
@@ -177,7 +180,7 @@ class Enemy extends FlxSprite
 				if (pathPoints != null && !pathing) 
 				{
 					pathing = true;
-					path.start(this,pathPoints, speed);
+					path.start(this,pathPoints, curSpeed);
 				}
 			}		
 		}
@@ -206,57 +209,35 @@ class Enemy extends FlxSprite
 	
 	override public function draw():Void 
 	{
-		oldFacing = facing;
-		if ((velocity.x != 0 || velocity.y != 0) )
+		if (Math.abs(velocity.x) > Math.abs(velocity.y))
 		{
-			
-			if (Math.abs(velocity.x) > Math.abs(velocity.y))
-			{
-				if (velocity.x < 0)
-					facing = FlxObject.LEFT;
-				else
-					facing = FlxObject.RIGHT;
-			}
+			if (velocity.x < 0)
+				facing = FlxObject.LEFT;
 			else
-			{
-				if (velocity.y < 0)
-					facing = FlxObject.UP;
-				else
-					facing = FlxObject.DOWN;
-			}
-			
-			switch(facing)
-			{
-				case FlxObject.LEFT:
-					if (facing != oldFacing)
-					{
-						animation.pause();
-						animation.play("lr");
-						trace("left");
-					}
-				case FlxObject.RIGHT:
-					if (facing != oldFacing)
-					{
-						animation.pause();
-						animation.play("lr");
-						trace("right");
-					}
-				case FlxObject.UP:
-					if (facing != oldFacing)
-					{
-						animation.pause();
-						animation.play("run");
-						trace("up");
-					}
-				case FlxObject.DOWN:	
-					if (facing != oldFacing)
-					{
-						animation.pause();
-						animation.play("run");
-						trace("down");
-					}
-
-			}
+				facing = FlxObject.RIGHT;
+		}
+		else if (Math.abs(velocity.x) < Math.abs(velocity.y))
+		{
+			if (velocity.y < 0)
+				facing = FlxObject.UP;
+			else
+				facing = FlxObject.DOWN;
+		}
+		else {
+			facing = FlxObject.NONE;
+		}
+		
+		if (facing == FlxObject.LEFT || facing == FlxObject.RIGHT)
+		{
+			animation.play("lr");
+		} 
+		else if (facing == FlxObject.DOWN || facing == FlxObject.UP)
+		{
+			animation.play("run");
+		}
+		else
+		{
+			animation.pause();
 		}
 			
 		super.draw();

@@ -14,16 +14,18 @@ import flixel.FlxSprite;
  */
 class LevelLoader
 {
-	var _map:FlxOgmoLoader;
-	var _walls:FlxTilemap;
-	var _ground:FlxTilemap;
-	var _player:Player;
-	var _enemies:FlxTypedGroup<Enemy>;
-	var _exits:FlxTypedGroup<Exit>;
-	var _bg:FlxSprite;
+	private var _map:FlxOgmoLoader;
+	private var _humanWalls:FlxTilemap;
+	private var _playerWalls:FlxTilemap;
+	private var _humanPlayerWalls:FlxTilemap;
+	private var _ground:FlxTilemap;
+	private var _player:Player;
+	private var _enemies:FlxTypedGroup<Enemy>;
+	private var _exits:FlxTypedGroup<Exit>;
+	private var _bg:FlxSprite;
 	private var _levelnum:Int;
 	private var levelPathFrag = "assets/data/room";
-	private var levelExtension = "Medium.oel";
+	private var levelExtension = ".oel";
 	private var levelBGFrag = "assets/images/room";
 	private var levelBGExtension = ".png";// Big.png";
 	private var escapee_threshold:Int;
@@ -39,15 +41,35 @@ class LevelLoader
 	
 	private function loadLevel(levelNum:Int)
 	{
-		_map = new FlxOgmoLoader(getLevelPath(levelNum));
-		_walls = _map.loadTilemap(AssetPaths.wall_tile_sheet_small__png, 64, 64, "walls");
+		//_map = new FlxOgmoLoader(getLevelPath(levelNum));
+		_map = new FlxOgmoLoader(AssetPaths.test__oel);
+		_humanWalls = _map.loadTilemap(AssetPaths.wall_tile_sheet_small__png, 64, 64, "walls");
 		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 64, 64, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
+		_playerWalls = _map.loadTilemap(AssetPaths.playerWall__png, 64, 64, "playerwalls");
 		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
+		createHumanPlayerWalls();
 		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
+	}
+	
+	private function createHumanPlayerWalls():Void {
+		var humanPlayerWallsData:Array<Int> = [];
+		for (i in 0..._humanWalls.heightInTiles) {
+			for (j in 0..._humanWalls.widthInTiles) {
+				if (_humanWalls.getTile(j, i) > 0 && _playerWalls.getTile(j, i) > 0)
+					humanPlayerWallsData.push(1);	// Fill with tile
+				else
+					humanPlayerWallsData.push(0);	// Don't fill with tile
+			}
+		}
+		
+		_humanPlayerWalls = new FlxTilemap();
+		_humanPlayerWalls.widthInTiles = _humanWalls.widthInTiles;
+		_humanPlayerWalls.heightInTiles = _humanWalls.heightInTiles;
+		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64, FlxTilemap.AUTO);
 	}
 	
 	private function getLevelPath(levelNum:Int):String
@@ -78,7 +100,7 @@ class LevelLoader
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_enemies.add(new DFSEnemy(x, y, _walls, _ground));
+				_enemies.add(new DFSEnemy(x, y, _humanWalls, _ground));
 			case "exit":
 				var escapable = StringToBool(entityData.get("escapable"));
 				_exits.add(new Exit(x, y, escapable));
@@ -92,7 +114,17 @@ class LevelLoader
 
 	public function getWalls():FlxTilemap
 	{
-		return _walls;
+		return _humanWalls;
+	}
+	
+	public function getPlayerWalls():FlxTilemap
+	{
+		return _playerWalls;
+	}
+	
+	public function getHumanPlayerWalls():FlxTilemap
+	{
+		return _humanPlayerWalls;
 	}
 	
 	public function getGround():FlxTilemap
