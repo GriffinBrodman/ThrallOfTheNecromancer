@@ -28,10 +28,11 @@ class Enemy extends FlxSprite
 	public var scared:Bool;
 	public var pathing:Bool;
 	public var snakePos(default, null):FlxPoint;
-
+	
+	private var position:FlxPoint;
 	private var currentTile:FlxPoint;	
-	private var pathMap:Array<Array<Bool>>;	//Keeps track of whether each node is visited.
-	private var path:Array<FlxPoint>;	//Stores the enemy path
+	private var pathArray:Array<FlxPoint>;	//Stores the enemy path
+	private var exitVisible = false;
 	
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
@@ -54,7 +55,7 @@ class Enemy extends FlxSprite
 	public function new(X:Float=0, Y:Float=0, map:FlxTilemap, ground:FlxTilemap)
 	{
 		super(X, Y);
-
+		
 		loadGraphic(AssetPaths.walkinganimation1__png, true, 64, 64);
 		width = 20;
 		height = 30;
@@ -70,11 +71,14 @@ class Enemy extends FlxSprite
 		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
 		curSpeed = normalSpeed;
-		
 		snakePos = FlxPoint.get();
 		
+		position = new FlxPoint(X, Y);
+		currentTile = new FlxPoint(Std.int(X / 64), Std.int(Y / 64));
+		pathArray = new Array<FlxPoint>();
 		walls = map;
 		path = new FlxPath();
+		pathing = false;
 	}
 	
 	public function updateCooldowns() 
@@ -98,6 +102,7 @@ class Enemy extends FlxSprite
 	
 	override public function update():Void 
 	{
+		position = new FlxPoint(this.x, this.y);
 		updateCurrentTile();
 		if (isFlickering())
 		{
@@ -107,9 +112,9 @@ class Enemy extends FlxSprite
 		{
 			idle();
 		}
-		if (state == "chase") 
+		if (state == "fleeing") 
 		{
-			chase();
+			fleeing();
 		}
 		
 		updateCooldowns();
@@ -130,7 +135,7 @@ class Enemy extends FlxSprite
 		{
 			path.cancel();
 			pathing = false;
-			state = "chase";
+			state = "fleeing";
 			fleeingTime = 50;
 			curSpeed = scaredSpeed;
 			path.speed = scaredSpeed;
@@ -146,23 +151,27 @@ class Enemy extends FlxSprite
 			{
 				path.cancel();
 				pathing = false;
-			}
-			
-			if (!pathing) {
-				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
-				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
-				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
+			}			
+			if (pathing == false) {
+				if (pathArray.length > 0) 
 				{
+					var newEnd:FlxPoint = pathArray.shift();
+					var pathPoints = walls.findPath(position, tileToCoords(newEnd));	
+					path.start(this, pathPoints, curSpeed);
 					pathing = true;
-					path.start(this,pathPoints, curSpeed);
 				}
+				else 
+				{
+					determinePath(walls);
+				}
+				
+				//while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
+				//endPoint = newEnd;
 			}
 		}
 	}
 	
-	public function chase():Void
+	public function fleeing():Void
 	{
 		if (fleeingTime == 0)
 		{
@@ -189,10 +198,35 @@ class Enemy extends FlxSprite
 					pathing = true;
 					path.start(this,pathPoints, curSpeed);
 				}
-			}		
+			}
 		}
 	}
+	public function determinePath(tileMap:FlxTilemap):Void {}
 	
+	//Checks if a player can see any object in the group passed in. Assumes an enemy can look in all four 
+	
+	public function canSee(goals:FlxTypedGroup<Exit>, bool:Bool):Bool
+	{
+		while (!exitVisible) 
+		{
+			goals.forEach(canSeeHelper);
+		}
+		return exitVisible;
+	}
+	
+	public function canSeeHelper(exit:Exit):Void
+	{
+		var result:FlxPoint = new FlxPoint();
+		{
+			var exitPos = new FlxPoint(exit.x, exit.y);
+			walls.ray(position, exitPos, result, 1);
+			if (result == null) 
+			{
+				exitVisible = true;
+			}
+		}
+		exitVisible = false;
+	}
 		
 	public function inLOS(X:Float, Y:Float):Bool
 	{
@@ -269,13 +303,19 @@ class Enemy extends FlxSprite
 	
 	public function updateCurrentTile():Void 
 	{
-		currentTile = new FlxPoint(Std.int(X / 128), Std.int(Y / 128.0));
+		currentTile = new FlxPoint(Std.int(this.x/64), Std.int(this.y/64));
+	}
+	
+	public function tileToCoords(tile:FlxPoint):FlxPoint 
+	{
+		var point = new FlxPoint(tile.x * 64, tile.y * 64);
+		return point;
 	}
 	
 	//Returns the type of the tile at the given tile (not world) coordinates
 	public function tileType(map:FlxTilemap,X:Float, Y:Float):Int 
 	{
-		return map.getTile(Std.int(X/128), Std.int(Y /128.0));
+		return map.getTile(Std.int(X/64), Std.int(Y /64.0));
 	}
 	
 	//Takes in a tilemap and tile coordinates; Returns an array of all the pathable neighbor tiles

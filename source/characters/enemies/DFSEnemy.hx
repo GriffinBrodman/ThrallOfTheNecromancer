@@ -33,7 +33,7 @@ class DFSEnemy extends Enemy
 		
 	}
 		
-	public function determinePath(tileMap:FlxTilemap):Void
+	override public function determinePath(tileMap:FlxTilemap):Void
 	{	
 		//Declare some temp data structures for pathfinding. 
 		var path = new Array<FlxPoint>(); 																								//Keeps track of the path to exit	
