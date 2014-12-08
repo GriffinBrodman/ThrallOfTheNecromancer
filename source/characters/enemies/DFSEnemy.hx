@@ -32,17 +32,8 @@ class DFSEnemy extends Enemy
 		scaredTime = 0;
 		
 	}
-	/* procedure DFS-iterative(G,v):
-	 * 		let S be a stack
-	 * 		S.push(currentTile)
-	 * 		while S is not empty
-	 * 			nextTile = S.pop() 
-	 * 			if nextTile is not labeled as discovered:
-	 * 				label v as discovered
-	 * 				for all edges from v to w in G.adjacentEdges(v) do
-	 * 					S.push(w)*/
 		
-	public function determinePath(tileMap:FlxTilemap, pathMap):Array<FlxPoint>
+	public function determinePath(tileMap:FlxTilemap, pathMap):Void
 	{	
 		//Declare some temp data structures for pathfinding. 
 		var path = new Array<FlxPoint>(); 			//Keeps track of the path to exit	
@@ -58,17 +49,18 @@ class DFSEnemy extends Enemy
 			if (S.length != 0) 
 			{
 				nextTile = S.pop();
-				if (visitedArrayArray[nextTile.x][nextTile.y] == false) 
+				if (visitedArrayArray[Std.int(nextTile.x)][Std.int(nextTile.y)] == false) 
 				{					
-					visitedArrayArray[nextTile.x][nextTile.y] = true;
+					visitedArrayArray[Std.int(nextTile.x)][Std.int(nextTile.y)] = true;
 					path.push(nextTile);
-					for (n in 0...getNeighborTiles(tileMap, (Std.int(nextTile.x / 128)), (Std.int(nextTile / 128))).length) 
+					for (n in 0...(getNeighborTiles(tileMap, (Std.int(nextTile.x / 128)), (Std.int(nextTile.y/ 128))).length)) 
 					{
-						S.push(n);
+						S.push(getNeighborTiles(tileMap, (Std.int(nextTile.x / 128)), (Std.int(nextTile.y/ 128)))[n]);
 					}
 				}			
 			}
 		}		
+		pathArray = path;
 	}
 
 	

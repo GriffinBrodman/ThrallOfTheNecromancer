@@ -30,8 +30,7 @@ class Enemy extends FlxSprite
 	public var snakePos(default, null):FlxPoint;
 
 	private var currentTile:FlxPoint;	
-	private var pathMap:Array<Array<Bool>>;	//Keeps track of whether each node is visited.
-	private var path:Array<FlxPoint>;	//Stores the enemy path
+	private var pathArray:Array<FlxPoint>;	//Stores the enemy path
 	
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
@@ -269,7 +268,7 @@ class Enemy extends FlxSprite
 	
 	public function updateCurrentTile():Void 
 	{
-		currentTile = new FlxPoint(Std.int(X / 128), Std.int(Y / 128.0));
+		currentTile = new FlxPoint(Std.int(this.x/128), Std.int(this.y/128.0));
 	}
 	
 	//Returns the type of the tile at the given tile (not world) coordinates
