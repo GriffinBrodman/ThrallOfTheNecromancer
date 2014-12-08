@@ -132,6 +132,7 @@ class PlayState extends FlxState
 		_humanPlayerWalls = loader.getHumanPlayerWalls();
 		_ground = loader.getGround();
 		_grpExits = loader.getExits();
+		Enemy.exits = loader.getExitsMap();
 		_grpEnemies = loader.getEnemies();
 		_escapeLimit = loader.getEscapeeThreshold();
 		//_bg = loader.getBackground();

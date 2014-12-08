@@ -7,6 +7,8 @@ import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
 import flixel.FlxSprite;
+import flixel.util.FlxPoint;
+import haxe.ds.IntMap;
 
 /**
  * ...
@@ -22,6 +24,7 @@ class LevelLoader
 	private var _player:Player;
 	private var _enemies:FlxTypedGroup<Enemy>;
 	private var _exits:FlxTypedGroup<Exit>;
+	private var _exitsMap:IntMap<Bool>;
 	private var _bg:FlxSprite;
 	private var _levelnum:Int;
 	private var levelPathFrag = "assets/data/room";
@@ -35,12 +38,13 @@ class LevelLoader
 		_player = new Player(0, 0, null, null, null);
 		_enemies = new FlxTypedGroup<Enemy>();
 		_exits = new FlxTypedGroup<Exit>();
+		_exitsMap = new IntMap<Bool>();
 		_levelnum = levelNum;
 		loadLevel(_levelnum);
 	}
 	
 	private function loadLevel(levelNum:Int)
-	{
+	{		
 		//_map = new FlxOgmoLoader(getLevelPath(levelNum));
 		_map = new FlxOgmoLoader(AssetPaths.test__oel);
 		_humanWalls = _map.loadTilemap(AssetPaths.wall_tile_sheet_small__png, 64, 64, "walls");
@@ -57,9 +61,9 @@ class LevelLoader
 	
 	private function createHumanPlayerWalls():Void {
 		var humanPlayerWallsData:Array<Int> = [];
-		for (i in 0..._humanWalls.heightInTiles) {
-			for (j in 0..._humanWalls.widthInTiles) {
-				if (_humanWalls.getTile(j, i) > 0 && _playerWalls.getTile(j, i) > 0)
+		for (y in 0..._humanWalls.heightInTiles) {
+			for (x in 0..._humanWalls.widthInTiles) {
+				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0)
 					humanPlayerWallsData.push(1);	// Fill with tile
 				else
 					humanPlayerWallsData.push(0);	// Don't fill with tile
@@ -102,8 +106,9 @@ class LevelLoader
 			case "enemy":
 				_enemies.add(new DFSEnemy(x, y, _humanWalls, _ground));
 			case "exit":
-				var escapable = StringToBool(entityData.get("escapable"));
+				var escapable:Bool = StringToBool(entityData.get("escapable"));
 				_exits.add(new Exit(x, y, escapable));
+				_exitsMap.set(Std.int((x / 64) + (y / 64) * _humanWalls.widthInTiles), escapable);
 		}
 	}
 	
@@ -145,6 +150,11 @@ class LevelLoader
 	public function getExits():FlxTypedGroup<Exit>
 	{
 		return _exits;
+	}
+	
+	public function getExitsMap():IntMap<Bool>
+	{
+		return _exitsMap;
 	}
 	
 	public function getBackground():FlxSprite

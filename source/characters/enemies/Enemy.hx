@@ -14,11 +14,14 @@ import flixel.util.FlxPath;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
+import haxe.ds.IntMap;
 using flixel.util.FlxSpriteUtil;
 import entities.Exit;
 
 class Enemy extends FlxSprite
 {
+	public static var exits:IntMap<Bool>;
+	
 	private var normalSpeed:Int;
 	private var scaredSpeed:Int;
 	private var curSpeed:Int;
@@ -288,6 +291,18 @@ class Enemy extends FlxSprite
 			neighbors.push(n4);
 		}
 		return neighbors;
+	}
+	
+	private function isExit(location:FlxPoint):Bool {
+		if (exits == null){
+			trace("exits has not been initialized yet");
+			return false;
+		}
+		else {
+			var val:Null<Bool> = exits.get(Std.int(location.x + location.y * walls.widthInTiles));
+			return val == true;
+		}
+		
 	}
 	
 }
