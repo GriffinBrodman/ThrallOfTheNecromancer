@@ -29,7 +29,10 @@ class Enemy extends FlxSprite
 	public var pathing:Bool;
 	public var snakePos(default, null):FlxPoint;
 
-	private var map:Array<Array<Int>>;
+	private var currentTile:FlxPoint;	
+	private var pathMap:Array<Array<Bool>>;	//Keeps track of whether each node is visited.
+	private var path:Array<FlxPoint>;	//Stores the enemy path
+	
 	private var path:FlxPath;
 	private var endPoint:FlxPoint;
 	private var goals:FlxTypedGroup<Exit>;
@@ -95,6 +98,7 @@ class Enemy extends FlxSprite
 	
 	override public function update():Void 
 	{
+		updateCurrentTile();
 		if (isFlickering())
 		{
 			return;
@@ -262,11 +266,19 @@ class Enemy extends FlxSprite
 		super.destroy();		
 	}
 	
+	
+	public function updateCurrentTile():Void 
+	{
+		currentTile = new FlxPoint(Std.int(X / 128), Std.int(Y / 128.0));
+	}
+	
+	//Returns the type of the tile at the given tile (not world) coordinates
 	public function tileType(map:FlxTilemap,X:Float, Y:Float):Int 
 	{
 		return map.getTile(Std.int(X/128), Std.int(Y /128.0));
 	}
 	
+	//Takes in a tilemap and tile coordinates; Returns an array of all the pathable neighbor tiles
 	public function getNeighborTiles(map:FlxTilemap, X:Float, Y:Float):Array<FlxPoint> 
 	{
 		var neighbors = new Array<FlxPoint>();

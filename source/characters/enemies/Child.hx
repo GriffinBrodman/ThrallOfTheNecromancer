@@ -18,14 +18,13 @@ import entities.Exit;
 
 class DFSEnemy extends Enemy
 {
-	private static var NORMAL_SPEED:Int = 200;
-	private static var SCARED_SPEED:Int = 300;
+	
+
 
 	override public function new(X:Float=0, Y:Float=0, walls:FlxTilemap, ground:FlxTilemap) 
 	{
-		normalSpeed = NORMAL_SPEED;
-		scaredSpeed = SCARED_SPEED;
-		super(X, Y, walls, ground);
+		super(X,Y, walls, ground);
+		speed = 65;		
 		scared = false;
 		pathing= false;
 		state = "idle";
@@ -52,24 +51,31 @@ class DFSEnemy extends Enemy
 				
 		S.push(currentTile);
 		
-		//If you haven't found the exit, keep searching
+		//If you can't see the exit, keep searching
 		while (!isExit(path[path.length - 1])) 
 		{
-			if (S.length != 0) 
+			//Check if the tile you are on is an intersection by seeing if it has more than 2 neighbors
+			if (getNeighborTiles(tileMap, currentTile.x, currentTile.y).length < 3 )  //If it's not an intersection, dfs until you are at an intersection
 			{
-				nextTile = S.pop();
-				if (visitedArrayArray[nextTile.x][nextTile.y] == false) 
-				{					
-					visitedArrayArray[nextTile.x][nextTile.y] = true;
-					path.push(nextTile);
-					for (n in 0...getNeighborTiles(tileMap, (Std.int(nextTile.x / 128)), (Std.int(nextTile / 128))).length) 
-					{
-						S.push(n);
-					}
-				}			
+				if (S.length != 0) 
+				{
+					nextTile = S.pop();
+					if (visitedArrayArray[nextTile.x][nextTile.y] == false) 
+					{					
+						visitedArrayArray[nextTile.x][nextTile.y] = true;
+						path.push(nextTile);
+						for (n in 0...getNeighborTiles(tileMap, (Std.int(nextTile.x / 128)), (Std.int(nextTile / 128))).length) 
+						{
+							S.push(n);
+						}
+					}			
+				}
 			}
-		}		
-	}
+			else //If you ARE on an intersection, choose a random direction to path to by adding a random neighbor
+			{
+				path.push(getObject_getRandom_T(getNeighborTiles(tileMap, currentTile.x, currentTile.y), 0, getNeighborTiles(tileMap, currentTile.x, currentTile.y).length));
+			}
+		}
 
 	
 	override public function update():Void 
