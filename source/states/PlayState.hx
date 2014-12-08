@@ -58,7 +58,7 @@ class PlayState extends FlxState
 	private var _bg:FlxSprite;
 	private var debug:FlxText;
 	private var _currLevel:Int;
-	private var _numLevels = 3;
+	private var _numLevels = 5;
 	
 	public function new(levelNum:Int) 
 	{
@@ -109,9 +109,6 @@ class PlayState extends FlxState
 		//FlxG.camera.setScale(1.5, 1.5);
 		//We will use the following line for the bigger scale, don't delete
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
-	
-		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
-
 		
 		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls);
 		add(_hud);
@@ -135,6 +132,7 @@ class PlayState extends FlxState
 		Enemy.exits = loader.getExitsMap();
 		_grpEnemies = loader.getEnemies();
 		_escapeLimit = loader.getEscapeeThreshold();
+		_timer = loader.getTime() * FRAMES_PER_SECOND;
 		//_bg = loader.getBackground();
 	}
 	

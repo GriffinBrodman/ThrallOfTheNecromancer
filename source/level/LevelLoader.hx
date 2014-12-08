@@ -27,6 +27,7 @@ class LevelLoader
 	private var _exitsMap:IntMap<Bool>;
 	private var _bg:FlxSprite;
 	private var _levelnum:Int;
+	private var _timeLeft:Int;
 	private var levelPathFrag = "assets/data/room";
 	private var levelExtension = ".oel";
 	private var levelBGFrag = "assets/images/room";
@@ -58,6 +59,7 @@ class LevelLoader
 		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
+		_timeLeft = Std.parseInt(_map.getProperty("time"));
 	}
 	
 	private function createHumanPlayerWalls():Void {
@@ -170,6 +172,11 @@ class LevelLoader
 	public function getEscapeeThreshold():Int
 	{
 		return escapee_threshold;
+	}
+	
+	public function getTime():Int
+	{
+		return _timeLeft;
 	}
 	
 	public function getCurrLevel()
