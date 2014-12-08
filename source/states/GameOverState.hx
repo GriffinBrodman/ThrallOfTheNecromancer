@@ -12,22 +12,24 @@ using flixel.util.FlxSpriteUtil;
 
 class GameOverState extends FlxState
 {
-	private var _score:Int = 0;			// number of coins we've collected
+	private var _currLevel:Int;			// number of coins we've collected
 	private var _win:Bool;				// if we won or lost
 	private var _txtTitle:FlxText;		// the title text
 	private var _txtMessage:FlxText;	// the final score message text
 	private var _txtScore:FlxText;		// text of the score
 	private var _txtHiScore:FlxText;	// text to show the hi-score
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
+	private var _btnRetry:FlxButton;
 	
 	/**
 	 * Called from PlayState, this will set our win and score variables
 	 * @param	Win		true if the player beat the boss, false if they died
 	 * @param	Score	the number of coins collected
 	 */
-	public function new(Win:Bool) 
+	public function new(Win:Bool, currLevel:Int) 
 	{
 		_win = Win;
+		_currLevel = currLevel;
 		super();
 	}
 	
@@ -50,22 +52,26 @@ class GameOverState extends FlxState
 		_txtMessage.screenCenter(true, false);
 		add(_txtMessage);
 		
-		_txtScore = new FlxText((FlxG.width / 2), 0, 0, Std.string(_score), 8);
+		/*_txtScore = new FlxText((FlxG.width / 2), 0, 0, Std.string(_score), 8);
 		_txtScore.screenCenter(false, true);
-		add(_txtScore);
+		add(_txtScore);*/
 		
 		// we want to see what the hi-score is
-		var _hiScore = checkHiScore(_score);
+		//var _hiScore = checkHiScore(_score);
 		
-		_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + Std.string(_hiScore), 8);
+		/*_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + Std.string(_hiScore), 8);
 		_txtHiScore.alignment = "center";
 		_txtHiScore.screenCenter(true, false);
-		add(_txtHiScore);
+		add(_txtHiScore);*/
 		
 		_btnMainMenu = new FlxButton(0, FlxG.height - 32, "Main Menu", goMainMenu);
 		_btnMainMenu.screenCenter(true, false);
 		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnMainMenu);
+		
+		_btnRetry = new FlxButton(0, FlxG.height - 64, "Retry", retry);
+		_btnRetry.screenCenter(true, false);
+		add(_btnRetry);
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
@@ -107,6 +113,13 @@ class GameOverState extends FlxState
 	{
 		FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
 			FlxG.switchState(new MenuState());
+		});
+	}
+	
+	private function retry():Void
+	{
+		FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
+			FlxG.switchState(new PlayState(_currLevel));
 		});
 	}
 	
