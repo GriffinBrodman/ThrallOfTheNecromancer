@@ -47,7 +47,7 @@ class LevelLoader
 	{		
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
 		//_map = new FlxOgmoLoader(AssetPaths.test2__oel);
-		_map.loadTilemap(AssetPaths.wheat_tile_set__png, 64, 64, "walls");
+		_humanWalls = _map.loadTilemap(AssetPaths.wheat_tile_set__png, 64, 64, "walls");
 		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 64, 64, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
@@ -63,8 +63,11 @@ class LevelLoader
 		var humanPlayerWallsData:Array<Int> = [];
 		for (y in 0..._humanWalls.heightInTiles) {
 			for (x in 0..._humanWalls.widthInTiles) {
-				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0)
+				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0){
 					humanPlayerWallsData.push(1);	// Fill with tile
+					_humanWalls.setTile(x, y, 0);
+					_playerWalls.setTile(x, y, 0);
+				}
 				else
 					humanPlayerWallsData.push(0);	// Don't fill with tile
 			}

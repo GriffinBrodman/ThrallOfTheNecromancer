@@ -180,6 +180,8 @@ class PlayState extends FlxState
 		}
 		FlxG.collide(_humanWalls, _grpEnemies);
 		FlxG.collide(_playerWalls, _player);
+		FlxG.collide(_humanPlayerWalls, _grpEnemies);
+		FlxG.collide(_humanPlayerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 	}
