@@ -27,6 +27,7 @@ class LevelLoader
 	private var _exitsMap:IntMap<Bool>;
 	private var _bg:FlxSprite;
 	private var _levelnum:Int;
+	private var _timeLeft:Int;
 	private var levelPathFrag = "assets/data/room";
 	private var levelExtension = ".oel";
 	private var levelBGFrag = "assets/images/room";
@@ -46,8 +47,9 @@ class LevelLoader
 	private function loadLevel(levelNum:Int)
 	{		
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
-		//_map = new FlxOgmoLoader(AssetPaths.test__oel);
-		_humanWalls = _map.loadTilemap(AssetPaths.wall_tile_sheet_small__png, 64, 64, "walls");
+		//_map = new FlxOgmoLoader(AssetPaths.test2__oel);
+		_humanWalls = _map.loadTilemap(AssetPaths.wheat_tile_set__png, 64, 64, "walls");
+		_humanWalls.loadMap(_humanWalls.getData(),AssetPaths.wheat_tile_set__png, 64, 64, FlxTilemap.AUTO);
 		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 64, 64, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
@@ -57,14 +59,18 @@ class LevelLoader
 		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
+		_timeLeft = Std.parseInt(_map.getProperty("time"));
 	}
 	
 	private function createHumanPlayerWalls():Void {
 		var humanPlayerWallsData:Array<Int> = [];
 		for (y in 0..._humanWalls.heightInTiles) {
 			for (x in 0..._humanWalls.widthInTiles) {
-				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0)
+				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0){
 					humanPlayerWallsData.push(1);	// Fill with tile
+					_humanWalls.setTile(x, y, 0);
+					_playerWalls.setTile(x, y, 0);
+				}
 				else
 					humanPlayerWallsData.push(0);	// Don't fill with tile
 			}
@@ -73,6 +79,7 @@ class LevelLoader
 		_humanPlayerWalls = new FlxTilemap();
 		_humanPlayerWalls.widthInTiles = _humanWalls.widthInTiles;
 		_humanPlayerWalls.heightInTiles = _humanWalls.heightInTiles;
+		//_humanPlayerWalls.customTileRemap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64, FlxTilemap.AUTO);
 	}
 	
@@ -165,6 +172,11 @@ class LevelLoader
 	public function getEscapeeThreshold():Int
 	{
 		return escapee_threshold;
+	}
+	
+	public function getTime():Int
+	{
+		return _timeLeft;
 	}
 	
 	public function getCurrLevel()
