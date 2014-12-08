@@ -36,10 +36,10 @@ class DFSEnemy extends Enemy
 	public function determinePath(tileMap:FlxTilemap):Void
 	{	
 		//Declare some temp data structures for pathfinding. 
-		var path = new Array<FlxPoint>(); 										//Keeps track of the path to exit	
-		var visitedArrayArray:Array<Array<Bool>> = new Array<Array<Bool>>();	//Keeps track of whether each node is visited.	
-		var nextTile = new FlxPoint();											//nextTile to add to path
-		var S = new Array<FlxPoint>();											//For tileMap iteration
+		var path = new Array<FlxPoint>(); 																								//Keeps track of the path to exit	
+		var visitedArrayArray:Array<Array<Bool>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) false]];	//Keeps track of whether each node is visited.	
+		var nextTile = new FlxPoint();																									//nextTile to add to path
+		var S = new Array<FlxPoint>();																									//For tileMap iteration
 				
 		S.push(currentTile);
 		
@@ -58,6 +58,10 @@ class DFSEnemy extends Enemy
 						S.push(getNeighborTiles(tileMap, (Std.int(nextTile.x / 128)), (Std.int(nextTile.y/ 128)))[n]);
 					}
 				}			
+			}
+			else 
+			{
+				break;
 			}
 		}		
 		pathArray = path;
