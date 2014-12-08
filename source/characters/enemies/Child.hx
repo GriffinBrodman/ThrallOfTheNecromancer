@@ -31,17 +31,8 @@ class DFSEnemy extends Enemy
 		scaredTime = 0;
 		
 	}
-	/* procedure DFS-iterative(G,v):
-	 * 		let S be a stack
-	 * 		S.push(currentTile)
-	 * 		while S is not empty
-	 * 			nextTile = S.pop() 
-	 * 			if nextTile is not labeled as discovered:
-	 * 				label v as discovered
-	 * 				for all edges from v to w in G.adjacentEdges(v) do
-	 * 					S.push(w)*/
 		
-	public function determinePath(tileMap:FlxTilemap, pathMap):Array<FlxPoint>
+	public function determinePath(tileMap:FlxTilemap):Array<FlxPoint>
 	{	
 		//Declare some temp data structures for pathfinding. 
 		var path = new Array<FlxPoint>(); 			//Keeps track of the path to exit	
@@ -74,8 +65,10 @@ class DFSEnemy extends Enemy
 			else //If you ARE on an intersection, choose a random direction to path to by adding a random neighbor
 			{
 				path.push(getObject_getRandom_T(getNeighborTiles(tileMap, currentTile.x, currentTile.y), 0, getNeighborTiles(tileMap, currentTile.x, currentTile.y).length));
-			}
+			}			
 		}
+		pathArray = path;
+	}
 
 	
 	override public function update():Void 

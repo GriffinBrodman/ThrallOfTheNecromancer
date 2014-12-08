@@ -106,9 +106,9 @@ class Enemy extends FlxSprite
 		{
 			idle();
 		}
-		if (state == "chase") 
+		if (state == "fleeing") 
 		{
-			chase();
+			fleeing();
 		}
 		
 		updateCooldowns();
@@ -129,7 +129,7 @@ class Enemy extends FlxSprite
 		{
 			path.cancel();
 			pathing = false;
-			state = "chase";
+			state = "fleeing";
 			fleeingTime = 50;
 			curSpeed = scaredSpeed;
 			path.speed = scaredSpeed;
@@ -161,7 +161,7 @@ class Enemy extends FlxSprite
 		}
 	}
 	
-	public function chase():Void
+	public function fleeing():Void
 	{
 		if (fleeingTime == 0)
 		{

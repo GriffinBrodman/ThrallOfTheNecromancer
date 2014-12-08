@@ -51,7 +51,7 @@ class LevelLoader
 		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 64, 64, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
-		_playerWalls = _map.loadTilemap(AssetPaths.playerWall__png, 64, 64, "playerwalls");
+		_playerWalls = _map.loadTilemap(AssetPaths.playerwall__png, 64, 64, "playerwalls");
 		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
 		createHumanPlayerWalls();
 		

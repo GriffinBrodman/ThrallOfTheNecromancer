@@ -33,13 +33,13 @@ class DFSEnemy extends Enemy
 		
 	}
 		
-	public function determinePath(tileMap:FlxTilemap, pathMap):Void
+	public function determinePath(tileMap:FlxTilemap):Void
 	{	
 		//Declare some temp data structures for pathfinding. 
-		var path = new Array<FlxPoint>(); 			//Keeps track of the path to exit	
-		var visitedArrayArray:Array<Array<Bool>>;	//Keeps track of whether each node is visited.	
-		var nextTile = new FlxPoint();				//nextTile to add to path
-		var S = new Array<FlxPoint>();				//For tileMap iteration
+		var path = new Array<FlxPoint>(); 										//Keeps track of the path to exit	
+		var visitedArrayArray:Array<Array<Bool>> = new Array<Array<Bool>>();	//Keeps track of whether each node is visited.	
+		var nextTile = new FlxPoint();											//nextTile to add to path
+		var S = new Array<FlxPoint>();											//For tileMap iteration
 				
 		S.push(currentTile);
 		
@@ -74,9 +74,9 @@ class DFSEnemy extends Enemy
 		super.idle();
 	}
 	
-	override public function chase():Void
+	override public function fleeing():Void
 	{
-		super.chase();
+		super.fleeing();
 	}	
 		
 	override public function inLOS(x:Float, y:Float):Bool
