@@ -39,8 +39,9 @@ class PlayState extends FlxState
 	public static var NUM_SNAKE_PARTS = 9;
 	
 	private var _player:Player;
-	private var _map:FlxOgmoLoader;
-	private var _mWalls:FlxTilemap;
+	private var _humanWalls:FlxTilemap;
+	private var _playerWalls:FlxTilemap;
+	private var _humanPlayerWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
 	//private var _mBorders:FlxTilemap;
 	private var loader:LevelLoader;
@@ -77,7 +78,9 @@ class PlayState extends FlxState
 		
 		//add(_bg);
 		add(_ground);
-		add(_mWalls);
+		add(_humanWalls);
+		add(_playerWalls);
+		add(_humanPlayerWalls);
 		add(_grpExits);
 		add(_grpEnemies);
 		
@@ -85,27 +88,12 @@ class PlayState extends FlxState
 		add(_grpUI);
 		
 		var tempPlayer = loader.getPlayer();
-		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _mWalls, this.add);
+		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _humanWalls, this.add);
 		_grpSnake = new FlxTypedGroup<SnakeBody>();
 		var lastPart:SnakeBody = null;
 		for (i in 0...NUM_SNAKE_PARTS) {
 			lastPart = new SnakeBody(lastPart == null ? _player : lastPart, i);
 			_grpSnake.add(lastPart);
-			/*
-			var subhead:SnakeBody = new SnakeBody(_player, 1);
-			var subhead2:SnakeBody = new SnakeBody(subhead, 2);
-			var body:SnakeBody = new SnakeBody(subhead2, 3);
-			var body2:SnakeBody = new SnakeBody(body, 4);
-			var tail:SnakeBody = new SnakeBody(body2, 5);
-			var tail2:SnakeBody = new SnakeBody(tail, 6);
-			
-			_grpSnake.add(tail2);
-			_grpSnake.add(tail);
-			_grpSnake.add(body2);
-			_grpSnake.add(body);
-			_grpSnake.add(subhead2);
-			_grpSnake.add(subhead);
-			*/
 		}
 		
 		add(_grpSnake);
@@ -125,7 +113,7 @@ class PlayState extends FlxState
 		_timer = NUM_SECONDS * FRAMES_PER_SECOND;
 
 		
-		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped, _mWalls);
+		_hud = new HUD(_timer, _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls);
 		add(_hud);
 		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
 		
@@ -139,10 +127,12 @@ class PlayState extends FlxState
 	
 	private function loadLevel()
 	{
-		_map = loader.getMap();
-		_mWalls = loader.getWalls();
+		_humanWalls = loader.getWalls();
+		_playerWalls = loader.getPlayerWalls();
+		_humanPlayerWalls = loader.getHumanPlayerWalls();
 		_ground = loader.getGround();
 		_grpExits = loader.getExits();
+		Enemy.exits = loader.getExitsMap();
 		_grpEnemies = loader.getEnemies();
 		_escapeLimit = loader.getEscapeeThreshold();
 		//_bg = loader.getBackground();
@@ -164,7 +154,7 @@ class PlayState extends FlxState
 	{
 		super.destroy();
 		_player = FlxDestroyUtil.destroy(_player);
-		_mWalls = FlxDestroyUtil.destroy(_mWalls);
+		_humanWalls = FlxDestroyUtil.destroy(_humanWalls);
 		_grpEnemies = FlxDestroyUtil.destroy(_grpEnemies);
 		_hud = FlxDestroyUtil.destroy(_hud);
 	}
@@ -188,8 +178,8 @@ class PlayState extends FlxState
 			else
 				FlxG.switchState(new PlayState(_currLevel + 1));
 		}
-		FlxG.collide(_mWalls, _grpEnemies);
-		//FlxG.collide(_playerWalls, _player);	TODO: Add this line when we get player walls
+		FlxG.collide(_humanWalls, _grpEnemies);
+		FlxG.collide(_playerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 	}
@@ -210,7 +200,7 @@ class PlayState extends FlxState
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
 			
-			FlxG.camera.flash(FlxColor.RED, 0.5, 0, null, true);
+			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 			if (_numEscaped >= _escapeLimit)
 			{
 				FlxG.switchState(new GameOverState(_won));
@@ -227,12 +217,12 @@ class PlayState extends FlxState
 	 * @param	e
 	 */
 	private function checkEnemyVision(e:Enemy):Void
-	{
+	{		
 		e.scared = false;
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
-		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _player.getMidpoint())
+		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _player.getMidpoint())
 		&& e.inLOS(_player.x, _player.y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
 			e.scared = true;
@@ -244,7 +234,7 @@ class PlayState extends FlxState
 			{
 				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
 				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
-				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _mWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
+				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
 				&& e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y )) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 				{
 					e.scared = true;

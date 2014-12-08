@@ -36,7 +36,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
 	 * escape, and number that have escaped.
 	 */
-	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, tiles:FlxTilemap) 
+	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, humanWalls:FlxTilemap, playerWalls:FlxTilemap, humanPlayerWalls:FlxTilemap) 
 	{
 		super();
 		this.player = player;
@@ -62,7 +62,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		add(_txtEscaped);
 		
 		// minimap
-		minimap = new FlxMinimap(tiles, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
+		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
 		this.add(minimap);
 		
 		forEach(function(spr:FlxSprite) {

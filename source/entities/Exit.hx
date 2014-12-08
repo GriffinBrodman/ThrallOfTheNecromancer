@@ -1,5 +1,6 @@
 package entities;
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -13,9 +14,9 @@ class Exit extends FlxSprite
 		super(X, Y);		
 		escape = escapable;
 		if (escape)
-			loadGraphic("assets/images/exit.png", false, 32, 32);
+			loadGraphic("assets/images/exit.png", false, 64, 64);
 		else
-			loadGraphic(AssetPaths.ground_tile__png, false, 32, 32);
+			makeGraphic(64, 64, FlxColor.TRANSPARENT);
 	}
 	
 	public function canEscape():Bool
