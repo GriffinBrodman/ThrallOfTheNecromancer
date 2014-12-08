@@ -1,4 +1,4 @@
-<level width="1280" height="960" room="0" escapeLimit="5">
+<level width="2560" height="1920" room="0" escapeLimit="5">
   <ground tileset="ground" exportMode="CSV">1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
@@ -60,30 +60,30 @@
 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,0,0,0,0,0,0,0,2
 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,2,2,2,2,2,2,2,2,2</walls>
   <entities>
-    <exit id="0" x="0" y="736" escapable="True" />
-    <exit id="1" x="960" y="928" escapable="True" />
-    <exit id="2" x="1248" y="224" escapable="True" />
-    <exit id="3" x="416" y="0" escapable="True" />
-    <exit id="4" x="96" y="832" escapable="False" />
-    <exit id="5" x="352" y="704" escapable="False" />
-    <exit id="6" x="288" y="576" escapable="False" />
-    <exit id="7" x="928" y="448" escapable="False" />
-    <exit id="8" x="1120" y="352" escapable="False" />
-    <exit id="9" x="832" y="160" escapable="False" />
-    <exit id="10" x="416" y="256" escapable="False" />
-    <exit id="11" x="1152" y="96" escapable="False" />
-    <exit id="12" x="96" y="128" escapable="False" />
-    <exit id="13" x="352" y="32" escapable="False" />
-    <exit id="14" x="480" y="32" escapable="False" />
-    <exit id="15" x="288" y="768" escapable="False" />
-    <enemy id="18" x="672" y="288" etype="0" />
-    <enemy id="19" x="704" y="288" etype="0" />
-    <enemy id="20" x="640" y="320" etype="0" />
-    <enemy id="21" x="608" y="320" etype="0" />
-    <player id="22" x="448" y="384" />
-    <enemy id="23" x="224" y="800" etype="0" />
-    <enemy id="24" x="224" y="768" etype="0" />
-    <enemy id="25" x="256" y="832" etype="0" />
-    <enemy id="26" x="288" y="832" etype="0" />
+    <exit id="0" x="0" y="1472" escapable="True" />
+    <exit id="1" x="1920" y="1856" escapable="True" />
+    <exit id="2" x="2496" y="448" escapable="True" />
+    <exit id="3" x="832" y="0" escapable="True" />
+    <exit id="4" x="192" y="1664" escapable="False" />
+    <exit id="5" x="704" y="1408" escapable="False" />
+    <exit id="6" x="576" y="1152" escapable="False" />
+    <exit id="7" x="1856" y="896" escapable="False" />
+    <exit id="8" x="2240" y="704" escapable="False" />
+    <exit id="9" x="1664" y="320" escapable="False" />
+    <exit id="10" x="832" y="512" escapable="False" />
+    <exit id="11" x="2304" y="192" escapable="False" />
+    <exit id="12" x="192" y="256" escapable="False" />
+    <exit id="13" x="704" y="64" escapable="False" />
+    <exit id="14" x="960" y="64" escapable="False" />
+    <exit id="15" x="576" y="1536" escapable="False" />
+    <enemy id="18" x="1344" y="576" etype="0" />
+    <enemy id="19" x="1408" y="576" etype="0" />
+    <enemy id="20" x="1280" y="640" etype="0" />
+    <enemy id="21" x="1216" y="640" etype="0" />
+    <player id="22" x="896" y="768" />
+    <enemy id="23" x="448" y="1600" etype="0" />
+    <enemy id="24" x="448" y="1536" etype="0" />
+    <enemy id="25" x="512" y="1664" etype="0" />
+    <enemy id="26" x="576" y="1664" etype="0" />
   </entities>
 </level>
