@@ -64,8 +64,11 @@ class LevelLoader
 		var humanPlayerWallsData:Array<Int> = [];
 		for (y in 0..._humanWalls.heightInTiles) {
 			for (x in 0..._humanWalls.widthInTiles) {
-				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0)
+				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0){
 					humanPlayerWallsData.push(1);	// Fill with tile
+					_humanWalls.setTile(x, y, 0);
+					_playerWalls.setTile(x, y, 0);
+				}
 				else
 					humanPlayerWallsData.push(0);	// Don't fill with tile
 			}
