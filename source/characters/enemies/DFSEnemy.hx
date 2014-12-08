@@ -18,8 +18,8 @@ import entities.Exit;
 
 class DFSEnemy extends Enemy
 {
-	private static var NORMAL_SPEED:Int = 200;
-	private static var SCARED_SPEED:Int = 300;
+	private static var NORMAL_SPEED:Int = 100;
+	private static var SCARED_SPEED:Int = 150;
 
 	override public function new(X:Float=0, Y:Float=0, walls:FlxTilemap, ground:FlxTilemap) 
 	{

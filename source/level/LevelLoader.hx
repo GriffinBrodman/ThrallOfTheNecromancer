@@ -45,7 +45,7 @@ class LevelLoader
 	}
 	
 	private function loadLevel(levelNum:Int)
-	{		
+	{
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
 		//_map = new FlxOgmoLoader(AssetPaths.test2__oel);
 		_humanWalls = _map.loadTilemap(AssetPaths.wheat_tile_set__png, 64, 64, "walls");
