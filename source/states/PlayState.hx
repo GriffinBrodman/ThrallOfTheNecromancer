@@ -171,7 +171,7 @@ class PlayState extends FlxState
 			if (loader.getCurrLevel() >= _numLevels)
 			{
 				_won = true;
-				FlxG.switchState(new GameOverState(_won));
+				FlxG.switchState(new GameOverState(_won, _currLevel));
 			}
 			else
 				FlxG.switchState(new PlayState(_currLevel + 1));
@@ -186,7 +186,7 @@ class PlayState extends FlxState
 	
 	private function doneFadeOut():Void 
 	{
-		FlxG.switchState(new GameOverState(_won));
+		FlxG.switchState(new GameOverState(_won, _currLevel));
 	}
 	
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
@@ -203,7 +203,7 @@ class PlayState extends FlxState
 			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 			if (_numEscaped >= _escapeLimit)
 			{
-				FlxG.switchState(new GameOverState(_won));
+				FlxG.switchState(new GameOverState(_won, _currLevel));
 			}
 		}
 		else
