@@ -16,7 +16,7 @@
     <Width>25600</Width>
     <Height>25600</Height>
   </LevelMaximumSize>
-  <Filename>D:\coding\Projects\Maize\assets\data\maize.oep</Filename>
+  <Filename>F:\Coding\Projects\Maize\assets\data\maize.oep</Filename>
   <AngleMode>Degrees</AngleMode>
   <CameraEnabled>false</CameraEnabled>
   <CameraSize>
@@ -25,7 +25,7 @@
   </CameraSize>
   <ExportCameraPosition>false</ExportCameraPosition>
   <LevelValueDefinitions>
-    <ValueDefinition xsi:type="IntValueDefinition" Name="room" Default="0" Min="0" Max="100" ShowSlider="false" />
+    <ValueDefinition xsi:type="IntValueDefinition" Name="time" Default="1" Min="10" Max="120" ShowSlider="false" />
     <ValueDefinition xsi:type="IntValueDefinition" Name="escapeLimit" Default="1" Min="1" Max="100" ShowSlider="false" />
   </LevelValueDefinitions>
   <LayerDefinitions>
