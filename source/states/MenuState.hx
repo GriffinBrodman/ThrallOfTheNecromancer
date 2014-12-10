@@ -10,7 +10,9 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxMath;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSave;
 using flixel.util.FlxSpriteUtil;
+
 
 /**
  * A FlxState which can be used for the game's menu.
@@ -26,13 +28,16 @@ class MenuState extends FlxState
 	#if desktop
 	private var _btnExit:FlxButton;
 	#end
+	private var _btnContinue:FlxButton;
 	private var _btnFullScreen:FlxButton;
+	private var levelStart:Int;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
+		levelStart = STARTLEVEL;
 		_background = new FlxSprite(0, 0, AssetPaths.menuBackground__jpg);
 		add(_background);
 		
@@ -50,21 +55,29 @@ class MenuState extends FlxState
 			#end
 		}
 		
-		/*
-		_txtTitle = new FlxText(0, 20, 0, "HaxeFlixel\nTutorial\nGame", 22);
-		_txtTitle.alignment = "center";
-		_txtTitle.screenCenter(true, false);
-		add(_txtTitle);
-		*/
-		
 		_btnPlay = new FlxButton(0, 0, "Play", clickPlay);
-		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width - 10;
-		_btnPlay.y = FlxG.height - _btnPlay.height - 50;
+		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width;
+		_btnPlay.y = FlxG.height - _btnPlay.height - 100;
 		_btnPlay.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnPlay);
+
+		var _save:FlxSave = new FlxSave();
+		if (_save.bind("maize"))
+		{
+			if (_save.data.Level != null &&
+			    _save.data.Level != STARTLEVEL)
+			{
+				levelStart = _save.data.Level;
+				_btnContinue = new FlxButton(0, 0, "Continue", clickPlay);
+				_btnContinue.x = (FlxG.width / 2) - _btnContinue.width;
+				_btnContinue.y = FlxG.height - _btnContinue.height - 75;
+				_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+				add(_btnContinue);
+			}
+		}
 		
 		_btnOptions = new FlxButton(0, 0, "Options", clickOptions);
-		_btnOptions.x = (FlxG.width / 2) + 10;
+		_btnOptions.x = (FlxG.width / 2) - _btnOptions.width;
 		_btnOptions.y = FlxG.height - _btnOptions.height - 50;
 		_btnOptions.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnOptions);
@@ -107,6 +120,13 @@ class MenuState extends FlxState
 		});
 	}
 	
+	private function clickContinue():Void
+	{
+		FlxG.camera.fade(FlxColor.BLACK,.33, false, function() {
+			FlxG.switchState(new PlayState(levelStart));
+		});
+	}
+	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
@@ -114,11 +134,13 @@ class MenuState extends FlxState
 	override public function destroy():Void
 	{
 		super.destroy();
-		//_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
+		_background = FlxDestroyUtil.destroy(_background);
 		_btnPlay = FlxDestroyUtil.destroy(_btnPlay);
 		_btnOptions = FlxDestroyUtil.destroy(_btnOptions);
 		#if desktop
 		_btnExit = FlxDestroyUtil.destroy(_btnExit);
 		#end
+		_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
+		_btnContinue = FlxDestroyUtil.destroy(_btnContinue);
 	}
 }

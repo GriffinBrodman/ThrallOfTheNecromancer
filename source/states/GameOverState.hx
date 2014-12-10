@@ -15,9 +15,6 @@ class GameOverState extends FlxState
 	private var _currLevel:Int;			// number of coins we've collected
 	private var _win:Bool;				// if we won or lost
 	private var _txtTitle:FlxText;		// the title text
-	private var _txtMessage:FlxText;	// the final score message text
-	private var _txtScore:FlxText;		// text of the score
-	private var _txtHiScore:FlxText;	// text to show the hi-score
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
 	private var _btnRetry:FlxButton;
 	
@@ -30,6 +27,7 @@ class GameOverState extends FlxState
 	{
 		_win = Win;
 		_currLevel = currLevel;
+		checkHiLevel(_currLevel);
 		super();
 	}
 	
@@ -47,34 +45,16 @@ class GameOverState extends FlxState
 		_txtTitle.screenCenter(true, false);
 		add(_txtTitle);
 		
-		_txtMessage = new FlxText(0, (FlxG.height / 2) - 18, 0, "Final Score:", 8);
-		_txtMessage.alignment = "center";
-		_txtMessage.screenCenter(true, false);
-		add(_txtMessage);
+		_btnRetry = new FlxButton(0, (FlxG.height / 2 - 10), "Retry", retry);
+		_btnRetry.screenCenter(true, false);
+		add(_btnRetry);
 		
-		/*_txtScore = new FlxText((FlxG.width / 2), 0, 0, Std.string(_score), 8);
-		_txtScore.screenCenter(false, true);
-		add(_txtScore);*/
-		
-		// we want to see what the hi-score is
-		//var _hiScore = checkHiScore(_score);
-		
-		/*_txtHiScore = new FlxText(0, (FlxG.height / 2) + 10, 0, "Hi-Score: " + Std.string(_hiScore), 8);
-		_txtHiScore.alignment = "center";
-		_txtHiScore.screenCenter(true, false);
-		add(_txtHiScore);*/
-		
-		_btnMainMenu = new FlxButton(0, FlxG.height - 32, "Main Menu", goMainMenu);
+		_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
 		_btnMainMenu.screenCenter(true, false);
 		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnMainMenu);
 		
-		_btnRetry = new FlxButton(0, FlxG.height - 64, "Retry", retry);
-		_btnRetry.screenCenter(true, false);
-		add(_btnRetry);
-		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
-		
 		super.create();
 	}
 	
@@ -84,24 +64,21 @@ class GameOverState extends FlxState
 	 * @param	Score	The new score
 	 * @return	the hi-score
 	 */
-	private function checkHiScore(Score:Int):Int
+	private function checkHiLevel(Level:Int):Int
 	{
-		var _hi:Int = Score;
+		var _hi:Int = Level;
 		var _save:FlxSave = new FlxSave();
-		if (_save.bind("flixel-tutorial"))
+		_save.bind("maize");
+		if (_save.data.Level != null &&
+			_save.data.Level > _hi)
 		{
-			if (_save.data.hiscore != null)
-			{
-				if (_save.data.hiscore > _hi)
-				{
-					_hi = _save.data.hiscore;
-				}
-				else
-				{
-					_save.data.hiscore = _hi;
-				}
-			}
+			_hi = _save.data.Level;
 		}
+		else
+		{
+			_save.data.Level = _hi;
+		}
+		_save.flush();
 		_save.close();
 		return _hi;
 	}
@@ -129,8 +106,7 @@ class GameOverState extends FlxState
 		
 		// clean up all our objects!
 		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
-		_txtMessage = FlxDestroyUtil.destroy(_txtMessage);
-		_txtScore = FlxDestroyUtil.destroy(_txtScore);
 		_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
+		_btnRetry = FlxDestroyUtil.destroy(_btnRetry);
 	}
 }
