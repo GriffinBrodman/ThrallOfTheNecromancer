@@ -42,7 +42,7 @@
       <ExportMode>CSV</ExportMode>
     </LayerDefinition>
     <LayerDefinition xsi:type="TileLayerDefinition">
-      <Name>walls</Name>
+      <Name>humanwalls</Name>
       <Grid>
         <Width>64</Width>
         <Height>64</Height>
@@ -79,7 +79,7 @@
   </LayerDefinitions>
   <Tilesets>
     <Tileset>
-      <Name>walls</Name>
+      <Name>humanwalls</Name>
       <FilePath>..\images\wall_tile_sheet_small.png</FilePath>
       <TileSize>
         <Width>64</Width>
