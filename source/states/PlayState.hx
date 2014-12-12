@@ -204,6 +204,7 @@ class PlayState extends FlxState
 				add(_startDelaySprite);
 				_startDelayText = new FlxText(FlxG.width / 2, FlxG.height / 2, 0, "", 32);
 				_startDelayText.scrollFactor.x = _startDelayText.scrollFactor.y = 0;
+				_startDelayText.screenCenter(true, true);
 				add(_startDelayText);
 				
 				_state = 1;
