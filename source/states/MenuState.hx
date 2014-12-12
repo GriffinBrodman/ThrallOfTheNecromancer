@@ -46,15 +46,9 @@ class MenuState extends FlxState
 		_btnFullScreen.y = 10;
 		add(_btnFullScreen);
 		
-		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
-		{
-			#if flash
-			FlxG.sound.playMusic(AssetPaths.HaxeFlixel_Tutorial_Game__mp3, 1, true);
-			#else
-			FlxG.sound.playMusic(AssetPaths.HaxeFlixel_Tutorial_Game__ogg, 1, true);
-			#end
-		}
+
 		
+
 		_btnPlay = new FlxButton(0, 0, "", clickPlay);
 		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 175, 285);
 		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width;

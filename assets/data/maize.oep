@@ -16,7 +16,7 @@
     <Width>25600</Width>
     <Height>25600</Height>
   </LevelMaximumSize>
-  <Filename>D:\Cornell\Fall 2014\Independent Game Study\ThrallOfTheNecromancer\assets\data\maize.oep</Filename>
+  <Filename>C:\Users\Mark\Workspace\Thrall\ThrallOfTheNecromancer\assets\data\maize.oep</Filename>
   <AngleMode>Degrees</AngleMode>
   <CameraEnabled>false</CameraEnabled>
   <CameraSize>
@@ -25,7 +25,7 @@
   </CameraSize>
   <ExportCameraPosition>false</ExportCameraPosition>
   <LevelValueDefinitions>
-    <ValueDefinition xsi:type="IntValueDefinition" Name="time" Default="1" Min="10" Max="120" ShowSlider="false" />
+    <ValueDefinition xsi:type="IntValueDefinition" Name="time" Default="1" Min="5" Max="120" ShowSlider="false" />
     <ValueDefinition xsi:type="IntValueDefinition" Name="escapeLimit" Default="1" Min="1" Max="100" ShowSlider="false" />
   </LevelValueDefinitions>
   <LayerDefinitions>
