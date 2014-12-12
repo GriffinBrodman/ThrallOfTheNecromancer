@@ -328,7 +328,7 @@ class PlayState extends FlxState
 			e.snakePos.copyFrom(_player.getMidpoint());
 			
 			if (!wasScared)
-				Camera.shake(0.01, 20);
+				Camera.shake(0.005, 20);
 			
 		}
 		else {
@@ -343,7 +343,7 @@ class PlayState extends FlxState
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
 					
 					if (!wasScared)
-						Camera.shake(0.01, 30);
+						Camera.shake(0.005, 20);
 				
 					break;
 				}
