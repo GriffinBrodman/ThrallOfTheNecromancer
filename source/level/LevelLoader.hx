@@ -111,7 +111,7 @@ class LevelLoader
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_enemies.add(new DFSEnemy(x, y, _humanWalls, _ground));
+				_enemies.add(new DFSEnemy(x, y, _humanWalls));
 			case "exit":
 				var escapable:Bool = StringToBool(entityData.get("escapable"));
 				_exits.add(new Exit(x, y, escapable));
