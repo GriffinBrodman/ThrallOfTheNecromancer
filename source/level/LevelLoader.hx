@@ -80,7 +80,7 @@ class LevelLoader
 		_humanPlayerWalls.widthInTiles = _humanWalls.widthInTiles;
 		_humanPlayerWalls.heightInTiles = _humanWalls.heightInTiles;
 		//_humanPlayerWalls.customTileRemap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64, FlxTilemap.AUTO);
+		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64);
 	}
 	
 	private function getLevelPath(levelNum:Int):String
