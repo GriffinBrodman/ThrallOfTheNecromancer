@@ -241,6 +241,10 @@ class PlayState extends FlxState
 			FlxG.collide(_humanPlayerWalls, _player);
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_grpEnemies, _grpExits, humanExit);
+			
+			if (FlxG.keys.anyJustPressed(["ESCAPE"])) {
+				this.openSubState(new PauseState());
+			}
 		}
 	}
 	
