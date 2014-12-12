@@ -259,7 +259,7 @@ class PlayState extends FlxState
 				_state = 3;
 			}
 			FlxG.collide(_humanWalls, _grpEnemies);
-			FlxG.collide(_playerWalls, _player);
+			//FlxG.overlap(_playerWalls, _player, snakeCollide);
 			FlxG.collide(_humanPlayerWalls, _grpEnemies);
 			FlxG.collide(_humanPlayerWalls, _player);
 			_grpEnemies.forEachAlive(checkEnemyVision);
@@ -283,7 +283,7 @@ class PlayState extends FlxState
 			}
 		}
 		FlxG.collide(_humanWalls, _grpEnemies);
-		FlxG.collide(_playerWalls, _player);
+		//FlxG.overlap(_playerWalls, _player, snakeCollide);
 		FlxG.collide(_humanPlayerWalls, _grpEnemies);
 		FlxG.collide(_humanPlayerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
@@ -345,6 +345,7 @@ class PlayState extends FlxState
 
 	}
 	
+	
 	private function doneFadeOut():Void 
 	{
 		FlxG.switchState(new GameOverState(_won, _currLevel));
@@ -371,6 +372,12 @@ class PlayState extends FlxState
 		{
 			human.setGoal(_grpExits);
 		}
+	}
+	
+	private function snakeCollide( wall:FlxTilemap, snake:Player):Void
+	{
+		snake.angle = snake.angle + 180;
+		
 	}
 
 	/**
