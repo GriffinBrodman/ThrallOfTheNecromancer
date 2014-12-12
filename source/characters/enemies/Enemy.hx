@@ -144,21 +144,33 @@ class Enemy extends FlxSprite
 	public function getNeighborTiles(map:FlxTilemap, X:Int, Y:Int):Array<FlxPoint> 
 	{
 		var neighbors = new Array<FlxPoint>();
-		if (tileType(map, X, Y + 1) == 0) 
+		if (Y + 1 < map.heightInTiles) 
 		{
+			if (tileType(map, X, Y + 1) == 0) 
+			{
 			neighbors.push(new FlxPoint(X, Y + 1));
+			}
 		}
-		if (tileType(map, X, Y - 1) == 0) 
+		if (Y - 1 > 0)
 		{
-			neighbors.push(new FlxPoint(X, Y - 1));
+			if (tileType(map, X, Y - 1) == 0) 
+			{
+				neighbors.push(new FlxPoint(X, Y - 1));
+			}
 		}
-		if (tileType(map, X + 1, Y) == 0) 
+		if (X + 1 < map.widthInTiles) 
 		{
-			neighbors.push(new FlxPoint(X + 1, Y));
+			if (tileType(map, X + 1, Y) == 0) 
+			{
+				neighbors.push(new FlxPoint(X + 1, Y));
+			}		
 		}
-		if (tileType(map, X - 1, Y) == 0) 
+		if (X - 1 > 0) 
 		{
-			neighbors.push(new FlxPoint(X - 1, Y));
+			if (tileType(map, X - 1, Y) == 0) 
+			{
+				neighbors.push(new FlxPoint(X - 1, Y));
+			}
 		}
 		return neighbors;
 	}
@@ -277,11 +289,13 @@ class Enemy extends FlxSprite
 				//Get neighbors of nextTile
 				
 				var neighbors = getNeighborTiles(tileMap, Std.int(nextTile.x), Std.int(nextTile.y));
+				trace(neighbors);
 				for (n in 0...neighbors.length) 
 				{					
 					//If the neighbor is unvisited, adds it to S
 					if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 					{
+						trace(neighbors[n]);
 						S.push(neighbors[n]);
 					}
 				}
@@ -332,7 +346,7 @@ class Enemy extends FlxSprite
 				if (pathToGoal[1] != pathToSnake[1]) 
 				{
 					trace("Step1: " + pathToGoal[1] + " is not the same as " + "Step1: " + pathToSnake[1]);
-					if (pathToGoal[2] != pathToGoal[1]) 
+					if (pathToGoal[2] != pathToSnake[2]) 
 					{
 						trace("Step2: " + pathToGoal[2] + " is not the same as " + "Step2: " + pathToSnake[2]);
 						endPoint = newGoal;
@@ -451,7 +465,17 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			else if (pathing == false ) 
+			else if (pathing == false)
+			{
+				flee();
+				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
+				if (pathPoints != null && !pathing) 
+				{
+					pathing = true;
+					path.start(this,pathPoints, curSpeed);
+				}
+			}
+			else /*if (pathing == false)*/ 
 			{
 				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
 				while (newEnd == endPoint) 
