@@ -59,6 +59,7 @@ class PlayState extends FlxState
 	private var debug:FlxText;
 	private var _currLevel:Int;
 	private var _numLevels:Int = 5;
+	private var _tutorial:FlxSprite;
 	
 	private var _state:Int = -1;
 	private var _startTimer:Int = 0;
@@ -124,6 +125,13 @@ class PlayState extends FlxState
 		debug.setPosition(100, FlxG.height - 30);
 		add(debug);
 		
+		if (_currLevel < 4)
+		{
+			_tutorial = new FlxSprite(50, 300);
+			_tutorial.loadGraphic("assets/images/tutorial" + _currLevel +".png");
+			add(_tutorial);
+		}
+		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		disableAll();
@@ -179,6 +187,10 @@ class PlayState extends FlxState
 		destroyGroup(_hud);
 		_startDelaySprite = FlxDestroyUtil.destroy(_startDelaySprite);
 		_startDelayText = FlxDestroyUtil.destroy(_startDelayText);
+		if (_currLevel < 4)
+		{
+			_tutorial.destroy();
+		}
 		super.destroy();
 	}
 	
