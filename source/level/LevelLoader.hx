@@ -68,7 +68,7 @@ class LevelLoader
 			for (x in 0..._humanWalls.widthInTiles) {
 				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0){
 					humanPlayerWallsData.push(1);	// Fill with tile
-					_humanWalls.setTile(x, y, 0);
+					//_humanWalls.setTile(x, y, 0);
 					_playerWalls.setTile(x, y, 0);
 				}
 				else
@@ -80,7 +80,7 @@ class LevelLoader
 		_humanPlayerWalls.widthInTiles = _humanWalls.widthInTiles;
 		_humanPlayerWalls.heightInTiles = _humanWalls.heightInTiles;
 		//_humanPlayerWalls.customTileRemap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64, FlxTilemap.AUTO);
+		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64);
 	}
 	
 	private function getLevelPath(levelNum:Int):String
@@ -111,7 +111,7 @@ class LevelLoader
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_enemies.add(new DFSEnemy(x, y, _humanWalls, _ground));
+				_enemies.add(new DFSEnemy(x, y, _humanWalls));
 			case "exit":
 				var escapable:Bool = StringToBool(entityData.get("escapable"));
 				_exits.add(new Exit(x, y, escapable));

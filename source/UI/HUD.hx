@@ -22,7 +22,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var BAR_HEIGHT:Int = 20;
 	
 	private static var MINIMAP_X:Int = 20;
-	private static var MINIMAP_Y:Int = 20;
+	private static var MINIMAP_Y:Int = 50;
 	private static var MINIMAP_WIDTH:Int = 200;
 	private static var MINIMAP_HEIGHT:Int = 200;
 	
@@ -30,6 +30,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechCooldownBar:FlxSprite;
+	private var dashCooldownBar:FlxSprite;
 	private var minimap:FlxMinimap;
 	
 	/** 
@@ -51,9 +52,10 @@ class HUD extends FlxTypedGroup<FlxSprite>
 
 		this.add(_txtTimer);
 
-				
-		// cooldown bar
+		// screech cooldown bar
 		screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
+		// dash cooldown bar
+		dashCooldownBar = createBar(BAR_X, BAR_Y + 20 + BAR_GAP, BAR_WIDTH, 20, FlxColor.BLUE);
 		
 		// escapee text
 		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
@@ -134,6 +136,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtEscaped.text = escaped;
 		
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
+		updateBar(dashCooldownBar, Player.DASH_COOLDOWN - player.getDashCooldown(), Player.DASH_COOLDOWN, BAR_WIDTH);
 	}
 	
 	public function minimapInit(player:Player, snakeBody:FlxTypedGroup<SnakeBody>, enemies:FlxTypedGroup<Enemy>, exits:FlxTypedGroup<Exit>) {
