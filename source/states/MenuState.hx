@@ -19,7 +19,7 @@ using flixel.util.FlxSpriteUtil;
  */
 class MenuState extends FlxState
 {
-	private var STARTLEVEL = 1;
+	private var STARTLEVEL:Int = 1;
 	private var _background:FlxSprite;
 	
 	//private var _txtTitle:FlxText;
@@ -55,9 +55,10 @@ class MenuState extends FlxState
 			#end
 		}
 		
-		_btnPlay = new FlxButton(0, 0, "Play", clickPlay);
+		_btnPlay = new FlxButton(0, 0, "", clickPlay);
+		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 175, 285);
 		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width;
-		_btnPlay.y = FlxG.height - _btnPlay.height - 100;
+		_btnPlay.y = FlxG.height - _btnPlay.height;
 		_btnPlay.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnPlay);
 
@@ -68,19 +69,20 @@ class MenuState extends FlxState
 			    _save.data.Level != STARTLEVEL)
 			{
 				levelStart = _save.data.Level;
-				_btnContinue = new FlxButton(0, 0, "Continue", clickPlay);
-				_btnContinue.x = (FlxG.width / 2) - _btnContinue.width;
-				_btnContinue.y = FlxG.height - _btnContinue.height - 75;
+				_btnContinue = new FlxButton(0, 0, "", clickPlay);
+				_btnContinue.loadGraphic(AssetPaths.continueButton__png, false, 175, 285);
+				_btnContinue.x = (FlxG.width / 2) - 1; // - _btnContinue.width;
+				_btnContinue.y = FlxG.height - _btnContinue.height;
 				_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 				add(_btnContinue);
 			}
 		}
 		
-		_btnOptions = new FlxButton(0, 0, "Options", clickOptions);
-		_btnOptions.x = (FlxG.width / 2) - _btnOptions.width;
-		_btnOptions.y = FlxG.height - _btnOptions.height - 50;
-		_btnOptions.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnOptions);
+		//_btnOptions = new FlxButton(0, 0, "Options", clickOptions);
+		//_btnOptions.x = (FlxG.width / 2) - _btnOptions.width;
+		//_btnOptions.y = FlxG.height - _btnOptions.height - 50;
+		//_btnOptions.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		//add(_btnOptions);
 		
 		#if desktop
 		_btnExit = new FlxButton(FlxG.width - 28, 8, "X", clickExit);
