@@ -15,6 +15,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxRandom;
 import flixel.util.FlxVelocity;
 import haxe.ds.IntMap;
+import ui.Camera;
 using flixel.util.FlxSpriteUtil;
 import entities.Exit;
 

@@ -22,6 +22,7 @@ import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
 import flixel.text.FlxText;
 import level.LevelLoader;
+import ui.Camera;
 //import openfl.utils.ObjectInput;
 import characters.SnakeBody;
 import ui.HUD;
@@ -128,6 +129,15 @@ class PlayState extends FlxState
 		
 		disableAll();
 		_state = 0;
+		_startDelaySprite = new FlxSprite(0, 0);
+		_startDelaySprite.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		_startDelaySprite.alpha = 0.6;
+		_startDelaySprite.scrollFactor.x = _startDelaySprite.scrollFactor.y = 0;
+		add(_startDelaySprite);
+		_startDelayText = new FlxText(FlxG.width / 2, FlxG.height / 2, 0, "Press Any Key to Start", 32);
+		_startDelayText.scrollFactor.x = _startDelayText.scrollFactor.y = 0;
+		_startDelayText.screenCenter(true, true);
+		add(_startDelayText);
 	}
 	
 	private function loadLevel():Void
@@ -148,12 +158,18 @@ class PlayState extends FlxState
 		for (e in _grpEnemies) {
 			e.set_active(false);
 		}
+		for (s in _grpSnake) {
+			s.set_active(false);
+		}
 		_player.set_active(false);
 	}
 	
 	private function enableAll():Void {
 		for (e in _grpEnemies) {
 			e.set_active(true);
+		}
+		for (s in _grpSnake) {
+			s.set_active(true);
 		}
 		_player.set_active(true);
 	}
@@ -197,15 +213,6 @@ class PlayState extends FlxState
 		if (_state == 0) {
 			if (FlxG.keys.firstJustReleased() != "") {
 				_startTimer = START_DELAY_SECONDS * FRAMES_PER_SECOND;
-				_startDelaySprite = new FlxSprite(0, 0);
-				_startDelaySprite.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-				_startDelaySprite.alpha = 0.6;
-				_startDelaySprite.scrollFactor.x = _startDelaySprite.scrollFactor.y = 0;
-				add(_startDelaySprite);
-				_startDelayText = new FlxText(FlxG.width / 2, FlxG.height / 2, 0, "", 32);
-				_startDelayText.scrollFactor.x = _startDelayText.scrollFactor.y = 0;
-				_startDelayText.screenCenter(true, true);
-				add(_startDelayText);
 				
 				_state = 1;
 			}
@@ -213,9 +220,10 @@ class PlayState extends FlxState
 		else if (_state == 1) {
 			_startTimer--;
 			_startDelayText.text = Std.string(getSecs(_startTimer));
+			_startDelayText.screenCenter(true, true);
 			if (_startTimer <= 0) {
-				_startDelaySprite = FlxDestroyUtil.destroy(_startDelaySprite);
-				_startDelayText = FlxDestroyUtil.destroy(_startDelayText);
+				remove(_startDelaySprite);
+				remove(_startDelayText);
 				enableAll();
 				
 				_state = 2;
@@ -227,13 +235,12 @@ class PlayState extends FlxState
 					
 			if (_timer <= 0)
 			{
-				if (loader.getCurrLevel() >= _numLevels)
-				{
-					_won = true;
-					FlxG.switchState(new GameOverState(_won, _currLevel));
-				}
-				else
-					FlxG.switchState(new PlayState(_currLevel + 1));
+				add(_startDelaySprite);
+				_startDelayText.text = "You win!";
+				_startDelayText.screenCenter(true, true);
+				add(_startDelayText);
+				disableAll();
+				_state = 3;
 			}
 			FlxG.collide(_humanWalls, _grpEnemies);
 			FlxG.collide(_playerWalls, _player);
@@ -242,8 +249,21 @@ class PlayState extends FlxState
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 			
+			Camera.update();
+			
 			if (FlxG.keys.anyJustPressed(["ESCAPE"])) {
 				this.openSubState(new PauseState());
+			}
+		}
+		else if (_state == 3) {
+			if (FlxG.keys.firstJustPressed() != ""){
+				if (loader.getCurrLevel() >= _numLevels)
+				{
+					_won = true;
+					FlxG.switchState(new GameOverState(_won, _currLevel));
+				}
+				else
+					FlxG.switchState(new PlayState(_currLevel + 1));
 			}
 		}
 	}
@@ -281,7 +301,8 @@ class PlayState extends FlxState
 	 * @param	e
 	 */
 	private function checkEnemyVision(e:Enemy):Void
-	{		
+	{
+		var wasScared:Bool = e.scared;
 		e.scared = false;
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
@@ -291,6 +312,9 @@ class PlayState extends FlxState
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
+			
+			if (!wasScared)
+				Camera.shake(0.01, 20);
 			
 		}
 		else {
@@ -303,6 +327,10 @@ class PlayState extends FlxState
 				{
 					e.scared = true;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
+					
+					if (!wasScared)
+						Camera.shake(0.01, 30);
+				
 					break;
 				}
 			}
