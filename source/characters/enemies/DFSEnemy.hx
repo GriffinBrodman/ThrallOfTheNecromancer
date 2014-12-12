@@ -30,7 +30,6 @@ class DFSEnemy extends Enemy
 		pathing= false;
 		state = "idle";
 		scaredTime = 0;
-		
 	}
 		
 	public function determinePath(tileMap:FlxTilemap):Void
@@ -66,7 +65,6 @@ class DFSEnemy extends Enemy
 		}		
 		pathArray = path;
 	}
-
 	
 	override public function update():Void 
 	{
