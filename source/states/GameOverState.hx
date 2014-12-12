@@ -53,7 +53,7 @@ class GameOverState extends FlxState
 		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 175, 285);
 		_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
 		_btnRetry.y = FlxG.height - _btnRetry.height;
-		_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 
 		//_btnRetry.screenCenter(true, false);
 		add(_btnRetry);

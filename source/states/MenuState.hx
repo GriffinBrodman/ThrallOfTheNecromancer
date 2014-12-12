@@ -53,7 +53,7 @@ class MenuState extends FlxState
 		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 175, 285);
 		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width;
 		_btnPlay.y = FlxG.height - _btnPlay.height;
-		_btnPlay.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+		//_btnPlay.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnPlay);
 
 		var _save:FlxSave = new FlxSave();
@@ -67,7 +67,7 @@ class MenuState extends FlxState
 				_btnContinue.loadGraphic(AssetPaths.continueButton__png, false, 175, 285);
 				_btnContinue.x = (FlxG.width / 2) - 1; // - _btnContinue.width;
 				_btnContinue.y = FlxG.height - _btnContinue.height;
-				_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+				//_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 				add(_btnContinue);
 			}
 		}
