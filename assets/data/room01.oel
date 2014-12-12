@@ -35,14 +35,8 @@
 1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1</humanwalls>
   <entities>
     <player id="0" x="512" y="512" />
-    <enemy id="1" x="128" y="512" etype="0" />
-    <enemy id="2" x="384" y="384" etype="0" />
-    <enemy id="3" x="768" y="576" etype="0" />
     <exit id="4" x="448" y="0" escapable="True" />
     <exit id="5" x="576" y="1024" escapable="True" />
-    <exit id="6" x="128" y="512" escapable="False" />
-    <exit id="7" x="384" y="512" escapable="False" />
-    <exit id="8" x="768" y="512" escapable="False" />
     <exit id="9" x="128" y="832" escapable="False" />
     <exit id="10" x="384" y="832" escapable="False" />
     <exit id="11" x="768" y="832" escapable="False" />
@@ -50,6 +44,15 @@
     <exit id="13" x="640" y="832" escapable="False" />
     <exit id="14" x="512" y="832" escapable="False" />
     <exit id="15" x="256" y="832" escapable="False" />
+    <exit id="1" x="128" y="768" escapable="False" />
+    <exit id="7" x="256" y="768" escapable="False" />
+    <exit id="6" x="384" y="768" escapable="False" />
+    <exit id="8" x="512" y="768" escapable="False" />
+    <exit id="16" x="640" y="768" escapable="False" />
+    <exit id="17" x="768" y="768" escapable="False" />
+    <exit id="18" x="896" y="768" escapable="False" />
+    <enemy id="2" x="384" y="448" etype="0" />
+    <enemy id="3" x="768" y="704" etype="0" />
   </entities>
   <playerwalls tileset="humanwalls" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
