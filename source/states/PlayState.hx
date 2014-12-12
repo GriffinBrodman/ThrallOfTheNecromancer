@@ -187,7 +187,7 @@ class PlayState extends FlxState
 		
 		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
 		{
-			var song:Int = FlxRandom.int() % 4;
+			var song:Int = FlxRandom.int() % 6;
 			if (song == 0)
 			{
 				#if flash

@@ -54,7 +54,11 @@ class Enemy extends FlxSprite
 	{
 		super(X, Y);
 
-		loadGraphic(AssetPaths.walkinganimation1__png, true, 64, 64);
+		var type:Int = FlxRandom.int() % 4;
+		if (type == 0) loadGraphic(AssetPaths.walkinganimation1__png, true, 64, 64);
+		else if (type == 1) loadGraphic(AssetPaths.walkinganimation2__png, true, 64, 64);
+		else if (type == 2) loadGraphic(AssetPaths.walkinganimation3__png, true, 64, 64);
+		else if (type == 3) loadGraphic(AssetPaths.walkinganimation4__png, true, 64, 64);
 		width = 20;
 		height = 30;
 		offset.x = 6;
