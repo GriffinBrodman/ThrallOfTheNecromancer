@@ -60,7 +60,7 @@ class PlayState extends FlxState
 	private var _bg:FlxSprite;
 	private var debug:FlxText;
 	private var _currLevel:Int;
-	private var _numLevels:Int = 5;
+	private var _numLevels:Int = 7;
 	private var _tutorial:FlxSprite;
 	
 	private var _state:Int = -1;

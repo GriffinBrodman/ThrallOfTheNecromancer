@@ -44,19 +44,24 @@ class GameOverState extends FlxState
 		
 		// create and add each of our items
 		
-		_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
+		/*_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
 		_txtTitle.alignment = "center";
 		_txtTitle.screenCenter(true, false);
-		add(_txtTitle);
+		add(_txtTitle);*/
 		
-		_btnRetry = new FlxButton(0, (FlxG.height / 2 - 10), _win ? "Play Again" : "Retry", retry);
-		_btnRetry.screenCenter(true, false);
+		_btnRetry = new FlxButton(0, 0, "", retry);
+		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 175, 285);
+		_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
+		_btnRetry.y = FlxG.height - _btnRetry.height;
+		_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+
+		//_btnRetry.screenCenter(true, false);
 		add(_btnRetry);
 		
-		_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
+		/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
 		_btnMainMenu.screenCenter(true, false);
 		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnMainMenu);
+		add(_btnMainMenu);*/
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		super.create();
@@ -109,8 +114,8 @@ class GameOverState extends FlxState
 		super.destroy();
 		
 		// clean up all our objects!
-		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
-		_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
+		//_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
+		//_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 		_btnRetry = FlxDestroyUtil.destroy(_btnRetry);
 		_background = FlxDestroyUtil.destroy(_background);
 	}
