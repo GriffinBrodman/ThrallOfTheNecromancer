@@ -68,7 +68,7 @@ class LevelLoader
 			for (x in 0..._humanWalls.widthInTiles) {
 				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0){
 					humanPlayerWallsData.push(1);	// Fill with tile
-					_humanWalls.setTile(x, y, 0);
+					//_humanWalls.setTile(x, y, 0);
 					_playerWalls.setTile(x, y, 0);
 				}
 				else
