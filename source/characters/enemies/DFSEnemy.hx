@@ -85,7 +85,6 @@ class DFSEnemy extends Enemy
 							var gPos = new FlxPoint(Std.int(Math.fround(g.x/Enemy.TILE_DIMENSION)), Std.int(Math.fround(g.y/Enemy.TILE_DIMENSION)));
 							if (gPos.x == nextTile.x && gPos.y == nextTile.y) 
 							{
-								trace("Exit found 2!");
 								break;							
 							}
 						}

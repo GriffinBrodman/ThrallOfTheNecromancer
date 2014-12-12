@@ -289,13 +289,11 @@ class Enemy extends FlxSprite
 				//Get neighbors of nextTile
 				
 				var neighbors = getNeighborTiles(tileMap, Std.int(nextTile.x), Std.int(nextTile.y));
-				trace(neighbors);
 				for (n in 0...neighbors.length) 
 				{					
 					//If the neighbor is unvisited, adds it to S
 					if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 					{
-						trace(neighbors[n]);
 						S.push(neighbors[n]);
 					}
 				}
@@ -339,34 +337,27 @@ class Enemy extends FlxSprite
 			var pathToSnake = determinePathTargeted(walls, snakeTile);
 			
 			//If the first two steps of the respective paths are the same, recalculate path
-			trace("before loop");
 			if (newGoal != endPoint) 
 			{
-				trace("newGoal: " +newGoal + " is not the same as " + "endPoint: " + endPoint);
 				if (pathToGoal[1] != pathToSnake[1]) 
 				{
-					trace("Step1: " + pathToGoal[1] + " is not the same as " + "Step1: " + pathToSnake[1]);
 					if (pathToGoal[2] != pathToSnake[2]) 
 					{
-						trace("Step2: " + pathToGoal[2] + " is not the same as " + "Step2: " + pathToSnake[2]);
 						endPoint = newGoal;
 						break;
 					}
 					else 
 					{
-						trace("continue1");
 						continue;
 					}
 				}
 				else 
 				{
-					trace("continue2");
 					continue;
 				}
 			}
 			else 
 			{
-				trace("continue3");
 				continue;
 			}
 		}
@@ -467,6 +458,7 @@ class Enemy extends FlxSprite
 			}
 			else if (pathing == false)
 			{
+				pathArray = [];
 				flee();
 				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
 				if (pathPoints != null && !pathing) 

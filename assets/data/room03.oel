@@ -43,8 +43,8 @@
     <exit id="0" x="448" y="1216" escapable="True" />
     <exit id="4" x="448" y="0" escapable="True" />
     <enemy id="5" x="448" y="320" etype="0" />
-    <enemy id="1" x="448" y="960" etype="0" />
     <player id="2" x="448" y="896" />
+    <enemy id="1" x="448" y="1024" etype="0" />
   </entities>
   <playerwalls tileset="humanwalls" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
