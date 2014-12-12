@@ -16,6 +16,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxPoint;
 import spells.Screech;
 import flixel.util.FlxAngle;
+import ui.Camera;
 
 class Player extends FlxSprite
 {
@@ -174,6 +175,8 @@ class Player extends FlxSprite
 			animation.play("screech");
 
 			addSprite(new Screech(this.getMidpoint().x, this.getMidpoint().y, grpEnemies));
+			
+			Camera.shake(0.02, 30, true);
 		}
 	}
 	
