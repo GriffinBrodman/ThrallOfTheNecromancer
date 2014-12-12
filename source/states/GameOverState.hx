@@ -12,11 +12,12 @@ using flixel.util.FlxSpriteUtil;
 
 class GameOverState extends FlxState
 {
-	private var _currLevel:Int;			// number of coins we've collected
+	private var _currLevel:Int;			// current level
 	private var _win:Bool;				// if we won or lost
 	private var _txtTitle:FlxText;		// the title text
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
 	private var _btnRetry:FlxButton;
+	private var _background:FlxSprite;
 	
 	/**
 	 * Called from PlayState, this will set our win and score variables
@@ -26,17 +27,20 @@ class GameOverState extends FlxState
 	public function new(Win:Bool, currLevel:Int) 
 	{
 		_win = Win;
-		_currLevel = currLevel;
-		checkHiLevel(_currLevel);
+		_currLevel = _win ? 1 : currLevel;
+		updateSavedLevel(_currLevel);
 		super();
 	}
 	
 	override public function create():Void 
 	{
-		
 		#if !FLX_NO_MOUSE
 		FlxG.mouse.visible = true;
 		#end
+		
+		_background = new FlxSprite(0, 0, _win ? AssetPaths.winScreen__jpg : AssetPaths.loseScreen__jpg);
+		_background.screenCenter(true, true);
+		add(_background);
 		
 		// create and add each of our items
 		
@@ -45,7 +49,7 @@ class GameOverState extends FlxState
 		_txtTitle.screenCenter(true, false);
 		add(_txtTitle);
 		
-		_btnRetry = new FlxButton(0, (FlxG.height / 2 - 10), "Retry", retry);
+		_btnRetry = new FlxButton(0, (FlxG.height / 2 - 10), _win ? "Play Again" : "Retry", retry);
 		_btnRetry.screenCenter(true, false);
 		add(_btnRetry);
 		
@@ -64,13 +68,13 @@ class GameOverState extends FlxState
 	 * @param	Score	The new score
 	 * @return	the hi-score
 	 */
-	private function checkHiLevel(Level:Int):Int
+	private function updateSavedLevel(Level:Int):Int
 	{
 		var _hi:Int = Level;
 		var _save:FlxSave = new FlxSave();
 		_save.bind("maize");
 		if (_save.data.Level != null &&
-			_save.data.Level > _hi)
+			_save.data.Level > _hi && !_win)
 		{
 			_hi = _save.data.Level;
 		}
@@ -108,5 +112,6 @@ class GameOverState extends FlxState
 		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
 		_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 		_btnRetry = FlxDestroyUtil.destroy(_btnRetry);
+		_background = FlxDestroyUtil.destroy(_background);
 	}
 }

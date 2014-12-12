@@ -212,5 +212,9 @@ class Player extends FlxSprite
 	public function getScreechCooldown():Int {
 		return screechCooldown;
 	}
+	
+	public function getDashCooldown():Int {
+		return dashCooldown;
+	}
 
 }
