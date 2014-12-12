@@ -130,6 +130,8 @@ class PlayState extends FlxState
 		{
 			_tutorial = new FlxSprite(50, 300);
 			_tutorial.loadGraphic("assets/images/tutorial" + _currLevel +".png");
+			_tutorial.x = 120 - (_tutorial.width / 2);
+			_tutorial.scrollFactor.set(0, 0);
 			add(_tutorial);
 		}
 		
