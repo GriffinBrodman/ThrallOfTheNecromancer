@@ -69,7 +69,7 @@ class MenuState extends FlxState
 			    _save.data.Level != STARTLEVEL)
 			{
 				levelStart = _save.data.Level;
-				_btnContinue = new FlxButton(0, 0, "", clickPlay);
+				_btnContinue = new FlxButton(0, 0, "", clickContinue);
 				_btnContinue.loadGraphic(AssetPaths.continueButton__png, false, 175, 285);
 				_btnContinue.x = (FlxG.width / 2) - 1; // - _btnContinue.width;
 				_btnContinue.y = FlxG.height - _btnContinue.height;
