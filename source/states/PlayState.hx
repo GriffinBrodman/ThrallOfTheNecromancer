@@ -20,6 +20,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPoint;
 import flixel.util.FlxMath;
+import flixel.util.FlxRandom;
 import flixel.text.FlxText;
 import level.LevelLoader;
 import ui.Camera;
@@ -59,7 +60,7 @@ class PlayState extends FlxState
 	private var _bg:FlxSprite;
 	private var debug:FlxText;
 	private var _currLevel:Int;
-	private var _numLevels:Int = 5;
+	private var _numLevels:Int = 7;
 	private var _tutorial:FlxSprite;
 	
 	private var _state:Int = -1;
@@ -103,6 +104,7 @@ class PlayState extends FlxState
 			lastPart = new SnakeBody(lastPart == null ? _player : lastPart, i);
 			_grpSnake.add(lastPart);
 		}
+		
 		
 		add(_grpSnake);
 		
@@ -257,7 +259,7 @@ class PlayState extends FlxState
 				_state = 3;
 			}
 			FlxG.collide(_humanWalls, _grpEnemies);
-			FlxG.collide(_playerWalls, _player);
+			//FlxG.overlap(_playerWalls, _player, snakeCollide);
 			FlxG.collide(_humanPlayerWalls, _grpEnemies);
 			FlxG.collide(_humanPlayerWalls, _player);
 			_grpEnemies.forEachAlive(checkEnemyVision);
@@ -280,7 +282,69 @@ class PlayState extends FlxState
 					FlxG.switchState(new PlayState(_currLevel + 1));
 			}
 		}
+		FlxG.collide(_humanWalls, _grpEnemies);
+		//FlxG.overlap(_playerWalls, _player, snakeCollide);
+		FlxG.collide(_humanPlayerWalls, _grpEnemies);
+		FlxG.collide(_humanPlayerWalls, _player);
+		_grpEnemies.forEachAlive(checkEnemyVision);
+		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
+		
+		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
+		{
+			var song:Int = FlxRandom.int() % 6;
+			if (song == 0)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
+				#end
+			}
+			if (song == 1)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
+				#end
+			}
+			if (song == 2)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
+				#end
+			}
+			if (song == 3)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
+				#end
+			}
+			if (song == 4)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
+				#end
+			}
+			if (song == 5)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
+				#end
+			}
+			
+		}
+
 	}
+	
 	
 	private function doneFadeOut():Void 
 	{
@@ -308,6 +372,12 @@ class PlayState extends FlxState
 		{
 			human.setGoal(_grpExits);
 		}
+	}
+	
+	private function snakeCollide( wall:FlxTilemap, snake:Player):Void
+	{
+		snake.angle = snake.angle + 180;
+		
 	}
 
 	/**
