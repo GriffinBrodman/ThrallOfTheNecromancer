@@ -194,7 +194,6 @@ class Player extends FlxSprite
 		}
 		
 		var changeInAngle:Float = (targetAngle - this.angle + 360) % 360;
-		trace(changeInAngle);
 		if (changeInAngle > 180) {
 			this.angle -= MAX_ANGLE;
 		}

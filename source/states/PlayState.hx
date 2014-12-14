@@ -38,7 +38,7 @@ class PlayState extends FlxState
 	public static var ENEMY_SIGHT_RANGE:Int = 200;
 	public static var ENEMY_DETECTION_RANGE:Int = 40;
 	public static var NUM_SNAKE_PARTS:Int = 9;
-	private static var START_DELAY_SECONDS:Int = 3;
+	private static var START_DELAY_SECONDS:Int = 0;
 	
 	private var _player:Player;
 	private var _humanWalls:FlxTilemap;
