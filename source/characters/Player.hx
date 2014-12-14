@@ -33,7 +33,7 @@ class Player extends FlxSprite
 	public static var DASH_COOLDOWN:Int = 150;
 	
 	private static var MAX_SPEED:Float = 400;	//Completely random
-	private static var MAX_ANGLE:Float = 15;
+	private static var MAX_ANGLE:Float = 10;
 	private static var DASH_MULTIPLIER:Float = 1.5;
 	private static var DASH_TURN_MULTIPLIER = .5;
 
@@ -101,6 +101,13 @@ class Player extends FlxSprite
 		right = right || PlayState.virtualPad.buttonRight.status == FlxButton.PRESSED;
 		#end
 		
+		if (up && down) {
+			up = down = false;
+		}
+		if (left && right) {
+			left = right = false;
+		}
+		
 		/*
 		//Determines speed based on user input		
 		//Speeds up until MAX_SPEED is hit
@@ -134,6 +141,7 @@ class Player extends FlxSprite
 		this.y = Math.max(this.y, 0);
 		this.y = Math.min(this.y, walls.height - this.height);
 		
+		/*
 		//Turns you left (relative)
 		if (left)
 		{
@@ -161,6 +169,38 @@ class Player extends FlxSprite
 		
 		//Rotate sprite
 		this.angle += turnAngle; //Bae caught me turnin'
+		
+		this.angle = this.angle % 360;
+		*/
+		
+		var targetAngle:Float = this.angle;
+		if (up) {
+			targetAngle = 0;
+			if (left)
+				targetAngle = 315;
+			else if (right)
+				targetAngle = 45;
+		}
+		else if (down) {
+			targetAngle = 180;
+			if (left)
+				targetAngle = 225;
+			else if (right)
+				targetAngle = 135;
+		} else if (left) {
+			targetAngle = 270;
+		} else if (right) {
+			targetAngle = 90;
+		}
+		
+		var changeInAngle:Float = (targetAngle - this.angle + 360) % 360;
+		trace(changeInAngle);
+		if (changeInAngle > 180) {
+			this.angle -= MAX_ANGLE;
+		}
+		else if (changeInAngle > 0) {
+			this.angle += MAX_ANGLE;
+		}
 		
 		this.angle = this.angle % 360;
 		

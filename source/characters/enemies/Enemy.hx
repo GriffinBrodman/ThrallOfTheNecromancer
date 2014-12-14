@@ -281,25 +281,25 @@ class Enemy extends FlxSprite
 	//Takes in a tilemap and tile coordinates; Returns an array of all the pathable neighbor tiles
 	public function getNeighborTiles(map:FlxTilemap, X:Float, Y:Float):Array<FlxPoint> 
 	{
-		var neighbors = new Array<FlxPoint>();
+		var neighbors:Array<FlxPoint> = new Array<FlxPoint>();
 		if (tileType(map, X, Y + 1) == 0) 
 		{
-			var n1 =  new FlxPoint(X, Y + 1);
+			var n1:FlxPoint =  new FlxPoint(X, Y + 1);
 			neighbors.push(n1);
 		}
 		if (tileType(map, X, Y - 1) == 0) 
 		{
-			var n2 =  new FlxPoint(X, Y - 1);
+			var n2:FlxPoint =  new FlxPoint(X, Y - 1);
 			neighbors.push(n2);
 		}
 		if (tileType(map, X + 1, Y) == 0) 
 		{
-			var n3 =  new FlxPoint(X + 1, Y);
+			var n3:FlxPoint = new FlxPoint(X + 1, Y);
 			neighbors.push(n3);
 		}
 		if (tileType(map, X - 1, Y) == 0) 
 		{
-			var n4 =  new FlxPoint(X - 1, Y);
+			var n4:FlxPoint = new FlxPoint(X - 1, Y);
 			neighbors.push(n4);
 		}
 		return neighbors;
