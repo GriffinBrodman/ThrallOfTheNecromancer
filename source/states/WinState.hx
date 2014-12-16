@@ -1,5 +1,5 @@
 package states;
-import flixel.FlxSubState;
+import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -13,13 +13,15 @@ using flixel.util.FlxSpriteUtil;
  * ...
  * @author Daniel W. Zhang
  */
-class WinState extends FlxSubState
+class WinState extends FlxState
 {
 	private var _winScreen:FlxSprite;
 	private var _text:FlxText;
-	public function new(BGColor:Int=FlxColor.TRANSPARENT)
+	private var _nextLevel:Int;
+	public function new(nextLevel)
 	{
-		super(BGColor);
+		super();
+		_nextLevel = nextLevel;
 		_winScreen = new FlxSprite(0, 0, AssetPaths.winScreen__jpg);
 		_winScreen.screenCenter(true, true);
 		_winScreen.scrollFactor.set(0, 0);
@@ -34,7 +36,7 @@ class WinState extends FlxSubState
 	override public function update():Void {
 		super.update();
 		if (FlxG.keys.firstJustReleased() != "") {
-			close();
+			FlxG.switchState(new PlayState(_nextLevel));
 		}
 	}
 	

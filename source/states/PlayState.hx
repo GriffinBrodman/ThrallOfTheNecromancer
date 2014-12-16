@@ -283,14 +283,13 @@ class PlayState extends FlxState
 			}
 		}
 		else if (_state == 3) {
-			this.openSubState(new WinState());
 			if (loader.getCurrLevel() >= _numLevels)
 			{
 				_won = true;
 				FlxG.switchState(new GameOverState(_won, _currLevel));
 			}
 			else
-				FlxG.switchState(new PlayState(_currLevel + 1));
+				FlxG.switchState(new WinState(_currLevel + 1));
 		}
 		FlxG.collide(_humanWalls, _grpEnemies);
 		//FlxG.overlap(_playerWalls, _player, snakeCollide);
