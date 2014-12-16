@@ -9,12 +9,14 @@ import flixel.util.FlxColor;
 class Exit extends FlxSprite
 {
 	var escape = false;
-	public function new(X:Float=0, Y:Float=0, escapable:Bool) 
+	var graphicPath = "assets/images/exit";
+	var graphicExt = ".png";
+	public function new(X:Float=0, Y:Float=0, escapable:Bool, direction:String) 
 	{
 		super(X, Y);		
 		escape = escapable;
 		if (escape)
-			loadGraphic("assets/images/exit.png", false, 64, 64);
+			loadGraphic(graphicPath + direction + graphicExt, false, 64, 64);
 		else
 			makeGraphic(64, 64, FlxColor.TRANSPARENT);
 	}

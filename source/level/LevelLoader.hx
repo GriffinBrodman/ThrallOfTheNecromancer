@@ -114,7 +114,8 @@ class LevelLoader
 				_enemies.add(new DFSEnemy(x, y, _humanWalls));
 			case "exit":
 				var escapable:Bool = StringToBool(entityData.get("escapable"));
-				_exits.add(new Exit(x, y, escapable));
+				var orient = Std.string(entityData.get("orientation"));
+				_exits.add(new Exit(x, y, escapable, orient));
 				_exitsMap.set(Std.int((x / 64) + (y / 64) * _humanWalls.widthInTiles), escapable);
 		}
 	}

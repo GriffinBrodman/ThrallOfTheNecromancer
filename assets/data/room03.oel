@@ -40,12 +40,12 @@
 1,1,1,1,1,1,1,0,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,0,1,1,1,1,1,1,1</humanwalls>
   <entities>
-    <exit id="4" x="448" y="0" escapable="True" />
+    <exit id="4" x="448" y="0" escapable="True" orientation="Up" />
     <enemy id="5" x="448" y="320" etype="0" />
-    <exit id="1" x="448" y="1152" escapable="False" />
-    <exit id="2" x="448" y="1216" escapable="False" />
-    <exit id="3" x="448" y="1088" escapable="False" />
-    <exit id="6" x="448" y="1024" escapable="False" />
+    <exit id="1" x="448" y="1152" escapable="False" orientation="Up" />
+    <exit id="2" x="448" y="1216" escapable="False" orientation="Up" />
+    <exit id="3" x="448" y="1088" escapable="False" orientation="Up" />
+    <exit id="6" x="448" y="1024" escapable="False" orientation="Up" />
     <player id="7" x="448" y="1024" />
   </entities>
   <playerwalls tileset="humanwalls" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
