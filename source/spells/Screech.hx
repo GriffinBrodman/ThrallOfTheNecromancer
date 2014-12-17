@@ -17,7 +17,7 @@ class Screech extends FlxSprite
 	private static var SCREECH_WIDTH:Int = 400;
 	private static var SCREECH_HEIGHT:Int = 400;
 	private static var SCREECH_STUN_DURATION:Int = 100;
-	private static var SCREECH_RANGE:Int = 275;
+	private static var SCREECH_RANGE:Int = 300;
 	private static var SCREECH_GRAPHIC_DURATION:Float = 0.4;	// in seconds
 	
 	public function new(X:Float = 0, Y:Float = 0, grpEnemies:FlxTypedGroup<Enemy>) 
