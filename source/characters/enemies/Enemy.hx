@@ -208,12 +208,12 @@ class Enemy extends FlxSprite
 		var visibleExits = new Array<FlxPoint>();	//Stores all the exits this enemy can see from current position				
 		for (g in goals) 
 		{
-			trace("in loop");
+			//trace("in loop");
 			var gPos = new FlxPoint(g.x, g.y);
-			trace("X is: " + pos.x/TILE_DIMENSION +" Y is: " + pos.y/TILE_DIMENSION);
+			//trace("X is: " + pos.x/TILE_DIMENSION +" Y is: " + pos.y/TILE_DIMENSION);
 			if (walls.ray(pos, gPos)) 	
 			{
-				trace("true");
+				//trace("true");
 				exitVisible = true;
 				visibleExits.push(gPos);	
 			}

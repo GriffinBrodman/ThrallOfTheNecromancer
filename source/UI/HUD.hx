@@ -31,7 +31,13 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var MAPFRAME_X = MINIMAP_X - MAPFRAME_WIDTH;
 	private static var MAPFRAME_Y = MINIMAP_Y - MAPFRAME_HEIGHT;
 	
-	private var _txtTimer:FlxText;
+	private static var TIMER_HEIGHT = 100;
+	private static var TIMER_WIDTH = 100;
+	
+	private static var SECS_PER_FRAME:Float;
+	
+	private var _timer:FlxSprite;
+	private var totalTime:Int;
 	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechBack:FlxSprite;
@@ -51,15 +57,24 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		this.player = player;
 
 		// timer text
-		var secs:String = Std.string(timer);
-		_txtTimer = new FlxText(0, 2, 40, secs, 16);
+		totalTime = timer;
+		SECS_PER_FRAME = totalTime / 12;
+		/*_txtTimer = new FlxText(0, 2, 40, secs, 16);
 		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 
 		_txtTimer.alignment = "center";
 		_txtTimer.x = FlxG.width / 2;
 
-		this.add(_txtTimer);
-
+		this.add(_txtTimer);*/
+		
+		_timer = new FlxSprite(0, 0);
+		_timer.loadGraphic(AssetPaths.time_anim__jpg, true, TIMER_WIDTH, TIMER_HEIGHT);
+		_timer.x = (FlxG.width - _timer.width) / 2;
+		_timer.scrollFactor.set(0, 0);
+		_timer.animation.add("runTime", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 1);
+		add(_timer);
+		
+		
 		// screech cooldown bar
 		//screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
 		screechBack = new FlxSprite(BAR_X, BAR_Y, AssetPaths.backbar__png);
@@ -144,8 +159,11 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
-		_txtTimer.text = Std.string(timer);
-		_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;
+		/*_txtTimer.text = Std.string(timer);
+		_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;*/
+		var index = Std.int(Math.min((totalTime - timer) / SECS_PER_FRAME, 11));
+		//trace(index);
+		_timer.animation.frameIndex = index;
 		
 		var escaped = "Game over if " + Std.string(escapeLimit - escapees) + " escape";
 		if (escapeLimit - escapees == 1)
