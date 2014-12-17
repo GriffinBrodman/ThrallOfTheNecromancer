@@ -44,7 +44,7 @@ class GameOverState extends FlxState
 		add(_background);
 		
 		// create and add each of our items
-		_retryTxt = new FlxText(0, 0, 0, "Press any key to retry", 32);
+		_retryTxt = new FlxText(0, 0, 0, _win ? "Congratulations, you beat the game!": "Press any key to retry", 32);
 		_retryTxt.screenCenter(true, true);
 		add(_retryTxt);
 		

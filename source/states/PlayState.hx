@@ -286,7 +286,7 @@ class PlayState extends FlxState
 			}
 		}
 		else if (_state == 3) {
-			if (loader.getCurrLevel() >= _numLevels)
+			if (_currLevel + 1 >= _numLevels)
 			{
 				_won = true;
 				FlxG.switchState(new GameOverState(_won, _currLevel));
