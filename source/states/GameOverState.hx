@@ -15,6 +15,7 @@ class GameOverState extends FlxState
 	private var _currLevel:Int;			// current level
 	private var _win:Bool;				// if we won or lost
 	private var _txtTitle:FlxText;		// the title text
+	private var _retryTxt:FlxText;
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
 	private var _btnRetry:FlxButton;
 	private var _background:FlxSprite;
@@ -43,20 +44,23 @@ class GameOverState extends FlxState
 		add(_background);
 		
 		// create and add each of our items
+		_retryTxt = new FlxText(0, 0, 0, "Press any key to retry", 32);
+		_retryTxt.screenCenter(true, true);
+		add(_retryTxt);
 		
 		/*_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
 		_txtTitle.alignment = "center";
 		_txtTitle.screenCenter(true, false);
 		add(_txtTitle);*/
 		
-		_btnRetry = new FlxButton(0, 0, "", retry);
+		/*_btnRetry = new FlxButton(0, 0, "", retry);
 		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 175, 285);
 		_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
 		_btnRetry.y = FlxG.height - _btnRetry.height;
 		//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 
 		//_btnRetry.screenCenter(true, false);
-		add(_btnRetry);
+		add(_btnRetry);*/
 		
 		/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
 		_btnMainMenu.screenCenter(true, false);
@@ -65,6 +69,14 @@ class GameOverState extends FlxState
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		super.create();
+	}
+	
+	override public function update():Void
+	{
+		super.update();
+		if (FlxG.keys.firstJustReleased() != "") {
+			retry();
+		}
 	}
 	
 	/**

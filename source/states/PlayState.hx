@@ -44,6 +44,7 @@ class PlayState extends FlxState
 	private var _humanWalls:FlxTilemap;
 	private var _playerWalls:FlxTilemap;
 	private var _humanPlayerWalls:FlxTilemap;
+	private var _trueHumanWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
 	//private var _mBorders:FlxTilemap;
 	private var loader:LevelLoader;
@@ -151,6 +152,7 @@ class PlayState extends FlxState
 		_humanWalls = loader.getWalls();
 		_playerWalls = loader.getPlayerWalls();
 		_humanPlayerWalls = loader.getHumanPlayerWalls();
+		_trueHumanWalls = loader.getTrueHumanWalls();
 		_ground = loader.getGround();
 		_grpExits = loader.getExits();
 		Enemy.exits = loader.getExitsMap();
@@ -269,9 +271,10 @@ class PlayState extends FlxState
 				_state = 3;*/
 				_state = 3;
 			}
-			FlxG.collide(_humanWalls, _grpEnemies);
+			//FlxG.collide(_humanWalls, _grpEnemies);
 			//FlxG.overlap(_playerWalls, _player, snakeCollide);
-			FlxG.collide(_humanPlayerWalls, _grpEnemies);
+			//FlxG.collide(_humanPlayerWalls, _grpEnemies);
+			FlxG.collide(_trueHumanWalls, _grpEnemies);
 			FlxG.collide(_humanPlayerWalls, _player);
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_grpEnemies, _grpExits, humanExit);

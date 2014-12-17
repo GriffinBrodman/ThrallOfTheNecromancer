@@ -36,6 +36,7 @@ class Player extends FlxSprite
 	private static var MAX_ANGLE:Float = 10;
 	private static var DASH_MULTIPLIER:Float = 1.5;
 	private static var DASH_TURN_MULTIPLIER = .5;
+	private static var SNAKE_SCALE = .23;
 
 	
 	private var screechCooldown:Int;
@@ -68,7 +69,7 @@ class Player extends FlxSprite
 		super(X, Y);
 
 		loadGraphic("assets/images/head.png", true, 256, 256);
-		scale = new FlxPoint(.25, .25);
+		scale = new FlxPoint(SNAKE_SCALE, SNAKE_SCALE);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
 		animation.add("screech", [0], 6, false);
