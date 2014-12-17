@@ -15,23 +15,31 @@ using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
 {
-	private static var BAR_X:Int = 20;
+	private static var BAR_X:Int = 0;
 	private static var BAR_Y:Int = 5;
-	private static var BAR_GAP:Int = 5; // Currently unused; will use as number of pixels between bars
+	private static var BAR_GAP:Int = 25;
 	private static var BAR_WIDTH:Int = 250;
 	private static var BAR_HEIGHT:Int = 20;
 	
 	private static var MINIMAP_X:Int = 20;
-	private static var MINIMAP_Y:Int = 50;
+	private static var MINIMAP_Y:Int = 80;
 	private static var MINIMAP_WIDTH:Int = 175;
 	private static var MINIMAP_HEIGHT:Int = 175;
+	
+	private static var MAPFRAME_WIDTH:Int = 18;
+	private static var MAPFRAME_HEIGHT:Int = 18;
+	private static var MAPFRAME_X = MINIMAP_X - MAPFRAME_WIDTH;
+	private static var MAPFRAME_Y = MINIMAP_Y - MAPFRAME_HEIGHT;
 	
 	private var _txtTimer:FlxText;
 	private var _txtEscaped:FlxText;
 	private var player:Player;
+	private var screechBack:FlxSprite;
 	private var screechCooldownBar:FlxSprite;
+	private var dashBack:FlxSprite;
 	private var dashCooldownBar:FlxSprite;
 	private var minimap:FlxMinimap;
+	private var mapFrame:FlxSprite;
 	
 	/** 
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
@@ -53,9 +61,17 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		this.add(_txtTimer);
 
 		// screech cooldown bar
-		screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
+		//screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
+		screechBack = new FlxSprite(BAR_X, BAR_Y, AssetPaths.backbar__png);
+		screechCooldownBar = new FlxSprite(BAR_X, BAR_Y, AssetPaths.screechbar__png);
 		// dash cooldown bar
-		dashCooldownBar = createBar(BAR_X, BAR_Y + 20 + BAR_GAP, BAR_WIDTH, 20, FlxColor.BLUE);
+		
+		dashBack = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.backbar__png);
+		dashCooldownBar = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.dashbar__png);
+		add(screechBack);
+		add(screechCooldownBar);
+		add(dashBack);
+		add(dashCooldownBar);
 		
 		// escapee text
 		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
@@ -65,6 +81,9 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		
 		// minimap
 		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
+		mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
+		mapFrame.scrollFactor.set(0, 0);
+		this.add(mapFrame);
 		this.add(minimap);
 		
 		forEach(function(spr:FlxSprite) {
@@ -114,7 +133,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	public static function updateBar(bar:FlxSprite, val:Int, cap:Int, width:Int, tween:Float=0) {
 		val = val > 0 ? val : 0;
 		
-		bar.scale.x = val * width / cap;
+		bar.x = BAR_X - (bar.width * (1 - (val / cap))) ;
 	}
 	
 	/**
