@@ -29,8 +29,8 @@ class Player extends FlxSprite
 	private static var SCREECH_INPUT:Array<String> = ["Z", "J"];
 	private static var DASH_INPUT:Array<String> = ["X", "L"];
 
-	public static var SCREECH_COOLDOWN:Int = 120;
-	public static var DASH_COOLDOWN:Int = 150;
+	public static var SCREECH_COOLDOWN:Int = 200;
+	public static var DASH_COOLDOWN:Int = 200;
 	
 	private static var MAX_SPEED:Float = 400;	//Completely random
 	private static var MAX_ANGLE:Float = 10;
