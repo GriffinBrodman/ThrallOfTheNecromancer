@@ -107,12 +107,29 @@ class Enemy extends FlxSprite
 				curSpeed = normalSpeed;
 				path.speed = normalSpeed;
 			}
-		}			
+		}
 	}
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
 		goals = goal;
-		endPoint = (goals.getRandom()).getMidpoint();
+		var dest = goals.getRandom();
+		var xOffset = 0.0;
+		var yOffset = 0.0;
+		if (dest.canEscape())
+		{
+			xOffset = TILE_DIMENSION / 2;
+			yOffset = TILE_DIMENSION / 2;
+			switch (dest.getDirection())
+			{
+				case "Left":
+					yOffset = 0;
+				case "Right":
+					xOffset *= -1;
+				case "Down":
+					yOffset *= -1;
+			}
+		}
+		endPoint = dest.getMidpoint().subtract(xOffset, yOffset);
 	}
 	
 	public function stun(duration:Int) {
@@ -329,7 +346,7 @@ class Enemy extends FlxSprite
 		
 		while (true) 
 		{		
-			var newGoal:FlxPoint = goals.getRandom().getMidpoint();
+			var newGoal:FlxPoint = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Std.int(Math.fround(newGoal.x / TILE_DIMENSION)), Std.int(Math.fround(newGoal.y / TILE_DIMENSION)));
 			
 			//Check path to goal vs path to snake
@@ -346,19 +363,7 @@ class Enemy extends FlxSprite
 						endPoint = newGoal;
 						break;
 					}
-					else 
-					{
-						continue;
-					}
 				}
-				else 
-				{
-					continue;
-				}
-			}
-			else 
-			{
-				continue;
 			}
 		}
 			
@@ -370,7 +375,27 @@ class Enemy extends FlxSprite
 		}
 	}
 	
-	
+	private function newPossibleGoal():FlxPoint
+	{
+		var dest = goals.getRandom();
+		var xOffset = 0.0;
+		var yOffset = 0.0;
+		if (dest.canEscape())
+		{
+			xOffset = TILE_DIMENSION / 2;
+			yOffset = TILE_DIMENSION / 2;
+			switch (dest.getDirection())
+			{
+				case "Left":
+					yOffset = 0;
+				case "Right":
+					xOffset *= -1;
+				case "Down":
+					yOffset *= -1;
+			}
+		}
+		return dest.getMidpoint().subtract(xOffset, yOffset);
+	}
 	
 	public function searching():Void
 	{
@@ -469,10 +494,10 @@ class Enemy extends FlxSprite
 			}
 			else /*if (pathing == false)*/ 
 			{
-				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
+				var newEnd:FlxPoint = newPossibleGoal();
 				while (newEnd == endPoint) 
 				{
-					newEnd = goals.getRandom().getMidpoint();
+					newEnd = newPossibleGoal();
 				}
 				endPoint = newEnd;
 				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
