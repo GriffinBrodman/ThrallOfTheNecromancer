@@ -82,7 +82,7 @@ class DFSEnemy extends Enemy
 						//Check if tile is escapable
 						for (g in goals) 
 						{
-							var gPos = new FlxPoint(Std.int(Math.fround(g.x/Enemy.TILE_DIMENSION)), Std.int(Math.fround(g.y/Enemy.TILE_DIMENSION)));
+							var gPos = new FlxPoint(Math.round(g.x/Enemy.TILE_DIMENSION)), Math.round(g.y/Enemy.TILE_DIMENSION));
 							if (gPos.x == nextTile.x && gPos.y == nextTile.y) 
 							{
 								break;							

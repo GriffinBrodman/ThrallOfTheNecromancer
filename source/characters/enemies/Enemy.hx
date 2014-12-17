@@ -124,7 +124,7 @@ class Enemy extends FlxSprite
 	//Updates the field to represent the tile this enemy is currently standing on
 	public function updateCurrentTile():Void 
 	{
-		currentTile = new FlxPoint(Std.int(Math.fround(this.x/TILE_DIMENSION)), Std.int(Math.fround(this.y/TILE_DIMENSION)));	
+		currentTile = new FlxPoint(Math.round(this.x/TILE_DIMENSION), Math.round(this.y/TILE_DIMENSION));	
 	}
 	
 	//Takes in a FlxPoint of tile coordinates and returns world coordinates
@@ -267,7 +267,7 @@ class Enemy extends FlxSprite
 	public function determinePath(tileMap:FlxTilemap):Void { }
 	
 	//Finds path to target tile
-	public function determinePathTargeted(tileMap:FlxTilemap, target:FlxPoint):Array<FlxPoint>
+	public function targetedDFS(tileMap:FlxTilemap, target:FlxPoint):Array<FlxPoint>
 	{
 		//Declare some temp data structures for pathfinding. 
 		var path = new Array<FlxPoint>(); 																								//Keeps track of the path to exit			
@@ -325,16 +325,16 @@ class Enemy extends FlxSprite
 	public function flee():Void 
 	{
 		//Define tile that the snake is on
-		var snakeTile = new FlxPoint(Std.int(Math.fround(snakePos.x / TILE_DIMENSION)), Std.int(Math.fround(snakePos.y / TILE_DIMENSION)));
+		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
 		
 		while (true) 
 		{		
 			var newGoal:FlxPoint = goals.getRandom().getMidpoint();
-			var newGoalTile = new FlxPoint(Std.int(Math.fround(newGoal.x / TILE_DIMENSION)), Std.int(Math.fround(newGoal.y / TILE_DIMENSION)));
+			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
 			
 			//Check path to goal vs path to snake
-			var pathToGoal = determinePathTargeted(walls, newGoalTile);
-			var pathToSnake = determinePathTargeted(walls, snakeTile);
+			var pathToGoal = targetedDFS(walls, newGoalTile);
+			var pathToSnake = targetedDFS(walls, snakeTile);
 			
 			//If the first two steps of the respective paths are the same, recalculate path
 			if (newGoal != endPoint) 
@@ -560,4 +560,90 @@ class Enemy extends FlxSprite
 		}
 		super.destroy();		
 	}
+	
+	/*
+	 * 1.) Assign to every node a tentative distance value: set it to 
+	 * zero for our initial node and to infinity for all other nodes.
+	 * 
+	 * 2.) Mark all nodes unvisited. Set the initial node as current. 
+	 * Create a set of the unvisited nodes called the unvisited set 
+	 * consisting of all the nodes.
+	 * 
+	 * 3.) For the current node, consider all of its unvisited neighbors 
+	 * and calculate their tentative distances. Compare the newly calculated 
+	 * tentative distance to the current assigned value and assign the smaller 
+	 * one. For example, if the current node A is marked with a distance of 6, 
+	 * and the edge connecting it with a neighbor B has length 2, then the 
+	 * distance to B (through A) will be 6 + 2 = 8. If B was previously marked 
+	 * with a distance greater than 8 then change it to 8. Otherwise, keep the 
+	 * current value.
+	 * 
+	 * 4.) When we are done considering all of the neighbors of the current node, 
+	 * mark the current node as visited and remove it from the unvisited set. 
+	 * A visited node will never be checked again. 
+	 * 
+	 * 5.) If the destination node has been marked visited (when planning a route 
+	 * between two specific nodes) or if the smallest tentative distance among the 
+	 * nodes in the unvisited set is infinity when planning a complete traversal; 
+	 * occurs when there is no connection between the initial node and remaining 
+	 * unvisited nodes), then stop. The algorithm has finished.
+	 * 
+	 * 6.)	Select the unvisited node that is marked with the smallest tentative 
+	 * distance, and set it as the new "current node" then go back to step 3.*/
+	
+	public function findTarget(tileMap:FlxTilemap, start:FlxPoint, end:FlxPoint):Array<FlxPoint>
+	{
+		var current:FlxPoint;				//Current tile being considered
+		var previous:FlxPoint;				//Used to reconstruct path
+		var Q = new Array<FlxPoint>();		//Array for iteration
+		var path = new Array<FlxPoint>();	//Path to target		
+		var visitedArrayArray:Array<Array<Bool>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) false]];	//Keeps track of whether each node is visited.	
+		var previousArrayArray:Array<Array<Int>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) null]];		//Keeps track of previous node
+		
+		//Start at the given start tile
+		current = start;
+		Q.push(current);
+		
+		//Get neighbors of tile
+		while (Q.length > 0) 
+		{
+			current = Q.shift();
+			var neighbors = getNeighborTiles(current);
+			for(n in 0...neighbors.length) 
+			{
+				//if neighbor is unvisited, enqueue it
+				if (visitedArrayArray[neighbors[n].x][neighbors[n].y] == null) 
+				{
+					Q.push(neighbors[n]);
+					visitedArrayArray[current.x][current.y] = true;
+				}
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return path;
+	}
+	
+	
+	
+	
 }
