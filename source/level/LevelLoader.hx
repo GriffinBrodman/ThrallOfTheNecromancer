@@ -18,6 +18,7 @@ class LevelLoader
 {
 	private var _map:FlxOgmoLoader;
 	private var _humanWalls:FlxTilemap;
+	private var _trueHumanWalls:FlxTilemap;
 	private var _playerWalls:FlxTilemap;
 	private var _humanPlayerWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
@@ -33,6 +34,7 @@ class LevelLoader
 	private var levelBGFrag = "assets/images/room";
 	private var levelBGExtension = ".png";// Big.png";
 	private var escapee_threshold:Int;
+	private var TILE_LENGTH = 64;
 	
 	public function new(levelNum:Int)
 	{
@@ -48,14 +50,15 @@ class LevelLoader
 	{
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
 		//_map = new FlxOgmoLoader(AssetPaths.test2__oel);
-		_humanWalls = _map.loadTilemap(AssetPaths.wheat_tile_set__png, 64, 64, "humanwalls");
-		_humanWalls.loadMap(_humanWalls.getData(),AssetPaths.wheat_tile_set__png, 64, 64, FlxTilemap.AUTO);
+		_humanWalls = _map.loadTilemap(AssetPaths.wheat_tile_set__png, TILE_LENGTH, TILE_LENGTH, "humanwalls");
+		_humanWalls.loadMap(_humanWalls.getData(),AssetPaths.wheat_tile_set__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
 		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
-		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, 64, 64, "ground");
+		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, TILE_LENGTH, TILE_LENGTH, "ground");
 		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
-		_playerWalls = _map.loadTilemap(AssetPaths.playerwall__png, 64, 64, "playerwalls");
+		_playerWalls = _map.loadTilemap(AssetPaths.playerwall__png, TILE_LENGTH, TILE_LENGTH, "playerwalls");
 		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
 		createHumanPlayerWalls();
+		//createEncompassingHumanWalls();
 		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
@@ -64,15 +67,24 @@ class LevelLoader
 	
 	private function createHumanPlayerWalls():Void {
 		var humanPlayerWallsData:Array<Int> = [];
+		var trueHumanWallsData:Array<Int> = [];
 		for (y in 0..._humanWalls.heightInTiles) {
 			for (x in 0..._humanWalls.widthInTiles) {
-				if (_humanWalls.getTile(x, y) > 0 && _playerWalls.getTile(x, y) > 0){
+				var humanWallHasTile = _humanWalls.getTile(x, y) > 0;
+				if (humanWallHasTile && _playerWalls.getTile(x, y) > 0){
 					humanPlayerWallsData.push(1);	// Fill with tile
-					//_humanWalls.setTile(x, y, 0);
+					trueHumanWallsData.push(1);
+					_humanWalls.setTile(x, y, 0);
 					_playerWalls.setTile(x, y, 0);
 				}
 				else
+				{
 					humanPlayerWallsData.push(0);	// Don't fill with tile
+					if (humanWallHasTile)
+						trueHumanWallsData.push(1);
+					else
+						trueHumanWallsData.push(0);
+				}
 			}
 		}
 		
@@ -80,7 +92,13 @@ class LevelLoader
 		_humanPlayerWalls.widthInTiles = _humanWalls.widthInTiles;
 		_humanPlayerWalls.heightInTiles = _humanWalls.heightInTiles;
 		//_humanPlayerWalls.customTileRemap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, 64, 64);
+		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, TILE_LENGTH, TILE_LENGTH);
+
+		_trueHumanWalls = new FlxTilemap();
+		_trueHumanWalls.widthInTiles = _humanWalls.widthInTiles;
+		_trueHumanWalls.heightInTiles = _humanWalls.heightInTiles;
+		//_humanPlayerWalls.customTileRemap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		_trueHumanWalls.loadMap(trueHumanWallsData, AssetPaths.humanPlayerWall__png, TILE_LENGTH, TILE_LENGTH);
 	}
 	
 	private function getLevelPath(levelNum:Int):String
@@ -111,10 +129,11 @@ class LevelLoader
 				_player.x = x;
 				_player.y = y;
 			case "enemy":
-				_enemies.add(new DFSEnemy(x, y, _humanWalls));
+				_enemies.add(new DFSEnemy(x, y, _trueHumanWalls));
 			case "exit":
 				var escapable:Bool = StringToBool(entityData.get("escapable"));
-				_exits.add(new Exit(x, y, escapable));
+				var orient = Std.string(entityData.get("orientation"));
+				_exits.add(new Exit(x, y, escapable, orient));
 				_exitsMap.set(Std.int((x / 64) + (y / 64) * _humanWalls.widthInTiles), escapable);
 		}
 	}
@@ -137,6 +156,11 @@ class LevelLoader
 	public function getHumanPlayerWalls():FlxTilemap
 	{
 		return _humanPlayerWalls;
+	}
+	
+	public function getTrueHumanWalls():FlxTilemap
+	{
+		return _trueHumanWalls;
 	}
 	
 	public function getGround():FlxTilemap

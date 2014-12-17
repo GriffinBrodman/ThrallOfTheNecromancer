@@ -107,12 +107,29 @@ class Enemy extends FlxSprite
 				curSpeed = normalSpeed;
 				path.speed = normalSpeed;
 			}
-		}			
+		}
 	}
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
 		goals = goal;
-		endPoint = (goals.getRandom()).getMidpoint();
+		var dest = goals.getRandom();
+		var xOffset = 0.0;
+		var yOffset = 0.0;
+		if (dest.canEscape())
+		{
+			xOffset = TILE_DIMENSION / 2;
+			yOffset = TILE_DIMENSION / 2;
+			switch (dest.getDirection())
+			{
+				case "Left":
+					yOffset = 0;
+				case "Right":
+					xOffset *= -1;
+				case "Down":
+					yOffset *= -1;
+			}
+		}
+		endPoint = dest.getMidpoint().subtract(xOffset, yOffset);
 	}
 	
 	public function stun(duration:Int) {
@@ -329,7 +346,7 @@ class Enemy extends FlxSprite
 		
 		while (true) 
 		{		
-			var newGoal:FlxPoint = goals.getRandom().getMidpoint();
+			var newGoal:FlxPoint = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
 			
 			//Check path to goal vs path to snake
@@ -346,19 +363,7 @@ class Enemy extends FlxSprite
 						endPoint = newGoal;
 						break;
 					}
-					else 
-					{
-						continue;
-					}
 				}
-				else 
-				{
-					continue;
-				}
-			}
-			else 
-			{
-				continue;
 			}
 		}
 			
@@ -370,7 +375,27 @@ class Enemy extends FlxSprite
 		}
 	}
 	
-	
+	private function newPossibleGoal():FlxPoint
+	{
+		var dest = goals.getRandom();
+		var xOffset = 0.0;
+		var yOffset = 0.0;
+		if (dest.canEscape())
+		{
+			xOffset = TILE_DIMENSION / 2;
+			yOffset = TILE_DIMENSION / 2;
+			switch (dest.getDirection())
+			{
+				case "Left":
+					yOffset = 0;
+				case "Right":
+					xOffset *= -1;
+				case "Down":
+					yOffset *= -1;
+			}
+		}
+		return dest.getMidpoint().subtract(xOffset, yOffset);
+	}
 	
 	public function searching():Void
 	{
@@ -469,10 +494,10 @@ class Enemy extends FlxSprite
 			}
 			else /*if (pathing == false)*/ 
 			{
-				var newEnd:FlxPoint = goals.getRandom().getMidpoint();
+				var newEnd:FlxPoint = newPossibleGoal();
 				while (newEnd == endPoint) 
 				{
-					newEnd = goals.getRandom().getMidpoint();
+					newEnd = newPossibleGoal();
 				}
 				endPoint = newEnd;
 				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
@@ -598,7 +623,7 @@ class Enemy extends FlxSprite
 		var Q = new Array<FlxPoint>();		//Array for iteration
 		var path = new Array<FlxPoint>();	//Path to target		
 		var visitedArrayArray:Array<Array<Bool>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) false]];	//Keeps track of whether each node is visited.	
-		var previousArrayArray:Array<Array<Int>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) null]];		//Keeps track of previous node
+		var previousArrayArray:Array<Array<FlxPoint>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) null]];		//Keeps track of previous node
 		
 		//Start at the given start tile
 		current = start;
@@ -608,14 +633,14 @@ class Enemy extends FlxSprite
 		while (Q.length > 0) 
 		{
 			current = Q.shift();
-			var neighbors = getNeighborTiles(current);
+			var neighbors = getNeighborTiles(tileMap, Std.int(current.x), Std.int(current.y));
 			for(n in 0...neighbors.length) 
 			{
 				//if neighbor is unvisited, enqueue it
-				if (visitedArrayArray[neighbors[n].x][neighbors[n].y] == null) 
+				if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 				{
 					Q.push(neighbors[n]);
-					visitedArrayArray[current.x][current.y] = true;
+					visitedArrayArray[Std.int(current.x)][Std.int(current.y)] = true;
 				}
 			}
 			

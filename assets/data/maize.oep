@@ -16,7 +16,7 @@
     <Width>25600</Width>
     <Height>25600</Height>
   </LevelMaximumSize>
-  <Filename>C:\Users\Mark\Workspace\Thrall\ThrallOfTheNecromancer\assets\data\maize.oep</Filename>
+  <Filename>F:\Coding\Projects\Maize\assets\data\maize.oep</Filename>
   <AngleMode>Degrees</AngleMode>
   <CameraEnabled>false</CameraEnabled>
   <CameraSize>
@@ -153,6 +153,7 @@
       </ImageDefinition>
       <ValueDefinitions>
         <ValueDefinition xsi:type="BoolValueDefinition" Name="escapable" Default="true" />
+        <ValueDefinition xsi:type="StringValueDefinition" Name="orientation" Default="Up" MaxChars="-1" MultiLine="false" />
       </ValueDefinitions>
       <NodesDefinition Enabled="false" Limit="-1" DrawMode="None" Ghost="false" />
     </EntityDefinition>

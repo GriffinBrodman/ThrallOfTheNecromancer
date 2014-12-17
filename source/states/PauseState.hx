@@ -22,11 +22,13 @@ class PauseState extends FlxSubState {
 		frame.makeGraphic(200, 50);
 		frame.color = FlxColor.BLACK;
 		frame.alpha = 0.8;
+		frame.scrollFactor.set(0, 0);
 		frame.screenCenter(true, true);
 		add(frame);
 		
 		text = new FlxText(0, 0, 0, "PAUSED", 30);
 		text.color = FlxColor.WHITE;
+		text.scrollFactor.set(0, 0);
 		//text.alignment = "center";
 		text.screenCenter(true, true);
 		add(text);

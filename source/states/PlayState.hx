@@ -38,12 +38,13 @@ class PlayState extends FlxState
 	public static var ENEMY_SIGHT_RANGE:Int = 200;
 	public static var ENEMY_DETECTION_RANGE:Int = 40;
 	public static var NUM_SNAKE_PARTS:Int = 9;
-	private static var START_DELAY_SECONDS:Int = 3;
+	private static var START_DELAY_SECONDS:Int = 0;
 	
 	private var _player:Player;
 	private var _humanWalls:FlxTilemap;
 	private var _playerWalls:FlxTilemap;
 	private var _humanPlayerWalls:FlxTilemap;
+	private var _trueHumanWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
 	//private var _mBorders:FlxTilemap;
 	private var loader:LevelLoader;
@@ -67,6 +68,7 @@ class PlayState extends FlxState
 	private var _startTimer:Int = 0;
 	private var _startDelaySprite:FlxSprite;
 	private var _startDelayText:FlxText;
+	private var _noTutorial = true;
 	
 	public function new(levelNum:Int) 
 	{
@@ -128,14 +130,7 @@ class PlayState extends FlxState
 		debug.setPosition(100, FlxG.height - 30);
 		add(debug);
 		
-		if (_currLevel < 4)
-		{
-			_tutorial = new FlxSprite(50, 300);
-			_tutorial.loadGraphic("assets/images/tutorial" + _currLevel +".png");
-			_tutorial.x = 120 - (_tutorial.width / 2);
-			_tutorial.scrollFactor.set(0, 0);
-			add(_tutorial);
-		}
+
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
@@ -144,10 +139,10 @@ class PlayState extends FlxState
 		_startDelaySprite = new FlxSprite(0, 0);
 		_startDelaySprite.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		_startDelaySprite.alpha = 0.6;
-		_startDelaySprite.scrollFactor.x = _startDelaySprite.scrollFactor.y = 0;
+		_startDelaySprite.scrollFactor.set(0, 0);
 		add(_startDelaySprite);
 		_startDelayText = new FlxText(FlxG.width / 2, FlxG.height / 2, 0, "Press Any Key to Start", 32);
-		_startDelayText.scrollFactor.x = _startDelayText.scrollFactor.y = 0;
+		_startDelayText.scrollFactor.set(0, 0);
 		_startDelayText.screenCenter(true, true);
 		add(_startDelayText);
 	}
@@ -157,6 +152,7 @@ class PlayState extends FlxState
 		_humanWalls = loader.getWalls();
 		_playerWalls = loader.getPlayerWalls();
 		_humanPlayerWalls = loader.getHumanPlayerWalls();
+		_trueHumanWalls = loader.getTrueHumanWalls();
 		_ground = loader.getGround();
 		_grpExits = loader.getExits();
 		Enemy.exits = loader.getExitsMap();
@@ -227,15 +223,27 @@ class PlayState extends FlxState
 	{
 		super.update();
 		if (_state == 0) {
+			if (_currLevel < 4 && _noTutorial)
+			{
+				_noTutorial = false;
+				_tutorial = new FlxSprite(0, FlxG.height * 3 / 4);
+				_tutorial.loadGraphic("assets/images/tutorial" + _currLevel +".png");
+				//_tutorial.x = 120 - (_tutorial.width / 2);
+				_tutorial.scrollFactor.set(0, 0);
+				_tutorial.screenCenter(true, false);
+				add(_tutorial);
+			}
 			if (FlxG.keys.firstJustReleased() != "") {
 				_startTimer = START_DELAY_SECONDS * FRAMES_PER_SECOND;
 				
 				_state = 1;
+
 			}
 		}
 		else if (_state == 1) {
 			_startTimer--;
 			_startDelayText.text = Std.string(getSecs(_startTimer));
+			_startDelayText.scrollFactor.set(0, 0);
 			_startDelayText.screenCenter(true, true);
 			if (_startTimer <= 0) {
 				remove(_startDelaySprite);
@@ -245,22 +253,28 @@ class PlayState extends FlxState
 				_state = 2;
 			}
 		}
-		else if (_state == 2){
+		else if (_state == 2) {
+			if (_timer >= loader.getTime() * FRAMES_PER_SECOND && _currLevel < 4)
+				remove(_tutorial);
 			_timer--;
 			_hud.updateHUD(getSecs(_timer), _escapeLimit, _numEscaped);
-					
+			
 			if (_timer <= 0)
 			{
+				/*
 				add(_startDelaySprite);
-				_startDelayText.text = "You win!";
+				_startDelayText.text = "You win!";				
 				_startDelayText.screenCenter(true, true);
+				_startDelayText.scrollFactor.set(0, 0);
 				add(_startDelayText);
 				disableAll();
+				_state = 3;*/
 				_state = 3;
 			}
-			FlxG.collide(_humanWalls, _grpEnemies);
+			//FlxG.collide(_humanWalls, _grpEnemies);
 			//FlxG.overlap(_playerWalls, _player, snakeCollide);
-			FlxG.collide(_humanPlayerWalls, _grpEnemies);
+			//FlxG.collide(_humanPlayerWalls, _grpEnemies);
+			FlxG.collide(_trueHumanWalls, _grpEnemies);
 			FlxG.collide(_humanPlayerWalls, _player);
 			_grpEnemies.forEachAlive(checkEnemyVision);
 			FlxG.overlap(_grpEnemies, _grpExits, humanExit);
@@ -272,15 +286,13 @@ class PlayState extends FlxState
 			}
 		}
 		else if (_state == 3) {
-			if (FlxG.keys.firstJustPressed() != ""){
-				if (loader.getCurrLevel() >= _numLevels)
-				{
-					_won = true;
-					FlxG.switchState(new GameOverState(_won, _currLevel));
-				}
-				else
-					FlxG.switchState(new PlayState(_currLevel + 1));
+			if (loader.getCurrLevel() >= _numLevels)
+			{
+				_won = true;
+				FlxG.switchState(new GameOverState(_won, _currLevel));
 			}
+			else
+				FlxG.switchState(new WinState(_currLevel + 1));
 		}
 		FlxG.collide(_humanWalls, _grpEnemies);
 		//FlxG.overlap(_playerWalls, _player, snakeCollide);

@@ -26,6 +26,9 @@ class SnakeBody extends FlxSprite
 	var prevPos:Array<FlxPoint>;
 	var nextPos:Int;
 	
+	private static var SNAKEWIDTH = 60;
+	private static var SNAKEPIECEHEIGHT = 64;
+	private static var SNAKE_SCALE = .23;
 	
 	
 	public function new(p:FlxSprite, type:Int)
@@ -38,9 +41,9 @@ class SnakeBody extends FlxSprite
 		else if (type == PlayState.NUM_SNAKE_PARTS - 2) loadGraphic("assets/images/tail1.png", true, 256, 256);
 		else if (type == PlayState.NUM_SNAKE_PARTS - 1) loadGraphic("assets/images/tail2.png", true, 256, 256);
 		else loadGraphic("assets/images/body2.png", true, 256, 256);
-		scale = new FlxPoint(.25, .25); // 1/4 the size
+		scale = new FlxPoint(SNAKE_SCALE, SNAKE_SCALE); // 1/4 the size
 		updateHitbox();
-		//setSize(64, 64);
+		//setSize(SNAKEWIDTH, SNAKEPIECEHEIGHT);
 		//offset = new FlxPoint(112, 112);
 
 		next = p;//Save the thing to follow

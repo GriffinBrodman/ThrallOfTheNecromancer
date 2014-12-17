@@ -23,8 +23,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	
 	private static var MINIMAP_X:Int = 20;
 	private static var MINIMAP_Y:Int = 50;
-	private static var MINIMAP_WIDTH:Int = 200;
-	private static var MINIMAP_HEIGHT:Int = 200;
+	private static var MINIMAP_WIDTH:Int = 175;
+	private static var MINIMAP_HEIGHT:Int = 175;
 	
 	private var _txtTimer:FlxText;
 	private var _txtEscaped:FlxText;

@@ -40,11 +40,11 @@
 1,1,1,1,1,1,1,0,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,0,1,1,1,1,1,1,1</humanwalls>
   <entities>
-    <exit id="0" x="448" y="1216" escapable="False" />
-    <exit id="1" x="448" y="1088" escapable="False" />
-    <exit id="2" x="448" y="960" escapable="False" />
-    <exit id="3" x="448" y="832" escapable="False" />
-    <exit id="4" x="448" y="0" escapable="True" />
+    <exit id="0" x="448" y="1216" escapable="False" orientation="Up" />
+    <exit id="1" x="448" y="1088" escapable="False" orientation="Up" />
+    <exit id="2" x="448" y="960" escapable="False" orientation="Up" />
+    <exit id="3" x="448" y="832" escapable="False" orientation="Up" />
+    <exit id="4" x="448" y="0" escapable="True" orientation="Up" />
     <enemy id="5" x="448" y="320" etype="0" />
     <player id="6" x="448" y="832" />
   </entities>
