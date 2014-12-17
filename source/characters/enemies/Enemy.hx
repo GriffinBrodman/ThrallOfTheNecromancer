@@ -346,7 +346,7 @@ class Enemy extends FlxSprite
 		
 		while (true) 
 		{		
-			var newGoal:FlxPoint = newPossibleGoal();
+			var newGoal = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
 			
 			//Check path to goal vs path to snake
@@ -356,13 +356,21 @@ class Enemy extends FlxSprite
 			//If the first two steps of the respective paths are the same, recalculate path
 			if (newGoal != endPoint) 
 			{
-				if (pathToGoal[1] != pathToSnake[1]) 
+				if (pathToGoal[0].x != pathToSnake[0].x && pathToGoal[0].y != pathToSnake[0].y) 
 				{
-					if (pathToGoal[2] != pathToSnake[2]) 
+					if (pathToGoal[1].x != pathToSnake[0].x && pathToGoal[1].y != pathToSnake[1].y) 
 					{
 						endPoint = newGoal;
 						break;
 					}
+					else 
+					{
+						continue; 
+					}
+				}
+				else 
+				{
+					continue;
 				}
 			}
 		}
@@ -450,26 +458,7 @@ class Enemy extends FlxSprite
 	
 	public function fleeing():Void
 	{
-		//NEW REPEL DOESN'T WORK; DO NOT DELETE THIS BLOCK OF CODE
-		/*if (fleeingTime == 0)
-		{
-			state = "searching";
-		}
-		else 
-		{
-			if (stunDuration > 0)
-			{
-				path.cancel();
-				pathing = false;
-			}
-			if (pathing == false) 
-			{
-				pathArray = [];
-				flee();
-			}
-		}*/
-			
-		
+	
 		if (fleeingTime == 0)
 		{
 			state = "searching";
@@ -481,7 +470,7 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			else if (pathing == false)
+			/*else if (pathing == false)
 			{
 				pathArray = [];
 				flee();
@@ -491,7 +480,7 @@ class Enemy extends FlxSprite
 					pathing = true;
 					path.start(this,pathPoints, curSpeed);
 				}
-			}
+			}*/
 			else /*if (pathing == false)*/ 
 			{
 				var newEnd:FlxPoint = newPossibleGoal();
