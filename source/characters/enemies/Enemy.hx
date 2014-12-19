@@ -516,9 +516,6 @@ class Enemy extends FlxSprite
 			else
 				facing = FlxObject.DOWN;
 		}
-		else {
-			facing = FlxObject.NONE;
-		}
 		
 		if (facing == FlxObject.LEFT || facing == FlxObject.RIGHT)
 		{
@@ -532,7 +529,6 @@ class Enemy extends FlxSprite
 		{
 			animation.pause();
 		}
-			
 		super.draw();
 	}
 	
