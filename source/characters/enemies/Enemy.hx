@@ -40,6 +40,7 @@ class Enemy extends FlxSprite
 	private var walls:FlxTilemap;	
 	private var ground:FlxTilemap;
 	public var state:String;
+	private var pathSet:Bool;
 	
 	public var scared:Bool;
 	private var stunDuration:Int;
@@ -64,6 +65,7 @@ class Enemy extends FlxSprite
 
 		path = new FlxPath();											//Path 
 		pathing = false;												//True if enemy is moving to another tile in a path
+		pathSet = false;
 		
 		scared = false;													//Why is this here?
 		fleeingTime = 0;
@@ -109,30 +111,13 @@ class Enemy extends FlxSprite
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
 		goals = goal;
-		var dest = goals.getRandom();
-		var xOffset = 0.0;
-		var yOffset = 0.0;
-		if (dest.canEscape())
-		{
-			xOffset = TILE_DIMENSION / 2;
-			yOffset = TILE_DIMENSION / 2;
-			switch (dest.getDirection())
-			{
-				case "Left":
-					yOffset = 0;
-				case "Right":
-					xOffset *= -1;
-				case "Down":
-					yOffset *= -1;
-			}
-		}
-		endPoint = dest.getMidpoint().subtract(xOffset, yOffset);
 	}
 	
 	public function stun(duration:Int) {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 		this.stunDuration = duration;
+		this.scared = false;
 	}
 	
 	//Updates the field to represent the tile this enemy is currently standing on
@@ -335,81 +320,69 @@ class Enemy extends FlxSprite
 		return path;
 	}
 	
-	public function flee():Void 
+	public function flee():Void
 	{
 		//Define tile that the snake is on
 		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
+		var pathToGoal: Array<FlxPoint>;
 		
 		while (true) 
 		{		
 			var newGoal = newPossibleGoal();
+			trace(newGoal);
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
+			trace("New Goal: " + newGoalTile);
 			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
 			{
 				//Check path to goal vs path to snake
-				var pathToGoal = findTarget(walls, currentTile, newGoalTile);
+				pathToGoal = findTarget(walls, currentTile, newGoalTile);
+				trace("PTG: " + pathToGoal);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
-				//If the first two steps of the respective paths are the same, recalculate path
-					
+				trace("PTS: " + pathToSnake);
+				//If the first two steps of the respective paths are the same, recalculate path					
 				if (pathToSnake.length != 0) 
 				{	
 					if (pathToGoal.length != 0)
 					{
-							if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
+						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
 						{
-							endPoint = newGoalTile;
+							trace("Path is good");
+							pathArray = pathToGoal;		
 							break;
 						}
 						else 
 						{
+							trace("Paths in same direction");
 							continue;
 						}
 					}
 					else 
 					{
+						trace("Path not reachable");
 						continue; 
 					}
 				}
 				else 
 				{
-					endPoint = newGoalTile;
+					("Snake is on the wall");
+					pathArray = pathToGoal;		
 					break;
 				}
 			}
 			else 
 			{
+				trace("Currently standing on new goal");
 				continue;
 			}
 		}
-			
-		var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-		if (pathPoints != null && !pathing) 
-		{
-			pathing = true;
-			path.start(this,pathPoints, curSpeed);
-		}
+		
+		pathArray = pathToGoal;		
 	}
 	
 	private function newPossibleGoal():FlxPoint
 	{
 		var dest = goals.getRandom();
-		var xOffset = 0.0;
-		var yOffset = 0.0;
-		if (dest.canEscape())
-		{
-			xOffset = TILE_DIMENSION / 2;
-			yOffset = TILE_DIMENSION / 2;
-			switch (dest.getDirection())
-			{
-				case "Left":
-					yOffset = 0;
-				case "Right":
-					xOffset *= -1;
-				case "Down":
-					yOffset *= -1;
-			}
-		}
-		return dest.getMidpoint().subtract(xOffset, yOffset);
+		return new FlxPoint(dest.x, dest.y);
 	}
 	
 	public function searching():Void
@@ -419,90 +392,63 @@ class Enemy extends FlxSprite
 			path.cancel();
 			pathing = false;
 			state = "fleeing";
-			fleeingTime = 50;
 			curSpeed = scaredSpeed;
 			path.speed = scaredSpeed;
 		}
 		else 
 		{
-			if (stunDuration > 0)
+			if (stunDuration > 0 || path.finished)
 			{
 				path.cancel();
 				pathing = false;
 			}
-			
-			if (path.finished)
-			{
-				path.cancel();
-				pathing = false;
-			}
-			
-			if (!pathing) 
-			{
-				if (pathArray.length == 0) 
+			else 
+			{			
+				if (pathSet == false) 
 				{
 					determinePath(walls);
 				}
-				else if (pathArray.length > 0) 
+				else 
 				{					
 					var newEnd:FlxPoint = pathArray.shift();
 					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
 					path.start(this, pathPoints, curSpeed);
 					pathing = true;
+					if (pathArray.length == 0) 
+					{
+						pathSet = false;
+					}
 				}
-				/*var newEnd:FlxPoint = goals.getRandom().getMidpoint();
-				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
-				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
-				{
-					pathing = true;
-					path.start(this,pathPoints, curSpeed);
-				}*/
 			}
 		}
 	}
 	
 	public function fleeing():Void
 	{
-	
-		if (fleeingTime == 0)
+		if (stunDuration > 0)
 		{
-			state = "searching";
+			path.cancel();
+			pathing = false;
 		}
 		else 
 		{
-			if (stunDuration > 0)
+			if (!pathSet) 
 			{
-				path.cancel();
-				pathing = false;
-			}
-			else if (pathing == false)
-			{
-				pathArray = [];
 				flee();
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
+				pathSet = true;
+			}
+			else 
+			{
+				var newEnd:FlxPoint = pathArray.shift();
+				var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+				path.start(this, pathPoints, curSpeed);
+				pathing = true;
+				if (pathArray.length == 0) 
 				{
-					pathing = true;
-					path.start(this,pathPoints, curSpeed);
+					pathSet = false;
+					scared = false;
 				}
 			}
-			else /*if (pathing == false)*/ 
-			{
-				var newEnd:FlxPoint = newPossibleGoal();
-				while (newEnd == endPoint) 
-				{
-					newEnd = newPossibleGoal();
-				}
-				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
-				{
-					pathing = true;
-					path.start(this,pathPoints, curSpeed);
-				}
-			}		
 		}
 	}
 	
