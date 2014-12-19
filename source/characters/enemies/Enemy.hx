@@ -323,20 +323,21 @@ class Enemy extends FlxSprite
 	public function flee():Void
 	{
 		//Define tile that the snake is on
+		trace("STARTED");
 		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
 		var pathToGoal: Array<FlxPoint>;
 		
 		while (true) 
 		{		
 			var newGoal = newPossibleGoal();
-			trace(newGoal);
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
-			trace("New Goal: " + newGoalTile);
 			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
 			{
 				//Check path to goal vs path to snake
+				trace("New Goal: " + newGoalTile);
 				pathToGoal = findTarget(walls, currentTile, newGoalTile);
 				trace("PTG: " + pathToGoal);
+				trace("Snake: " + snakeTile);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
 				trace("PTS: " + pathToSnake);
 				//If the first two steps of the respective paths are the same, recalculate path					
@@ -406,18 +407,25 @@ class Enemy extends FlxSprite
 			{			
 				if (pathSet == false) 
 				{
+					trace("Calculating path");
 					determinePath(walls);
+					pathSet = true;
 				}
 				else 
-				{					
-					var newEnd:FlxPoint = pathArray.shift();
-					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-					path.start(this, pathPoints, curSpeed);
-					pathing = true;
-					if (pathArray.length == 0) 
+				{	
+					if (path.finished) 
 					{
-						pathSet = false;
+						trace("pathing");
+						var newEnd:FlxPoint = pathArray.shift();
+						var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+						path.start(this, pathPoints, curSpeed);
+						pathing = true;
+						if (pathArray.length == 0) 
+						{
+							pathSet = false;
+						}
 					}
+
 				}
 			}
 		}
@@ -436,18 +444,23 @@ class Enemy extends FlxSprite
 			{
 				flee();
 				pathSet = true;
+				trace("BATMAN");
 			}
 			else 
 			{
-				var newEnd:FlxPoint = pathArray.shift();
-				var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-				path.start(this, pathPoints, curSpeed);
-				pathing = true;
-				if (pathArray.length == 0) 
+				if (path.finished) 
 				{
-					pathSet = false;
-					scared = false;
+					var newEnd:FlxPoint = pathArray.shift();
+					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+					path.start(this, pathPoints, curSpeed);
+					pathing = true;
+					if (pathArray.length == 0) 
+					{
+						pathSet = false;
+						scared = false;
+					}
 				}
+
 			}
 		}
 	}
