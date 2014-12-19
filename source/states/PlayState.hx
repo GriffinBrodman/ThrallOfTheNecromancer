@@ -39,6 +39,7 @@ class PlayState extends FlxState
 	public static var ENEMY_DETECTION_RANGE:Int = 40;
 	public static var NUM_SNAKE_PARTS:Int = 9;
 	private static var START_DELAY_SECONDS:Int = 0;
+	private static var SONG_NUMBER:Int = 0;
 	
 	private var _player:Player;
 	private var _humanWalls:FlxTilemap;
@@ -301,23 +302,36 @@ class PlayState extends FlxState
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		
-		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
+		var song:Int = -1;
+		if (_currLevel < 5) song = 0;
+		else if (_currLevel < 8) song = 1;
+		else if (_currLevel < 11) song = 2;
+		else if (_currLevel < 14) song = 3;
+		else if (_currLevel < 17) song = 4;
+		else song = 5;
+
+		if (FlxG.sound.music == null || SONG_NUMBER != song) // don't restart the music if it's alredy playing
 		{
-			var song:Int = FlxRandom.int() % 6;
-			if (song == 0)
+			if (FlxG.sound.music != null)
 			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
-				#end
+					FlxG.sound.pause();
 			}
-			if (song == 1)
+			SONG_NUMBER = song;
+			if (song == 0)
 			{
 				#if flash
 				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
 				#else
 				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
+				#end
+				
+			}
+			if (song == 1)
+			{
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
 				#end
 			}
 			if (song == 2)
@@ -339,17 +353,17 @@ class PlayState extends FlxState
 			if (song == 4)
 			{
 				#if flash
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
 				#else
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
+				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
 				#end
 			}
 			if (song == 5)
 			{
 				#if flash
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
+				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
 				#else
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
+				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
 				#end
 			}
 			
