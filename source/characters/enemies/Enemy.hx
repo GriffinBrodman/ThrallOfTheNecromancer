@@ -90,7 +90,7 @@ class Enemy extends FlxSprite
 		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
 		
-		snakePos = FlxPoint.get();
+		
 		
 		walls = map;
 		path = new FlxPath();
