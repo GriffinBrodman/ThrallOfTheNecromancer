@@ -387,6 +387,7 @@ class PlayState extends FlxState
 		{
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
+			FlxG.sound.play(AssetPaths.poof__mp3, .5, false);
 			
 			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 			if (_numEscaped >= _escapeLimit)
