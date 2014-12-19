@@ -203,17 +203,25 @@ class PlayState extends FlxState
 	 */
 	override public function destroy():Void
 	{
+		_sidebar = FlxDestroyUtil.destroy(_sidebar);
 		_player = FlxDestroyUtil.destroy(_player);
 		_humanWalls = FlxDestroyUtil.destroy(_humanWalls);
+		_playerWalls = FlxDestroyUtil.destroy(_playerWalls);
+		_humanPlayerWalls = FlxDestroyUtil.destroy(_humanPlayerWalls);
+		_trueHumanWalls = FlxDestroyUtil.destroy(_trueHumanWalls);
+		_ground = FlxDestroyUtil.destroy(_ground);
 		destroyGroup(_grpSnake);
 		destroyGroup(_grpEnemies);
 		destroyGroup(_hud);
+		destroyGroup(_grpExits);
+		destroyGroup(_grpUI);
 		_startDelaySprite = FlxDestroyUtil.destroy(_startDelaySprite);
 		_startDelayText = FlxDestroyUtil.destroy(_startDelayText);
 		if (_currLevel < 4)
 		{
 			_tutorial.destroy();
 		}
+		debug = FlxDestroyUtil.destroy(debug);
 		super.destroy();
 	}
 	

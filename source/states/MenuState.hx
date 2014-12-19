@@ -23,7 +23,7 @@ class MenuState extends FlxState
 	private var _background:FlxSprite;
 	
 	//private var _txtTitle:FlxText;
-	private var _btnOptions:FlxButton;
+	//private var _btnOptions:FlxButton;
 	private var _btnPlay:FlxButton;
 	#if desktop
 	private var _btnExit:FlxButton;
@@ -45,9 +45,6 @@ class MenuState extends FlxState
 		_btnFullScreen.x = 10;
 		_btnFullScreen.y = 10;
 		add(_btnFullScreen);
-		
-
-		
 
 		_btnPlay = new FlxButton(0, 0, "", clickPlay);
 		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 226, 285);
@@ -132,11 +129,11 @@ class MenuState extends FlxState
 		super.destroy();
 		_background = FlxDestroyUtil.destroy(_background);
 		_btnPlay = FlxDestroyUtil.destroy(_btnPlay);
-		_btnOptions = FlxDestroyUtil.destroy(_btnOptions);
+		//_btnOptions = FlxDestroyUtil.destroy(_btnOptions);
 		#if desktop
 		_btnExit = FlxDestroyUtil.destroy(_btnExit);
 		#end
-		_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
 		_btnContinue = FlxDestroyUtil.destroy(_btnContinue);
+		_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
 	}
 }

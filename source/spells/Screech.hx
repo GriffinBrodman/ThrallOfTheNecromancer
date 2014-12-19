@@ -29,7 +29,7 @@ class Screech extends FlxSprite
 		/*scale.x = 0;
 		scale.y = 0;
 		FlxTween.tween(scale, { x: 2 * SCREECH_RANGE / SCREECH_WIDTH, y: 2 * SCREECH_RANGE / SCREECH_HEIGHT }, SCREECH_GRAPHIC_DURATION / 4);*/
-		FlxTween.tween(this, { alpha: 1 }, SCREECH_GRAPHIC_DURATION,
+		FlxTween.tween(this, { alpha: 0.5 }, SCREECH_GRAPHIC_DURATION,
 		{ complete: function (f:FlxTween) {
 			this.destroy();
 		}});
