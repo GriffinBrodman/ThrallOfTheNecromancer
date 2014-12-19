@@ -41,10 +41,10 @@ class PlayState extends FlxState
 	public static var CAM_OFFSET = 200;
 	public static var CAM_Y_OFFSET = FlxG.height;
 	//public static var HUD_START = FlxG.width + CAM_OFFSET;
+	
 	private static var START_DELAY_SECONDS:Int = 0;
 	private static var SONG_NUMBER:Int = 0;
 	
-	private static var START_DELAY_SECONDS:Int = 0;
 	private var _sidebar:FlxCamera;
 	private var _player:Player;
 	private var _humanWalls:FlxTilemap;
