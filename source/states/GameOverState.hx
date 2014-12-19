@@ -68,6 +68,8 @@ class GameOverState extends FlxState
 		add(_btnMainMenu);*/
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
+		FlxG.sound.pause();
+		FlxG.sound.playMusic(AssetPaths.losesound__mp3, 1, false);
 		super.create();
 	}
 	
