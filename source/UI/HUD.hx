@@ -6,36 +6,43 @@ import characters.SnakeBody;
 import entities.Exit;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxColor;
+import states.PlayState;
 import ui.FlxMinimap;
 using flixel.util.FlxSpriteUtil;
 
+
 class HUD extends FlxTypedGroup<FlxSprite>
 {
-	private static var BAR_X:Int = 0;
+	private static var START_X = FlxG.width;
+
+	private static var BAR_X:Int = START_X;
 	private static var BAR_Y:Int = 5;
 	private static var BAR_GAP:Int = 25;
-	private static var BAR_WIDTH:Int = 250;
+	private static var BAR_WIDTH:Int = 200;
 	private static var BAR_HEIGHT:Int = 20;
-	
-	private static var MINIMAP_X:Int = 20;
+
+	private static var MINIMAP_X:Int = START_X + 20;
 	private static var MINIMAP_Y:Int = 80;
-	private static var MINIMAP_WIDTH:Int = 175;
-	private static var MINIMAP_HEIGHT:Int = 175;
-	
+	private static var MINIMAP_WIDTH:Int = 125;
+	private static var MINIMAP_HEIGHT:Int = 125;
+
 	private static var MAPFRAME_WIDTH:Int = 18;
 	private static var MAPFRAME_HEIGHT:Int = 18;
 	private static var MAPFRAME_X = MINIMAP_X - MAPFRAME_WIDTH;
 	private static var MAPFRAME_Y = MINIMAP_Y - MAPFRAME_HEIGHT;
 	
-	private static var TIMER_HEIGHT = 100;
-	private static var TIMER_WIDTH = 100;
-	
+	private static var TIMER_X = START_X;
+	private static var TIMER_Y = MINIMAP_Y + BAR_GAP;
+	private static var TIMER_HEIGHT = 50;
+	private static var TIMER_WIDTH = 50;
+
 	private static var SECS_PER_FRAME:Float;
-	
+
 	private var _timer:FlxSprite;
 	private var _txtTimer:FlxText;
 	private var totalTime:Int;
@@ -53,27 +60,10 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
 	 * escape, and number that have escaped.
 	 */
-	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, humanWalls:FlxTilemap, playerWalls:FlxTilemap, humanPlayerWalls:FlxTilemap) 
+	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, humanWalls:FlxTilemap, playerWalls:FlxTilemap, humanPlayerWalls:FlxTilemap, uiCam:FlxCamera)
 	{
 		super();
 		this.player = player;
-
-		// timer text
-		totalTime = timer;
-		SECS_PER_FRAME = totalTime / 12;
-		secs = Std.string(totalTime);
-		_timer = new FlxSprite(0, 0);
-		_timer.loadGraphic(AssetPaths.time_anim__jpg, true, TIMER_WIDTH, TIMER_HEIGHT);
-		_timer.x = (FlxG.width - _timer.width) / 2;
-		_timer.scrollFactor.set(0, 0);
-		_timer.animation.add("runTime", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 1);
-		add(_timer);
-		
-		_txtTimer = new FlxText(0, 0, 0, secs, 32);
-		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
-		_txtTimer.alignment = "center";
-		_txtTimer.screenCenter(true, false);
-		add(_txtTimer);
 
 		// screech cooldown bar
 		//screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
@@ -95,14 +85,30 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		add(_txtEscaped);
 
 		// minimap
-		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
+		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT, uiCam);
 		mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
 		mapFrame.scrollFactor.set(0, 0);
 		this.add(mapFrame);
 		this.add(minimap);
+		
+		// timer text
+		totalTime = timer;
+		SECS_PER_FRAME = totalTime / 12;
+		secs = Std.string(totalTime);
+		_timer = new FlxSprite(0, 0);
+		_timer.loadGraphic(AssetPaths.timekeep__png, true, TIMER_WIDTH, TIMER_HEIGHT);
+		_timer.setPosition((uiCam.width - _timer.width) / 2, TIMER_Y + mapFrame.height);
+		add(_timer);
+		
+		_txtTimer = new FlxText(_timer.x, _timer.y, 0, secs, 32);
+		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
+		_txtTimer.alignment = "center";
+		_txtTimer.camera = uiCam;
 
+		add(_txtTimer);
 		forEach(function(spr:FlxSprite) {
 			spr.scrollFactor.set(0, 0);
+			spr.camera = uiCam;
 		});
 	}
 
@@ -159,10 +165,10 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
 		_txtTimer.text = Std.string(timer);
-		_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;*/
+		//_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;*/
 		var index = Std.int(Math.min((totalTime - timer) / SECS_PER_FRAME, 11));
 		//trace(index);
-		_timer.animation.frameIndex = index;
+		//_timer.animation.frameIndex = index;
 
 		var escaped = "Game over if " + Std.string(escapeLimit - escapees) + " escape";
 		if (escapeLimit - escapees == 1)

@@ -4,6 +4,7 @@ import characters.Player;
 import characters.SnakeBody;
 import entities.Exit;
 import flash.display.BitmapData;
+import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
@@ -47,8 +48,10 @@ class FlxMinimap extends FlxSprite
 	
 	private var grpEnemies:FlxTypedGroup<Enemy>;
 	private var grpExits:FlxTypedGroup<Exit>;
+	private var cam:FlxCamera;
 	
-	public function new(humanTilemap:FlxTilemap, playerTilemap:FlxTilemap, humanPlayerTilemap:FlxTilemap, dots:FlxTypedGroup<FlxSprite>, X:UInt, Y:UInt, W:UInt, H:UInt) {			
+	public function new(humanTilemap:FlxTilemap, playerTilemap:FlxTilemap, humanPlayerTilemap:FlxTilemap, dots:FlxTypedGroup<FlxSprite>,
+						X:UInt, Y:UInt, W:UInt, H:UInt, uiCam:FlxCamera) {			
 		super(X, Y);
 		this.humanTilemap = humanTilemap;
 		this.playerTilemap = playerTilemap;
@@ -67,6 +70,7 @@ class FlxMinimap extends FlxSprite
 		pixels = bmd;
 		
 		set_alpha(MINIMAP_ALPHA);
+		cam = uiCam;
 	}
 	
 	public function init(player:Player, snakeBody:FlxTypedGroup<SnakeBody>, enemies:FlxTypedGroup<Enemy>, exits:FlxTypedGroup<Exit>) {
@@ -77,13 +81,16 @@ class FlxMinimap extends FlxSprite
 		
 		for (exit in grpExits) {
 			if (exit.canEscape())
-				follow(exit, FlxColor.AZURE);
+				follow(exit, FlxColor.AZURE).camera = cam;
 		}
 		for (enemy in grpEnemies)
+		{
 			enemy.minimapDot = follow(enemy, FlxColor.RED);
+			enemy.minimapDot.camera = cam;
+		}
 		for (snakeBody in snakeBody)
-			follow(snakeBody, FlxColor.PURPLE);
-		follow(player, FlxColor.PURPLE);
+			follow(snakeBody, FlxColor.PURPLE).camera = cam;
+		follow(player, FlxColor.PURPLE).camera = cam;
 	}
 	
 	/**

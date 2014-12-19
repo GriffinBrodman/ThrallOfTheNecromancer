@@ -38,8 +38,12 @@ class PlayState extends FlxState
 	public static var ENEMY_SIGHT_RANGE:Int = 200;
 	public static var ENEMY_DETECTION_RANGE:Int = 40;
 	public static var NUM_SNAKE_PARTS:Int = 9;
-	private static var START_DELAY_SECONDS:Int = 0;
+	public static var CAM_OFFSET = 200;
+	public static var CAM_Y_OFFSET = FlxG.height;
+	//public static var HUD_START = FlxG.width + CAM_OFFSET;
 	
+	private static var START_DELAY_SECONDS:Int = 0;
+	private var _sidebar:FlxCamera;
 	private var _player:Player;
 	private var _humanWalls:FlxTilemap;
 	private var _playerWalls:FlxTilemap;
@@ -83,10 +87,15 @@ class PlayState extends FlxState
 	{
 		super.create();
 		FlxG.mouse.visible = false;
-		
+		FlxG.camera.width -= CAM_OFFSET;
+		FlxG.camera.x = CAM_OFFSET;
+
+		_sidebar = new FlxCamera(0, 0, CAM_OFFSET, FlxG.height);
+		_sidebar.setBounds(FlxG.width, 0);
+		FlxG.cameras.add(_sidebar);
 		loader = new LevelLoader(_currLevel);
 		loadLevel();
-		
+
 		//add(_bg);
 		add(_ground);
 		add(_humanWalls);
@@ -94,10 +103,10 @@ class PlayState extends FlxState
 		add(_humanPlayerWalls);
 		add(_grpExits);
 		add(_grpEnemies);
-		
+
 		_grpUI = new FlxTypedGroup<FlxSprite>();
 		add(_grpUI);
-		
+
 		var tempPlayer = loader.getPlayer();
 		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _humanWalls, this.add);
 		_grpSnake = new FlxTypedGroup<SnakeBody>();
@@ -106,10 +115,8 @@ class PlayState extends FlxState
 			lastPart = new SnakeBody(lastPart == null ? _player : lastPart, i);
 			_grpSnake.add(lastPart);
 		}
-		
-		
+
 		add(_grpSnake);
-		
 		add(_player);
 				
 		for (i in 0..._grpEnemies.length)
@@ -122,16 +129,14 @@ class PlayState extends FlxState
 		//We will use the following line for the bigger scale, don't delete
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 		
-		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls);
+		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls, _sidebar);
 		add(_hud);
 		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
 		
 		debug = new FlxText();
 		debug.setPosition(100, FlxG.height - 30);
 		add(debug);
-		
 
-		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		disableAll();
@@ -235,9 +240,7 @@ class PlayState extends FlxState
 			}
 			if (FlxG.keys.firstJustReleased() != "") {
 				_startTimer = START_DELAY_SECONDS * FRAMES_PER_SECOND;
-				
 				_state = 1;
-
 			}
 		}
 		else if (_state == 1) {
