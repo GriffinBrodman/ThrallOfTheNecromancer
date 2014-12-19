@@ -241,6 +241,7 @@ class Player extends FlxSprite
 		handleCooldowns();
 		updateCurrentTile();
 		checkInWall(walls);
+		trace(inWall);
 		super.update();
 	}
 
@@ -275,8 +276,9 @@ class Player extends FlxSprite
 	
 	public function checkInWall(tilemap:FlxTilemap):Void 
 	{
-		if (tilemap.getTile(Std.int(currentTile.x), Std.int(currentTile.y)) == 1) 
+		if (tilemap.getTile(Std.int(currentTile.x), Std.int(currentTile.y)) != 0) 
 		{
+			trace("BATMAN");
 			inWall =  true;
 		}
 		else 

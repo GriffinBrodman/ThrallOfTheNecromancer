@@ -344,16 +344,16 @@ class Enemy extends FlxSprite
 		{		
 			var newGoal = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
-			
+			6
 			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
 			{
 				//Check path to goal vs path to snake
 				var pathToGoal = findTarget(walls, currentTile, newGoalTile);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
 				//If the first two steps of the respective paths are the same, recalculate path
-				if (pathToSnake.length != 0) 
+				if (pathToSnake != null) 
 				{
-					if (pathToGoal.length != 0)
+					if (pathToGoal.length != 0 || pathToGoal != null)
 					{
 						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
 						{
@@ -593,6 +593,7 @@ class Enemy extends FlxSprite
 		
 		if (tileMap.getTile(Std.int(end.x), Std.int(end.y)) != 1) 
 		{
+			trace("empty1");
 			return [];
 		}
 		
@@ -613,7 +614,7 @@ class Enemy extends FlxSprite
 			var neighbors = getNeighborTiles(tileMap, Std.int(current.x), Std.int(current.y));
 			for(n in 0...neighbors.length) 
 			{
-				//if neighbor is unvisited, enqueue it, mark previous. 
+				//if neighbor is unvisited, enqueue it, mark pr1evious. 
 
 				if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 				{
@@ -632,6 +633,7 @@ class Enemy extends FlxSprite
 			}
 			visitedArrayArray[Std.int(current.x)][Std.int(current.y)] = true;
 		}
+		trace("empty2");
 		return [];
 	}
 		
