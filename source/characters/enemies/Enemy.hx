@@ -323,7 +323,7 @@ class Enemy extends FlxSprite
 	public function flee():Void
 	{
 		//Define tile that the snake is on
-		trace("STARTED");
+		trace("SCARED");
 		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
 		var pathToGoal: Array<FlxPoint>;
 		
@@ -392,13 +392,14 @@ class Enemy extends FlxSprite
 		{
 			path.cancel();
 			pathing = false;
+			pathSet = false;
 			state = "fleeing";
 			curSpeed = scaredSpeed;
 			path.speed = scaredSpeed;
 		}
 		else 
 		{
-			if (stunDuration > 0 || path.finished)
+			if (stunDuration > 0)
 			{
 				path.cancel();
 				pathing = false;
@@ -411,9 +412,15 @@ class Enemy extends FlxSprite
 					determinePath(walls);
 					pathSet = true;
 				}
+				
+				if (path.finished) 
+				{
+					pathing = false;
+				}
+				
 				else 
 				{	
-					if (path.finished) 
+					if (!pathing) 
 					{
 						trace("pathing");
 						var newEnd:FlxPoint = pathArray.shift();
@@ -444,7 +451,6 @@ class Enemy extends FlxSprite
 			{
 				flee();
 				pathSet = true;
-				trace("BATMAN");
 			}
 			else 
 			{
