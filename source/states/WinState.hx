@@ -30,6 +30,8 @@ class WinState extends FlxState
 		_text = new FlxText(0, 0, 0, "Press any key to continue", 32);
 		_text.screenCenter(true, true);
 		_text.scrollFactor.set(0, 0);
+		FlxG.sound.pause();
+		FlxG.sound.playMusic(AssetPaths.winsound__mp3, 1, false);
 		add(_text);
 	}
 	

@@ -27,7 +27,7 @@ class Player extends FlxSprite
 	private static var RIGHT_INPUT:Array<String> = ["RIGHT", "D"];
 
 	private static var SCREECH_INPUT:Array<String> = ["Z", "J"];
-	private static var DASH_INPUT:Array<String> = ["X", "L"];
+	private static var DASH_INPUT:Array<String> = ["X", "K"];
 
 	public static var SCREECH_COOLDOWN:Int = 200;
 	public static var DASH_COOLDOWN:Int = 200;
@@ -78,7 +78,7 @@ class Player extends FlxSprite
 		scale = new FlxPoint(SNAKE_SCALE, SNAKE_SCALE);
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, false);
-		animation.add("screech", [0], 6, false);
+		//animation.add("screech", [0], 6, false);
 		updateHitbox();
 		//setSize(64, 64);
 		//offset = new FlxPoint(224, 224);
@@ -218,11 +218,12 @@ class Player extends FlxSprite
 	private function screech() {
 		if (FlxG.keys.anyJustPressed(SCREECH_INPUT) && screechCooldown <= 0) {
 			screechCooldown = SCREECH_COOLDOWN;
-			animation.play("screech");
+			//animation.play("screech");
+			FlxG.sound.play(AssetPaths.shriek__mp3, .5, false);
 
 			addSprite(new Screech(this.getMidpoint().x, this.getMidpoint().y, grpEnemies));
 			
-			Camera.shake(0.02, 30, true);
+			Camera.shake(0.005, 30, true);
 		}
 	}
 	

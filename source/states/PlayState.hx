@@ -38,8 +38,14 @@ class PlayState extends FlxState
 	public static var ENEMY_SIGHT_RANGE:Int = 200;
 	public static var ENEMY_DETECTION_RANGE:Int = 40;
 	public static var NUM_SNAKE_PARTS:Int = 9;
-	private static var START_DELAY_SECONDS:Int = 0;
+	public static var CAM_OFFSET = 200;
+	public static var CAM_Y_OFFSET = FlxG.height;
+	//public static var HUD_START = FlxG.width + CAM_OFFSET;
 	
+	private static var START_DELAY_SECONDS:Int = 0;
+	private static var SONG_NUMBER:Int = 0;
+	
+	private var _sidebar:FlxCamera;
 	private var _player:Player;
 	private var _humanWalls:FlxTilemap;
 	private var _playerWalls:FlxTilemap;
@@ -83,10 +89,15 @@ class PlayState extends FlxState
 	{
 		super.create();
 		FlxG.mouse.visible = false;
-		
+		FlxG.camera.width -= CAM_OFFSET;
+		FlxG.camera.x = CAM_OFFSET;
+
+		_sidebar = new FlxCamera(0, 0, CAM_OFFSET, FlxG.height);
+		_sidebar.setBounds(FlxG.width, 0);
+		FlxG.cameras.add(_sidebar);
 		loader = new LevelLoader(_currLevel);
 		loadLevel();
-		
+
 		//add(_bg);
 		add(_ground);
 		add(_humanWalls);
@@ -94,10 +105,10 @@ class PlayState extends FlxState
 		add(_humanPlayerWalls);
 		add(_grpExits);
 		add(_grpEnemies);
-		
+
 		_grpUI = new FlxTypedGroup<FlxSprite>();
 		add(_grpUI);
-		
+
 		var tempPlayer = loader.getPlayer();
 		_player = new Player(tempPlayer.x, tempPlayer.y, _grpEnemies, _humanWalls, this.add);
 		_grpSnake = new FlxTypedGroup<SnakeBody>();
@@ -106,10 +117,8 @@ class PlayState extends FlxState
 			lastPart = new SnakeBody(lastPart == null ? _player : lastPart, i);
 			_grpSnake.add(lastPart);
 		}
-		
-		
+
 		add(_grpSnake);
-		
 		add(_player);
 				
 		for (i in 0..._grpEnemies.length)
@@ -122,16 +131,14 @@ class PlayState extends FlxState
 		//We will use the following line for the bigger scale, don't delete
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 		
-		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls);
+		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls, _sidebar);
 		add(_hud);
 		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
 		
 		debug = new FlxText();
 		debug.setPosition(100, FlxG.height - 30);
 		add(debug);
-		
 
-		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		
 		disableAll();
@@ -145,6 +152,68 @@ class PlayState extends FlxState
 		_startDelayText.scrollFactor.set(0, 0);
 		_startDelayText.screenCenter(true, true);
 		add(_startDelayText);
+		
+		
+		
+		var song:Int = -1;
+		if (_currLevel < 5) song = 0;
+		else if (_currLevel < 8) song = 1;
+		else if (_currLevel < 11) song = 2;
+		else if (_currLevel < 14) song = 3;
+		else if (_currLevel < 17) song = 4;
+		else song = 5;
+		FlxG.sound.pause();
+		FlxG.sound.play(AssetPaths.slithering__mp3, .5, true);
+			
+		if (song == 0)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
+			#end
+		}
+		if (song == 1)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
+			#end
+		}
+		if (song == 2)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
+			#end
+		}
+		if (song == 3)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
+			#end
+		}
+		if (song == 4)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
+			#end
+		}
+		if (song == 5)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
+			#end
+		}
+		
 	}
 	
 	private function loadLevel():Void
@@ -235,9 +304,7 @@ class PlayState extends FlxState
 			}
 			if (FlxG.keys.firstJustReleased() != "") {
 				_startTimer = START_DELAY_SECONDS * FRAMES_PER_SECOND;
-				
 				_state = 1;
-
 			}
 		}
 		else if (_state == 1) {
@@ -300,61 +367,9 @@ class PlayState extends FlxState
 		FlxG.collide(_humanPlayerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
-		
-		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
-		{
-			var song:Int = FlxRandom.int() % 6;
-			if (song == 0)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
-				#end
-			}
-			if (song == 1)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
-				#end
-			}
-			if (song == 2)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
-				#end
-			}
-			if (song == 3)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
-				#end
-			}
-			if (song == 4)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
-				#end
-			}
-			if (song == 5)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
-				#end
-			}
-			
-		}
 
+
+		
 	}
 	
 	
@@ -373,6 +388,7 @@ class PlayState extends FlxState
 		{
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
+			FlxG.sound.play(AssetPaths.poof__mp3, .5, false);
 			
 			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 			if (_numEscaped >= _escapeLimit)
@@ -404,7 +420,11 @@ class PlayState extends FlxState
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _player.getMidpoint())
+<<<<<<< HEAD
 		&& !_player.inWall && e.inLOS(_player.x, _player.y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+=======
+		&& e.inLOS(_player.x, _player.y)) )
+>>>>>>> origin/master
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
@@ -419,7 +439,7 @@ class PlayState extends FlxState
 				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
 				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
 				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-				&& e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+				&& e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
 				{
 					e.scared = true;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());

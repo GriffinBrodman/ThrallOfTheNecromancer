@@ -93,6 +93,13 @@ class Enemy extends FlxSprite
 		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
 		
+<<<<<<< HEAD
+=======
+		
+		
+		walls = map;
+		path = new FlxPath();
+>>>>>>> origin/master
 	}
 	
 	public function updateCooldowns() 

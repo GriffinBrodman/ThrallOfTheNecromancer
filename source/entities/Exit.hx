@@ -8,7 +8,7 @@ import flixel.util.FlxColor;
  */
 class Exit extends FlxSprite
 {
-	private static var DENOMINATOR = 1;// 2;
+	private static var DENOMINATOR = 1;// 4;// 2;
 	var escape = false;
 	var graphicPath = "assets/images/exit";
 	var graphicExt = ".png";
@@ -27,14 +27,16 @@ class Exit extends FlxSprite
 		{
 			case "Up":
 				this.height /= DENOMINATOR;
+				this.offset.add(0, (this.height / DENOMINATOR ) * (DENOMINATOR / 2));
 			case "Left":
 				this.width /= DENOMINATOR;
+				this.offset.add((this.width / DENOMINATOR) * (DENOMINATOR / 2), 0);
 			case "Right":
 				this.width /= DENOMINATOR;
-				this.offset.add((this.width / DENOMINATOR) * (DENOMINATOR - 1), 0);
+				this.offset.add((this.width / DENOMINATOR) * (DENOMINATOR / 2), 0);
 			case "Down":
 				this.height /= DENOMINATOR;
-				this.offset.add(0, (this.height / DENOMINATOR ) * (DENOMINATOR - 1));
+				this.offset.add(0, (this.height / DENOMINATOR ) * (DENOMINATOR / 2));
 		}
 	}
 	
