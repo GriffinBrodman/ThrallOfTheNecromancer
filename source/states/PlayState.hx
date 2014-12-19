@@ -41,6 +41,8 @@ class PlayState extends FlxState
 	public static var CAM_OFFSET = 200;
 	public static var CAM_Y_OFFSET = FlxG.height;
 	//public static var HUD_START = FlxG.width + CAM_OFFSET;
+	private static var START_DELAY_SECONDS:Int = 0;
+	private static var SONG_NUMBER:Int = 0;
 	
 	private static var START_DELAY_SECONDS:Int = 0;
 	private var _sidebar:FlxCamera;
@@ -304,32 +306,71 @@ class PlayState extends FlxState
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 		
-		if (FlxG.sound.music == null) // don't restart the music if it's alredy playing
+		var song:Int = -1;
+		if (_currLevel < 5) song = 0;
+		else if (_currLevel < 8) song = 1;
+		else if (_currLevel < 11) song = 2;
+		else if (_currLevel < 14) song = 3;
+		else if (_currLevel < 17) song = 4;
+		else song = 5;
+
+		if (FlxG.sound.music == null || SONG_NUMBER != song) // don't restart the music if it's alredy playing
 		{
-			var song:Int = FlxRandom.int() % 6;
+			if (FlxG.sound.music != null)
+			{
+					FlxG.sound.pause();
+			}
+			SONG_NUMBER = song;
 			if (song == 0)
 			{
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
+
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
+				#end
+				
 			}
 			if (song == 1)
 			{
-				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
+				#end
 			}
 			if (song == 2)
 			{
+				#if flash
 				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
+				#end
 			}
 			if (song == 3)
 			{
+				#if flash
 				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
+				#end
 			}
 			if (song == 4)
 			{
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
+				#end
 			}
 			if (song == 5)
 			{
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
+				#if flash
+				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
+				#else
+				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
+				#end
+
 			}
 		}
 	}
