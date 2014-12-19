@@ -306,55 +306,29 @@ class PlayState extends FlxState
 			var song:Int = FlxRandom.int() % 6;
 			if (song == 0)
 			{
-				#if flash
 				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
-				#end
 			}
 			if (song == 1)
 			{
-				#if flash
 				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
-				#end
 			}
 			if (song == 2)
 			{
-				#if flash
 				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
-				#end
 			}
 			if (song == 3)
 			{
-				#if flash
 				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
-				#end
 			}
 			if (song == 4)
 			{
-				#if flash
 				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
-				#end
 			}
 			if (song == 5)
 			{
-				#if flash
 				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
-				#end
 			}
-			
 		}
-
 	}
 	
 	

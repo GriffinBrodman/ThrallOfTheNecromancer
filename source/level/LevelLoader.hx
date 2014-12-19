@@ -49,16 +49,13 @@ class LevelLoader
 	private function loadLevel(levelNum:Int)
 	{
 		_map = new FlxOgmoLoader(getLevelPath(levelNum));
-		//_map = new FlxOgmoLoader(AssetPaths.test2__oel);
 		_humanWalls = _map.loadTilemap(AssetPaths.wheat_tile_set__png, TILE_LENGTH, TILE_LENGTH, "humanwalls");
 		_humanWalls.loadMap(_humanWalls.getData(),AssetPaths.wheat_tile_set__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
-		//_walls = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "walls");
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, TILE_LENGTH, TILE_LENGTH, "ground");
-		//_ground = _map.loadTilemap(AssetPaths.invisibletile__png, 128, 128, "ground");
-		_playerWalls = _map.loadTilemap(AssetPaths.playerwall__png, TILE_LENGTH, TILE_LENGTH, "playerwalls");
-		//_bg = new FlxSprite(0, 0, getBGPath(levelNum));
+		_playerWalls = _map.loadTilemap(AssetPaths.puddleTilesheet__png, TILE_LENGTH, TILE_LENGTH, "playerwalls");
+		_playerWalls.loadMap(_playerWalls.getData(), AssetPaths.puddleTilesheet__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
+
 		createHumanPlayerWalls();
-		//createEncompassingHumanWalls();
 		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
