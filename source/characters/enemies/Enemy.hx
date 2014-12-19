@@ -348,16 +348,16 @@ class Enemy extends FlxSprite
 			{
 				//Check path to goal vs path to snake
 				var pathToGoal = findTarget(walls, currentTile, newGoalTile);
-				trace("ptg: " + pathToGoal);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
-				trace("pts: " + pathToSnake);
 				//If the first two steps of the respective paths are the same, recalculate path
-				if (pathToSnake.length != 0 || pathToSnake != null) 
-				{																									
-					if (pathToGoal.length != 0 || pathToGoal != null)
+					
+				if (pathToSnake.length != 0) 
+				{	
+					if (pathToGoal.length != 0)
 					{
-						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
+							if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
 						{
+							endPoint = newGoalTile;
 							break;
 						}
 						else 
@@ -372,6 +372,7 @@ class Enemy extends FlxSprite
 				}
 				else 
 				{
+					endPoint = newGoalTile;
 					break;
 				}
 			}

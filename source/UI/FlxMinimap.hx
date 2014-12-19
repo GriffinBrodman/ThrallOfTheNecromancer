@@ -105,13 +105,13 @@ class FlxMinimap extends FlxSprite
 				for (exit in grpExits) {
 					if (exit.canEscape() && FlxMath.isDistanceWithin(enemy, exit, BLINK_DISTANCE)) {
 						enemy.minimapDotTweening = true;
-						/*FlxTween.tween(enemy.minimapDot.scale, { x:2, y:2 }, 0.25, { complete: function(f:FlxTween) {
+						FlxTween.tween(enemy.minimapDot.scale, { x:2, y:2 }, 0.25, { complete: function(f:FlxTween) {
 							if (enemy != null && enemy.exists && enemy.minimapDot != null){
 								FlxTween.tween(enemy.minimapDot.scale, { x: 1, y:1 }, 0.25, { complete: function(f:FlxTween) {
 									enemy.minimapDotTweening = false;
 								}});
 							}
-						}} );*/
+						}} );
 						break;
 					}
 				}
