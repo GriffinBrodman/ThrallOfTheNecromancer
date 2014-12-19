@@ -37,7 +37,9 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var SECS_PER_FRAME:Float;
 	
 	private var _timer:FlxSprite;
+	private var _txtTimer:FlxText;
 	private var totalTime:Int;
+	private var secs:String;
 	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechBack:FlxSprite;
@@ -59,14 +61,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		// timer text
 		totalTime = timer;
 		SECS_PER_FRAME = totalTime / 12;
-		/*_txtTimer = new FlxText(0, 2, 40, secs, 16);
-		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
-
-		_txtTimer.alignment = "center";
-		_txtTimer.x = FlxG.width / 2;
-
-		this.add(_txtTimer);*/
-		
+		secs = Std.string(totalTime);
 		_timer = new FlxSprite(0, 0);
 		_timer.loadGraphic(AssetPaths.time_anim__jpg, true, TIMER_WIDTH, TIMER_HEIGHT);
 		_timer.x = (FlxG.width - _timer.width) / 2;
@@ -74,33 +69,38 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_timer.animation.add("runTime", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 1);
 		add(_timer);
 		
-		
+		_txtTimer = new FlxText(0, 0, 0, secs, 32);
+		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
+		_txtTimer.alignment = "center";
+		_txtTimer.screenCenter(true, false);
+		add(_txtTimer);
+
 		// screech cooldown bar
 		//screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
 		screechBack = new FlxSprite(BAR_X, BAR_Y, AssetPaths.backbar__png);
 		screechCooldownBar = new FlxSprite(BAR_X, BAR_Y, AssetPaths.screechbar__png);
 		// dash cooldown bar
-		
+
 		dashBack = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.backbar__png);
 		dashCooldownBar = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.dashbar__png);
 		add(screechBack);
 		add(screechCooldownBar);
 		add(dashBack);
 		add(dashCooldownBar);
-		
+
 		// escapee text
 		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
 		_txtEscaped = new FlxText(FlxG.width - 250, 2, 250, escaped, 16);
 		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 		add(_txtEscaped);
-		
+
 		// minimap
 		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT);
 		mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
 		mapFrame.scrollFactor.set(0, 0);
 		this.add(mapFrame);
 		this.add(minimap);
-		
+
 		forEach(function(spr:FlxSprite) {
 			spr.scrollFactor.set(0, 0);
 		});
@@ -121,19 +121,19 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		frame.makeGraphic(width+4,height+4); //White frame for the bar
 		frame.scrollFactor.x = frame.scrollFactor.y = 0;
 		this.add(frame);
- 
+
 		var inside:FlxSprite = new FlxSprite(X,Y);
 		inside.makeGraphic(width,height,0xff000000); //Black interior, 48 pixels wide
 		inside.scrollFactor.x = inside.scrollFactor.y = 0;
 		this.add(inside);
- 
+
 		var bar:FlxSprite = new FlxSprite(X,Y);
 		bar.makeGraphic(1,height,color); //The bar itself
 		bar.scrollFactor.x = bar.scrollFactor.y = 0;
 		bar.origin.x = bar.origin.y = 0; //Zero out the origin
 		bar.scale.x = width;
 		this.add(bar);
-		
+
 		return bar;
 	}
 
@@ -147,10 +147,9 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public static function updateBar(bar:FlxSprite, val:Int, cap:Int, width:Int, tween:Float=0) {
 		val = val > 0 ? val : 0;
-		
 		bar.x = BAR_X - (bar.width * (1 - (val / cap))) ;
 	}
-	
+
 	/**
 	 * Updates rest of UI, such as timer and number of escapees
 	 * @param	timer
@@ -159,19 +158,19 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	 */
 	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
-		/*_txtTimer.text = Std.string(timer);
+		_txtTimer.text = Std.string(timer);
 		_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;*/
 		var index = Std.int(Math.min((totalTime - timer) / SECS_PER_FRAME, 11));
 		//trace(index);
 		_timer.animation.frameIndex = index;
-		
+
 		var escaped = "Game over if " + Std.string(escapeLimit - escapees) + " escape";
 		if (escapeLimit - escapees == 1)
 			escaped += "s!";
 		else
 			escaped += "!";
 		_txtEscaped.text = escaped;
-		
+
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
 		updateBar(dashCooldownBar, Player.DASH_COOLDOWN - player.getDashCooldown(), Player.DASH_COOLDOWN, BAR_WIDTH);
 	}

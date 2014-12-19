@@ -319,6 +319,7 @@ class PlayState extends FlxState
 			SONG_NUMBER = song;
 			if (song == 0)
 			{
+
 				#if flash
 				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
 				#else
@@ -365,10 +366,9 @@ class PlayState extends FlxState
 				#else
 				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
 				#end
-			}
-			
-		}
 
+			}
+		}
 	}
 	
 	

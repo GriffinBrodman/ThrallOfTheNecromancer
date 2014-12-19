@@ -53,14 +53,14 @@ class GameOverState extends FlxState
 		_txtTitle.screenCenter(true, false);
 		add(_txtTitle);*/
 		
-		/*_btnRetry = new FlxButton(0, 0, "", retry);
-		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 175, 285);
+		_btnRetry = new FlxButton(0, 0, "", retry);
+		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 226, 285);
 		_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
 		_btnRetry.y = FlxG.height - _btnRetry.height;
 		//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-
 		//_btnRetry.screenCenter(true, false);
-		add(_btnRetry);*/
+		if (!_win)
+			add(_btnRetry);
 		
 		/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
 		_btnMainMenu.screenCenter(true, false);
@@ -74,8 +74,12 @@ class GameOverState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		if (FlxG.keys.firstJustReleased() != "") {
-			retry();
+		if (FlxG.keys.firstJustReleased() != "") 
+		{
+			if (_win)
+				FlxG.switchState(new MenuState());
+			else
+				retry();
 		}
 	}
 	
