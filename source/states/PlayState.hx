@@ -152,6 +152,68 @@ class PlayState extends FlxState
 		_startDelayText.scrollFactor.set(0, 0);
 		_startDelayText.screenCenter(true, true);
 		add(_startDelayText);
+		
+		
+		
+		var song:Int = -1;
+		if (_currLevel < 5) song = 0;
+		else if (_currLevel < 8) song = 1;
+		else if (_currLevel < 11) song = 2;
+		else if (_currLevel < 14) song = 3;
+		else if (_currLevel < 17) song = 4;
+		else song = 5;
+		FlxG.sound.pause();
+		FlxG.sound.play(AssetPaths.slithering__mp3, .5, true);
+			
+		if (song == 0)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
+			#end
+		}
+		if (song == 1)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
+			#end
+		}
+		if (song == 2)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
+			#end
+		}
+		if (song == 3)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
+			#end
+		}
+		if (song == 4)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
+			#end
+		}
+		if (song == 5)
+		{
+			#if flash
+			FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
+			#else
+			FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
+			#end
+		}
+		
 	}
 	
 	private function loadLevel():Void
@@ -313,74 +375,9 @@ class PlayState extends FlxState
 		FlxG.collide(_humanPlayerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
+
+
 		
-		var song:Int = -1;
-		if (_currLevel < 5) song = 0;
-		else if (_currLevel < 8) song = 1;
-		else if (_currLevel < 11) song = 2;
-		else if (_currLevel < 14) song = 3;
-		else if (_currLevel < 17) song = 4;
-		else song = 5;
-
-		if (FlxG.sound.music == null || SONG_NUMBER != song) // don't restart the music if it's alredy playing
-		{
-			if (FlxG.sound.music != null)
-			{
-					FlxG.sound.pause();
-			}
-			SONG_NUMBER = song;
-			if (song == 0)
-			{
-
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.A_Harpy_Beginning__ogg, 1, true);
-				#end
-				
-			}
-			if (song == 1)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Reklaws_and_Carefree__ogg, 1, true);
-				#end
-			}
-			if (song == 2)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Clumsy_Exploration__ogg, 1, true);
-				#end
-			}
-			if (song == 3)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Questionable_Territory__ogg, 1, true);
-				#end
-			}
-			if (song == 4)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Rising_Tensions__ogg, 1, true);
-				#end
-			}
-			if (song == 5)
-			{
-				#if flash
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__mp3, 1, true);
-				#else
-				FlxG.sound.playMusic(AssetPaths.Dark_and_Stormy__ogg, 1, true);
-				#end
-
-			}
-		}
 	}
 	
 	
@@ -399,6 +396,7 @@ class PlayState extends FlxState
 		{
 			FlxDestroyUtil.destroy(human);
 			_numEscaped++;
+			FlxG.sound.play(AssetPaths.poof__mp3, .5, false);
 			
 			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 			if (_numEscaped >= _escapeLimit)
@@ -430,7 +428,7 @@ class PlayState extends FlxState
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& e.inLOS(_player.x, _player.y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+		&& e.inLOS(_player.x, _player.y)) )
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
@@ -445,7 +443,7 @@ class PlayState extends FlxState
 				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
 				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
 				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-				&& e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+				&& e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
 				{
 					e.scared = true;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());

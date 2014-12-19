@@ -213,6 +213,7 @@ class Player extends FlxSprite
 		if (FlxG.keys.anyJustPressed(SCREECH_INPUT) && screechCooldown <= 0) {
 			screechCooldown = SCREECH_COOLDOWN;
 			//animation.play("screech");
+			FlxG.sound.play(AssetPaths.shriek__mp3, .5, false);
 
 			addSprite(new Screech(this.getMidpoint().x, this.getMidpoint().y, grpEnemies));
 			
