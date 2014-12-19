@@ -50,7 +50,7 @@ class MenuState extends FlxState
 		
 
 		_btnPlay = new FlxButton(0, 0, "", clickPlay);
-		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 175, 285);
+		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 226, 285);
 		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width;
 		_btnPlay.y = FlxG.height - _btnPlay.height;
 		//_btnPlay.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
@@ -65,7 +65,7 @@ class MenuState extends FlxState
 				levelStart = _save.data.Level;
 				_btnContinue = new FlxButton(0, 0, "", clickContinue);
 				_btnContinue.loadGraphic(AssetPaths.continueButton__png, false, 175, 285);
-				_btnContinue.x = (FlxG.width / 2) - 1; // - _btnContinue.width;
+				_btnContinue.x = _btnPlay.x + _btnPlay.width - 30; // - _btnContinue.width;
 				_btnContinue.y = FlxG.height - _btnContinue.height;
 				//_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 				add(_btnContinue);

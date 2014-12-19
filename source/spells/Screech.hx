@@ -18,13 +18,13 @@ class Screech extends FlxSprite
 	private static var SCREECH_HEIGHT:Int = 600;
 	private static var SCREECH_STUN_DURATION:Int = 100;
 	private static var SCREECH_RANGE:Int = 300;
-	private static var SCREECH_GRAPHIC_DURATION:Float = 0.3;	// in seconds
+	private static var SCREECH_GRAPHIC_DURATION:Float = 0.25;	// in seconds
 	
 	public function new(X:Float = 0, Y:Float = 0, grpEnemies:FlxTypedGroup<Enemy>) 
 	{
 		super(X - SCREECH_WIDTH / 2, Y - SCREECH_HEIGHT / 2);
 		loadGraphic(AssetPaths.screech__png, true, SCREECH_WIDTH, SCREECH_HEIGHT);
-		animation.add("screech", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], Std.int(60 / SCREECH_GRAPHIC_DURATION));
+		animation.add("screech", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 60, false);
 		animation.play("screech");
 		/*scale.x = 0;
 		scale.y = 0;
