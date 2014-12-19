@@ -76,6 +76,7 @@ class Enemy extends FlxSprite
 		else if (type == 1) loadGraphic(AssetPaths.walkinganimation2__png, true, 64, 64);
 		else if (type == 2) loadGraphic(AssetPaths.walkinganimation3__png, true, 64, 64);
 		else if (type == 3) loadGraphic(AssetPaths.walkinganimation4__png, true, 64, 64);
+		
 		width = 20;
 		height = 30;
 		offset.x = 6;
@@ -90,10 +91,6 @@ class Enemy extends FlxSprite
 		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
 		
-		snakePos = FlxPoint.get();
-		
-		walls = map;
-		path = new FlxPath();
 	}
 	
 	public function updateCooldowns() 
@@ -348,28 +345,38 @@ class Enemy extends FlxSprite
 			var newGoal = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
 			
-			if (newGoalTile != currentTile) 
+			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
 			{
 				//Check path to goal vs path to snake
 				var pathToGoal = findTarget(walls, currentTile, newGoalTile);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
-				
 				//If the first two steps of the respective paths are the same, recalculate path
-				if (pathToGoal.length != 0 && pathToSnake.length != 0) 
+				if (pathToSnake.length != 0) 
 				{
-					if (pathToGoal[0].x != pathToSnake[0].x && pathToGoal[0].y != pathToSnake[0].y) 
+					if (pathToGoal.length != 0)
 					{
-						break;
+						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
+						{
+							break;
+						}
+						else 
+						{
+							continue;
+						}
 					}
 					else 
 					{
-						continue;
+						continue; 
 					}
 				}
 				else 
 				{
-					continue; 
+					break;
 				}
+			}
+			else 
+			{
+				continue;
 			}
 		}
 			
@@ -583,6 +590,12 @@ class Enemy extends FlxSprite
 		var previousArrayArray:Array<Array<FlxPoint>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) null]];		//Keeps track of previous node
 		
 		//Start at the given start tile
+		
+		if (tileMap.getTile(Std.int(end.x), Std.int(end.y)) != 1) 
+		{
+			return [];
+		}
+		
 		Q.push(start);
 		previousArrayArray[Std.int(start.x)][Std.int(start.y)] = start;
 		
@@ -601,6 +614,7 @@ class Enemy extends FlxSprite
 			for(n in 0...neighbors.length) 
 			{
 				//if neighbor is unvisited, enqueue it, mark previous. 
+
 				if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 				{
 					Q.push(neighbors[n]);	//Add neighbor to open queue

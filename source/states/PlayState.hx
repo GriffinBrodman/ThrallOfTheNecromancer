@@ -404,7 +404,7 @@ class PlayState extends FlxState
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
 		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _humanWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& e.inLOS(_player.x, _player.y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
+		&& !_player.inWall && e.inLOS(_player.x, _player.y)) || dx * dx + dy * dy <= ENEMY_DETECTION_RANGE * ENEMY_DETECTION_RANGE)
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());

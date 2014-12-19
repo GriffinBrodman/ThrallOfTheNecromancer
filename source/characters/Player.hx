@@ -37,6 +37,8 @@ class Player extends FlxSprite
 	private static var DASH_MULTIPLIER:Float = 1.5;
 	private static var DASH_TURN_MULTIPLIER = .5;
 	private static var SNAKE_SCALE = .23;
+	
+	public static var TILE_DIMENSION = 64.0; 
 
 	
 	private var screechCooldown:Int;
@@ -57,12 +59,16 @@ class Player extends FlxSprite
 	private var decel:Float = .90;		//Deceleration
 	private var friction:Float = .95;	//Slowdown factor
 	
+	private var currentTile:FlxPoint;
+	public var inWall:Bool;
+	
 	//Variables for turning
 	public var turnAngle:Float = 0;		//Basically the direction the player is facing	
 	private var turnAccel:Float = 0.8;		//Rate at which player turns
 	private var turnFriction:Float = .98;	//For smoothness
 	
 	private var dashing:Bool = false;
+
 	
 	public function new(X:Float=0, Y:Float=0, grpEnemies:FlxTypedGroup<Enemy>, walls:FlxTilemap, add:FlxSprite -> Void)
 	{
@@ -233,6 +239,8 @@ class Player extends FlxSprite
 		screech();
 		dash();
 		handleCooldowns();
+		updateCurrentTile();
+		checkInWall(walls);
 		super.update();
 	}
 
@@ -260,4 +268,20 @@ class Player extends FlxSprite
 		return dashCooldown;
 	}
 
+	public function updateCurrentTile():Void 
+	{
+		currentTile = new FlxPoint(Math.round(this.x/TILE_DIMENSION), Math.round(this.y/TILE_DIMENSION));	
+	}
+	
+	public function checkInWall(tilemap:FlxTilemap):Void 
+	{
+		if (tilemap.getTile(Std.int(currentTile.x), Std.int(currentTile.y)) == 1) 
+		{
+			inWall =  true;
+		}
+		else 
+		{
+			inWall = false;
+		}
+	}
 }
