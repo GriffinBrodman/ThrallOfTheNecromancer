@@ -165,7 +165,7 @@ class PlayState extends FlxState
 		else song = 5;
 		FlxG.sound.pause();
 		FlxG.sound.play(AssetPaths.growl__mp3, .5, true);
-		FlxG.sound.play(AssetPaths.slithering__mp3, .5, true);
+		FlxG.sound.play(AssetPaths.SnakeGrowl_with_silence__mp3, .7, true);
 		
 		
 			
