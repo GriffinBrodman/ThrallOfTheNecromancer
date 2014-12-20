@@ -41,7 +41,7 @@ class OptionsState extends FlxState
 		_txtVolume.screenCenter(true, false);
 		add(_txtVolume);
 		
-		// the volume buttons will be smaller than 'default' buttons
+		/*// the volume buttons will be smaller than 'default' buttons
 		_btnVolumeDown = new FlxButton(8, _txtVolume.y + _txtVolume.height + 2, "-", clickVolumeDown);
 		_btnVolumeDown.loadGraphic(AssetPaths.button__png, true, 20,20);
 		_btnVolumeDown.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
@@ -50,7 +50,7 @@ class OptionsState extends FlxState
 		_btnVolumeUp = new FlxButton(FlxG.width - 28, _btnVolumeDown.y, "+", clickVolumeUp);
 		_btnVolumeUp.loadGraphic(AssetPaths.button__png, true, 20,20);
 		_btnVolumeUp.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnVolumeUp);
+		add(_btnVolumeUp);*/
 		
 		_barVolume = new FlxBar(_btnVolumeDown.x + _btnVolumeDown.width + 4, _btnVolumeDown.y, FlxBar.FILL_LEFT_TO_RIGHT, Std.int(FlxG.width - 64), Std.int(_btnVolumeUp.height));
 		_barVolume.createFilledBar(FlxColor.CHARCOAL, FlxColor.WHITE, true, FlxColor.WHITE);
@@ -158,8 +158,8 @@ class OptionsState extends FlxState
 		_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
 		_txtVolume = FlxDestroyUtil.destroy(_txtVolume);
 		_txtVolumeAmt = FlxDestroyUtil.destroy(_txtVolumeAmt);
-		_btnVolumeDown = FlxDestroyUtil.destroy(_btnVolumeDown);
-		_btnVolumeUp = FlxDestroyUtil.destroy(_btnVolumeUp);
+		//_btnVolumeDown = FlxDestroyUtil.destroy(_btnVolumeDown);
+		//_btnVolumeUp = FlxDestroyUtil.destroy(_btnVolumeUp);
 		_btnClearData = FlxDestroyUtil.destroy(_btnClearData);
 		_btnBack = FlxDestroyUtil.destroy(_btnBack);
 		_save.destroy();
