@@ -100,7 +100,7 @@ class Enemy extends FlxSprite
 	{
 		if (stunDuration > 0)
 			stunDuration--;
-		if (scaredTimer == 0)
+		if (scaredTimer == 0 && scared)
 		{
 			pathSet = false;
 		}
@@ -327,7 +327,7 @@ class Enemy extends FlxSprite
 	public function flee():Void
 	{
 		//Define tile that the snake is on
-		trace("SCARED");
+		//trace("SCARED");
 		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
 		var pathToGoal: Array<FlxPoint>;
 		
@@ -338,13 +338,13 @@ class Enemy extends FlxSprite
 			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
 			{
 				//Check path to goal vs path to snake
-				trace("New Goal: " + newGoalTile);
+				//trace("New Goal: " + newGoalTile);
 				pathToGoal = findTarget(walls, currentTile, newGoalTile);
-				trace("PTG: " + pathToGoal);
-				trace("Snake Pos: " + snakePos);
-				trace("Snake: " + snakeTile);
+				//trace("PTG: " + pathToGoal);
+				//trace("Snake Pos: " + snakePos);
+				//trace("Snake: " + snakeTile);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
-				trace("PTS: " + pathToSnake);
+				//trace("PTS: " + pathToSnake);
 				//If the first two steps of the respective paths are the same, recalculate path					
 				if (pathToSnake.length != 0) 
 				{	
@@ -352,32 +352,32 @@ class Enemy extends FlxSprite
 					{
 						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
 						{
-							trace("Path is good");
+							//trace("Path is good");
 							pathArray = pathToGoal;		
 							break;
 						}
 						else 
 						{
-							trace("Paths in same direction");
+							//trace("Paths in same direction");
 							continue;
 						}
 					}
 					else 
 					{
-						trace("Path not reachable");
+						//trace("Path not reachable");
 						continue; 
 					}
 				}
 				else 
 				{
-					trace("Snake is on the wall");
+					//trace("Snake is on the wall");
 					pathArray = pathToGoal;		
 					break;
 				}
 			}
 			else 
 			{
-				trace("Currently standing on new goal");
+				//trace("Currently standing on new goal");
 				continue;
 			}
 		}
@@ -413,7 +413,6 @@ class Enemy extends FlxSprite
 			{	
 				if (!pathSet) 
 				{
-					path.cancel();
 					determinePath(walls);
 					pathSet = true;
 				}
