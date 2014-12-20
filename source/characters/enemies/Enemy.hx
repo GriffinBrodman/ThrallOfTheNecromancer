@@ -42,11 +42,10 @@ class Enemy extends FlxSprite
 	public var state:String;
 	private var pathSet:Bool;
 	
-	public var wasScared:Bool;
 	public var scared:Bool;
+	private var scaredTimer:Int;
 	
 	private var stunDuration:Int;
-	private var fleeingTime:Int;
 	public var snakePos:FlxPoint;
 	
 	public var minimapDot:FlxSprite;	// Reference to dot on minimap to blink when necessary; Used by minimap
@@ -70,9 +69,8 @@ class Enemy extends FlxSprite
 		pathSet = false;												//If this has a path it's following
 		
 		scared = false;													//Why is this here?
-		wasScared = false;												//Idk embrace it
 		
-		fleeingTime = 0;
+		scaredTimer = 0;
 		stunDuration = 0;
 		
 		snakePos = FlxPoint.get();		
@@ -102,10 +100,11 @@ class Enemy extends FlxSprite
 	{
 		if (stunDuration > 0)
 			stunDuration--;
-		if (fleeingTime > 0)
+		if (scaredTimer > 0)
 		{
-			fleeingTime--;
-			if (fleeingTime == 0){
+			scaredTimer--;
+			if (scaredTimer == 0) {
+				scared = false;
 				curSpeed = normalSpeed;
 				path.speed = normalSpeed;
 			}
@@ -401,6 +400,7 @@ class Enemy extends FlxSprite
 	{
 		if (scared)
 		{
+			scaredTimer = 30;
 			path.cancel();
 			pathing = false;
 			pathSet = false;
@@ -453,19 +453,10 @@ class Enemy extends FlxSprite
 			pathing = false;
 		}
 		else 
-		{
-			if (wasScared) 
-			{
-				trace("BATMAN");
-				path.cancel();
-				flee();
-				pathSet = true;
-				wasScared = false;
-			}
+		{			
 			if (!pathSet)
 			{
 				trace("IT'S THE JOKER!");
-				path.cancel();
 				flee();
 				pathSet = true;
 			}
@@ -480,7 +471,6 @@ class Enemy extends FlxSprite
 					if (pathArray.length == 0) 
 					{
 						pathSet = false;
-						scared = false;
 						state = "searching";
 					}
 				}
