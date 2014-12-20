@@ -44,6 +44,11 @@
     <exit id="11" x="256" y="448" escapable="False" orientation="Up" />
     <exit id="12" x="448" y="576" escapable="False" orientation="Up" />
     <exit id="13" x="448" y="640" escapable="False" orientation="Up" />
+    <player id="14" x="448" y="640" />
+    <enemy id="15" x="448" y="320" etype="0" />
+    <enemy id="16" x="576" y="448" etype="0" />
+    <enemy id="17" x="448" y="576" etype="0" />
+    <enemy id="18" x="320" y="448" etype="0" />
   </entities>
   <playerwalls tileset="playerWalls" exportMode="CSV">1,1,1,1,1,0,0,0,0,0,1,1,1,1,1
 1,1,1,1,0,0,0,0,0,0,0,1,1,1,1
