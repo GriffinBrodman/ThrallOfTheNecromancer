@@ -425,6 +425,7 @@ class PlayState extends FlxState
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
 			if (!wasScared)
+				FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
 				Camera.shake(0.005, 20);
 			
 		}
@@ -438,9 +439,10 @@ class PlayState extends FlxState
 				{
 					e.scared = true;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
-					trace("GRiffininisde facing" +  e.facing);
+					
 					if (!wasScared)
 						Camera.shake(0.005, 20);
+						FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
 				
 					break;
 				}
