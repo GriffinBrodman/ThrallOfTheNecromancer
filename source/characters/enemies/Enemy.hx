@@ -43,7 +43,7 @@ class Enemy extends FlxSprite
 	private var pathSet:Bool;
 	
 	public var scared:Bool;
-	private var scaredTimer:Int;
+	public var scaredTimer:Int;
 	
 	private var stunDuration:Int;
 	public var snakePos:FlxPoint;
@@ -104,9 +104,7 @@ class Enemy extends FlxSprite
 		{
 			scaredTimer--;
 			if (scaredTimer == 0) {
-				scared = false;
-				curSpeed = normalSpeed;
-				path.speed = normalSpeed;
+				pathSet = false;
 			}
 		}
 	}
@@ -400,7 +398,7 @@ class Enemy extends FlxSprite
 	{
 		if (scared)
 		{
-			scaredTimer = 30;
+			scaredTimer = 5;
 			path.cancel();
 			pathing = false;
 			pathSet = false;
@@ -454,25 +452,24 @@ class Enemy extends FlxSprite
 		}
 		else 
 		{			
-			if (!pathSet)
+			if (scaredTimer == 0)
 			{
 				trace("IT'S THE JOKER!");
 				flee();
 				pathSet = true;
 			}
-			else 
+
+			if (path.finished) 
 			{
-				if (path.finished) 
+				var newEnd:FlxPoint = pathArray.shift();
+				var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+				path.start(this, pathPoints, curSpeed);
+				pathing = true;
+				if (pathArray.length == 0) 
 				{
-					var newEnd:FlxPoint = pathArray.shift();
-					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-					path.start(this, pathPoints, curSpeed);
-					pathing = true;
-					if (pathArray.length == 0) 
-					{
-						pathSet = false;
-						state = "searching";
-					}
+					pathSet = false;
+					scared = false;
+					state = "searching";
 				}
 			}
 		}
@@ -480,6 +477,7 @@ class Enemy extends FlxSprite
 	
 	override public function update():Void 
 	{
+		updateCooldowns();
 		position.x = this.x;
 		position.y = this.y;
 		updateCurrentTile();
@@ -495,8 +493,6 @@ class Enemy extends FlxSprite
 		{
 			fleeing();
 		}
-		
-		updateCooldowns();
 		
 		super.update();
 		
