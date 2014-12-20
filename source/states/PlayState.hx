@@ -96,7 +96,7 @@ class PlayState extends FlxState
 		_sidebar = new FlxCamera(0, 0, CAM_OFFSET, SCREEN_HEIGHT);
 		FlxG.camera.x += _sidebar.width + _sidebar.x;
 		//Put off screen
-		_sidebar.setBounds(FlxG.width, 0);
+		_sidebar.setBounds(-FlxG.width, -FlxG.height);
 		FlxG.cameras.add(_sidebar);
 		loader = new LevelLoader(_currLevel);
 		loadLevel();
@@ -146,11 +146,11 @@ class PlayState extends FlxState
 		disableAll();
 		_state = 0;
 		_startDelaySprite = new FlxSprite(0, 0);
-		_startDelaySprite.makeGraphic(FlxG.width, SCREEN_HEIGHT, FlxColor.BLACK);
+		_startDelaySprite.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.BLACK);
 		_startDelaySprite.alpha = 0.6;
 		_startDelaySprite.scrollFactor.set(0, 0);
 		add(_startDelaySprite);
-		_startDelayText = new FlxText(FlxG.width / 2, SCREEN_HEIGHT / 2, 0, "Press Any Key to Start", 32);
+		_startDelayText = new FlxText(0, SCREEN_HEIGHT / 2, 0, "Press Any Key to Start", 32);
 		_startDelayText.scrollFactor.set(0, 0);
 		_startDelayText.screenCenter(true, true);
 		add(_startDelayText);
@@ -306,9 +306,8 @@ class PlayState extends FlxState
 			if (_currLevel < 4 && _noTutorial)
 			{
 				_noTutorial = false;
-				_tutorial = new FlxSprite(0, FlxG.height * 3 / 4);
+				_tutorial = new FlxSprite(0, SCREEN_HEIGHT * 3 / 4);
 				_tutorial.loadGraphic("assets/images/tutorial" + _currLevel +".png");
-				//_tutorial.x = 120 - (_tutorial.width / 2);
 				_tutorial.scrollFactor.set(0, 0);
 				_tutorial.screenCenter(true, false);
 				add(_tutorial);
