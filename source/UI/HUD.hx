@@ -35,14 +35,17 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var MAPFRAME_HEIGHT:Int = 18;
 	private static var MAPFRAME_X = MINIMAP_X - MAPFRAME_WIDTH;
 	private static var MAPFRAME_Y = MINIMAP_Y - MAPFRAME_HEIGHT;
-	
-	private static var TIMER_X = START_X;
-	private static var TIMER_Y = MINIMAP_Y + BAR_GAP;
-	private static var TIMER_HEIGHT = 50;
-	private static var TIMER_WIDTH = 50;
-
 	private static var LEVEL_X = MAPFRAME_X + 180;
 	private static var LEVEL_Y = MAPFRAME_Y + 45;
+	private static var ESCAPE_X = MAPFRAME_X + 142;
+	private static var ESCAPE_Y = MAPFRAME_X + 210;
+	
+	private static var TIMER_X = START_X;
+	private static var TIMER_Y = MINIMAP_Y + (2 * BAR_GAP);
+	private static var TIMER_HEIGHT = 50;
+	private static var TIMER_WIDTH = 50;
+	private static var TIME_SPACER = 10;
+
 	
 	private static var SECS_PER_FRAME:Float;
 
@@ -72,26 +75,19 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		this.player = player;
 
 		_uiBack = new FlxSprite(0, 0, AssetPaths.uiBack__png);
-		_uiBack.camera = uiCam;
 		add(_uiBack);
+		
 		// screech cooldown bar
-		//screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
 		screechBack = new FlxSprite(BAR_X, BAR_Y, AssetPaths.backbar__png);
 		screechCooldownBar = new FlxSprite(BAR_X, BAR_Y, AssetPaths.screechbar__png);
-		// dash cooldown bar
-
-		dashBack = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.backbar__png);
-		dashCooldownBar = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.dashbar__png);
 		add(screechBack);
 		add(screechCooldownBar);
+
+		// dash cooldown bar
+		dashBack = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.backbar__png);
+		dashCooldownBar = new FlxSprite(BAR_X, BAR_Y + BAR_GAP, AssetPaths.dashbar__png);
 		add(dashBack);
 		add(dashCooldownBar);
-
-		// escapee text
-		var escaped = "Game over if " + Std.string(escapeLimit - numEscaped) + " escape!";
-		_txtEscaped = new FlxText(FlxG.width - 250, 2, 250, escaped, 16);
-		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
-		add(_txtEscaped);
 
 		// minimap
 		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT, uiCam);
@@ -103,21 +99,30 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		levelNum = new FlxText(LEVEL_X, LEVEL_Y, 0, Std.string(levelNumber), 12);
 		levelNum.color = FlxColor.BLACK;
 		add(levelNum);
-		
-		// timer text
+
+		// escapee text
+		_txtEscaped = new FlxText(ESCAPE_X, ESCAPE_Y, 0, Std.string(escapeLimit), 16);
+		_txtEscaped.color = FlxColor.BLACK;
+		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
+		_txtEscaped.camera = uiCam;
+		add(_txtEscaped);
+
+		// timer frame
 		totalTime = timer;
 		SECS_PER_FRAME = totalTime / 12;
 		secs = Std.string(totalTime);
 		_timer = new FlxSprite(0, 0, AssetPaths.timekeep__png);
-		_timer.setPosition(TIMER_X, TIMER_Y + MINIMAP_HEIGHT);
+		_timer.setPosition(TIMER_X, TIMER_Y + mapFrame.height);
 		add(_timer);
-		
-		_txtTimer = new FlxText(_timer.x, _timer.y, 0, secs, 32);
+
+		// timer text
+		_txtTimer = new FlxText(0, _timer.y + TIME_SPACER, 0, secs, 16);
+		_txtTimer.color = FlxColor.BLACK;
 		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 		_txtTimer.alignment = "center";
-		_txtTimer.camera = uiCam;
-
+		_txtTimer.x = uiCam.width / 2 - _txtTimer.textField.width;
 		add(_txtTimer);
+		
 		forEach(function(spr:FlxSprite) {
 			spr.scrollFactor.set(0, 0);
 			spr.camera = uiCam;
@@ -182,12 +187,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		//trace(index);
 		//_timer.animation.frameIndex = index;
 
-		var escaped = "Game over if " + Std.string(escapeLimit - escapees) + " escape";
-		if (escapeLimit - escapees == 1)
-			escaped += "s!";
-		else
-			escaped += "!";
-		_txtEscaped.text = escaped;
+		_txtEscaped.text = Std.string(escapees);
 
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
 		updateBar(dashCooldownBar, Player.DASH_COOLDOWN - player.getDashCooldown(), Player.DASH_COOLDOWN, BAR_WIDTH);
