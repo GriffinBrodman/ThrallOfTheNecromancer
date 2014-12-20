@@ -373,10 +373,14 @@ class PlayState extends FlxState
 			if (_currLevel + 1 >= _numLevels)
 			{
 				_won = true;
+				FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
 				FlxG.switchState(new GameOverState(_won, _currLevel));
+				});
 			}
 			else
-				FlxG.switchState(new WinState(_currLevel + 1));
+				FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
+					FlxG.switchState(new WinState(_currLevel + 1));
+				});
 		}
 		FlxG.collide(_humanWalls, _grpEnemies);
 		//FlxG.overlap(_playerWalls, _player, snakeCollide);
@@ -407,7 +411,9 @@ class PlayState extends FlxState
 			FlxG.camera.flash(FlxColor.RED, 0.5, null, true, 0.5);
 			if (_numEscaped >= _escapeLimit)
 			{
-				FlxG.switchState(new GameOverState(_won, _currLevel));
+				FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
+					FlxG.switchState(new GameOverState(_won, _currLevel));
+				});
 			}
 		}
 		else

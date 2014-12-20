@@ -12,13 +12,16 @@ using flixel.util.FlxSpriteUtil;
 
 class GameOverState extends FlxState
 {
+	private static var textSpacer = 40;
 	private var _currLevel:Int;			// current level
 	private var _win:Bool;				// if we won or lost
-	private var _txtTitle:FlxText;		// the title text
-	private var _retryTxt:FlxText;
+	//private var _txtTitle:FlxText;		// the title text
+	//private var _retryTxt:FlxText;
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
 	private var _btnRetry:FlxButton;
 	private var _background:FlxSprite;
+	private var _beatTxt:FlxText;
+	private var _pressTxt:FlxText;
 	
 	/**
 	 * Called from PlayState, this will set our win and score variables
@@ -39,11 +42,48 @@ class GameOverState extends FlxState
 		FlxG.mouse.visible = true;
 		#end
 		
-		_background = new FlxSprite(0, 0, _win ? AssetPaths.winScreen__jpg : AssetPaths.loseScreen__jpg);
+		_background = new FlxSprite(0, 0, _win ? AssetPaths.beatGame__jpg : AssetPaths.loseScreen__jpg);
 		_background.screenCenter(true, true);
 		add(_background);
 		
 		// create and add each of our items
+		if (_win)
+		{
+			_beatTxt = new FlxText(0, 0, 0, "Congratulations, you've beat the game!", 32);
+			_pressTxt = new FlxText(0, 0, 0, "Press Z to return to the menu", 24);
+			_beatTxt.screenCenter(true, true);
+			_pressTxt.screenCenter(true, true);
+			_pressTxt.y += textSpacer;
+			add(_beatTxt);
+			add(_pressTxt);
+			FlxG.camera.fade(FlxColor.BLACK, .33, true);
+			FlxG.sound.pause();
+			FlxG.sound.playMusic(AssetPaths.winsound__mp3, 1, false);
+		}
+		else
+		{
+			_btnRetry = new FlxButton(0, 0, "", retry);
+			_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 207, 300);
+			_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
+			_btnRetry.y = FlxG.height - _btnRetry.height;
+			//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+			//_btnRetry.screenCenter(true, false);
+			add(_btnRetry);
+			_btnMainMenu = new FlxButton(0, 0, "", goMainMenu);
+			_btnMainMenu.loadGraphic(AssetPaths.retMain__png, false, 207, 300);
+			_btnMainMenu.x = _btnRetry.x + _btnRetry.width;
+			_btnMainMenu.y = _btnRetry.y;
+			add(_btnMainMenu);
+			/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
+			_btnMainMenu.screenCenter(true, false);
+			_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+			add(_btnMainMenu);*/
+			
+			FlxG.camera.fade(FlxColor.BLACK, .33, true);
+			FlxG.sound.pause();
+			FlxG.sound.playMusic(AssetPaths.losesound__mp3, 1, false);
+		}
+		super.create();
 		/*_retryTxt = new FlxText(0, 0, 0, _win ? "Congratulations, you beat the game!": "Press any key to retry", 32);
 		_retryTxt.screenCenter(true, true);
 		add(_retryTxt);*/
@@ -53,41 +93,26 @@ class GameOverState extends FlxState
 		_txtTitle.screenCenter(true, false);
 		add(_txtTitle);*/
 		
-		_btnRetry = new FlxButton(0, 0, "", retry);
-		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 207, 300);
-		_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
-		_btnRetry.y = FlxG.height - _btnRetry.height;
-		//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		//_btnRetry.screenCenter(true, false);
-		add(_btnRetry);
-		_btnMainMenu = new FlxButton(0, 0, "", goMainMenu);
-		_btnMainMenu.loadGraphic(AssetPaths.retMain__png, false, 207, 300);
-		_btnMainMenu.x = _btnRetry.x + _btnRetry.width;
-		_btnMainMenu.y = _btnRetry.y;
-		add(_btnMainMenu);
-		/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
-		_btnMainMenu.screenCenter(true, false);
-		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-		add(_btnMainMenu);*/
-		
-		FlxG.camera.fade(FlxColor.BLACK, .33, true);
-		FlxG.sound.pause();
-		FlxG.sound.playMusic(AssetPaths.losesound__mp3, 1, false);
-		super.create();
+
 	}
 	
 	override public function update():Void
 	{
 		super.update();
-		if (FlxG.keys.firstJustReleased() == "Z") 
+		if (_win)
 		{
-			if (_win)
-				FlxG.switchState(new MenuState());
-			else
-				retry();
+			if (FlxG.keys.firstJustReleased() == "Z")
+				goMainMenu();
 		}
-		if (FlxG.keys.firstJustReleased() == "X") 
-			FlxG.switchState(new MenuState());
+		else
+		{
+			if (FlxG.keys.firstJustReleased() == "Z") 
+			{
+				retry();
+			}
+			if (FlxG.keys.firstJustReleased() == "X") 
+				goMainMenu();
+		}
 	}
 	
 	/**
@@ -141,5 +166,7 @@ class GameOverState extends FlxState
 		//_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 		_btnRetry = FlxDestroyUtil.destroy(_btnRetry);
 		_background = FlxDestroyUtil.destroy(_background);
+		_beatTxt = FlxDestroyUtil.destroy(_beatTxt);
+		_pressTxt = FlxDestroyUtil.destroy(_pressTxt);
 	}
 }
