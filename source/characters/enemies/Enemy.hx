@@ -47,7 +47,7 @@ class Enemy extends FlxSprite
 	
 	private var stunDuration:Int;
 	private var fleeingTime:Int;
-	public var snakePos(default, null):FlxPoint;
+	public var snakePos:FlxPoint;
 	
 	public var minimapDot:FlxSprite;	// Reference to dot on minimap to blink when necessary; Used by minimap
 	public var minimapDotTweening:Bool;
@@ -148,13 +148,7 @@ class Enemy extends FlxSprite
 	public function getNeighborTiles(map:FlxTilemap, X:Int, Y:Int):Array<FlxPoint> 
 	{
 		var neighbors = new Array<FlxPoint>();
-		if (Y + 1 <= map.heightInTiles) 
-		{
-			if (tileType(map, X, Y + 1) == 0) 
-			{
-			neighbors.push(new FlxPoint(X, Y + 1));
-			}
-		}
+		
 		if (Y - 1 >= 0)
 		{
 			if (tileType(map, X, Y - 1) == 0) 
@@ -162,13 +156,7 @@ class Enemy extends FlxSprite
 				neighbors.push(new FlxPoint(X, Y - 1));
 			}
 		}
-		if (X + 1 <= map.widthInTiles) 
-		{
-			if (tileType(map, X + 1, Y) == 0) 
-			{
-				neighbors.push(new FlxPoint(X + 1, Y));
-			}		
-		}
+
 		if (X - 1 >= 0) 
 		{
 			if (tileType(map, X - 1, Y) == 0) 
@@ -176,6 +164,23 @@ class Enemy extends FlxSprite
 				neighbors.push(new FlxPoint(X - 1, Y));
 			}
 		}
+		
+		if (X + 1 <= map.widthInTiles) 
+		{
+			if (tileType(map, X + 1, Y) == 0) 
+			{
+				neighbors.push(new FlxPoint(X + 1, Y));
+			}		
+		}
+		
+		if (Y + 1 <= map.heightInTiles) 
+		{
+			if (tileType(map, X, Y + 1) == 0) 
+			{
+			neighbors.push(new FlxPoint(X, Y + 1));
+			}
+		}
+		
 		return neighbors;
 	}
 	
@@ -329,7 +334,7 @@ class Enemy extends FlxSprite
 	{
 		//Define tile that the snake is on
 		//trace("SCARED");
-		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
+		var snakeTile = new FlxPoint(Math.floor(snakePos.x / TILE_DIMENSION), Math.floor(snakePos.y / TILE_DIMENSION));
 		var pathToGoal: Array<FlxPoint>;
 		
 		while (true) 
@@ -342,9 +347,10 @@ class Enemy extends FlxSprite
 				//trace("New Goal: " + newGoalTile);
 				pathToGoal = findTarget(walls, currentTile, newGoalTile);
 				//trace("PTG: " + pathToGoal);
-				//trace("Snake: " + snakeTile);
+				//trace("Snake Pos: " + snakePos);
+				trace("Snake: " + snakeTile);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
-				//trace("PTS: " + pathToSnake);
+				trace("PTS: " + pathToSnake);
 				//If the first two steps of the respective paths are the same, recalculate path					
 				if (pathToSnake.length != 0) 
 				{	
@@ -411,9 +417,9 @@ class Enemy extends FlxSprite
 			}
 			else 
 			{	
-				//trace(pathSet);
 				if (!pathSet) 
 				{
+					path.cancel;
 					determinePath(walls);
 					pathSet = true;
 				}
@@ -450,11 +456,14 @@ class Enemy extends FlxSprite
 		{
 			if (wasScared) 
 			{
-				pathSet = false;
+				path.cancel;
+				flee();
+				pathSet = true;
 				wasScared = false;
 			}
 			if (!pathSet)
 			{
+				path.cancel;
 				flee();
 				pathSet = true;
 			}

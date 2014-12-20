@@ -25,9 +25,8 @@
 1,1,1,1,1,1,1,0,1,1,1,1,1,1,1</humanwalls>
   <entities>
     <exit id="4" x="448" y="0" escapable="True" orientation="Up" />
-    <enemy id="5" x="448" y="256" etype="0" />
+    <enemy id="5" x="448" y="192" etype="0" />
     <exit id="3" x="448" y="704" escapable="False" orientation="Up" />
-    <exit id="6" x="448" y="640" escapable="False" orientation="Up" />
     <player id="7" x="448" y="640" />
   </entities>
   <playerwalls tileset="playerWalls" exportMode="CSV">0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

@@ -64,7 +64,7 @@ class DFSEnemy extends Enemy
 				var neighbors = getNeighborTiles(tileMap, Std.int(nextTile.x), Std.int(nextTile.y));
 				for (n in 0...neighbors.length) 
 				{					
-					//If the neighbor is unvisited, adds it to S
+					//If the neighbor is unvxisited, adds it to S
 					if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 					{
 						S.push(neighbors[n]);
