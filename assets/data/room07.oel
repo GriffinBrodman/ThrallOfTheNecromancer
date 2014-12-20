@@ -9,8 +9,8 @@
 1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1</ground>
-  <humanwalls tileset="humanwalls" exportMode="CSV">1,1,0,1,1,1,1,1,1,1
-1,1,0,0,0,0,0,1,1,1
+  <humanwalls tileset="humanwalls" exportMode="CSV">1,0,1,1,1,1,1,1,1,1
+1,0,0,0,0,0,0,1,1,1
 1,1,1,1,1,1,0,0,0,0
 1,1,1,1,1,1,0,1,1,1
 1,1,1,0,0,0,0,1,1,1
@@ -20,7 +20,7 @@
 1,1,1,1,1,0,1,1,1,1
 0,0,0,0,0,0,1,1,1,1</humanwalls>
   <entities>
-    <exit id="0" x="128" y="0" escapable="True" orientation="Up" />
+    <exit id="0" x="64" y="0" escapable="True" orientation="Up" />
     <exit id="2" x="576" y="128" escapable="True" orientation="Right" />
     <exit id="1" x="0" y="576" escapable="True" orientation="Left" />
     <exit id="3" x="320" y="384" escapable="False" orientation="Up" />
