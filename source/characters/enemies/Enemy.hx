@@ -122,6 +122,7 @@ class Enemy extends FlxSprite
 		this.stunDuration = duration;
 		this.scared = false;
 		pathSet = false;
+		this.state = "searching";
 	}
 	
 	//Updates the field to represent the tile this enemy is currently standing on
@@ -409,8 +410,9 @@ class Enemy extends FlxSprite
 				pathing = false;
 			}
 			else 
-			{			
-				if (pathSet == false) 
+			{	
+				//trace(pathSet);
+				if (!pathSet) 
 				{
 					determinePath(walls);
 					pathSet = true;
@@ -421,21 +423,18 @@ class Enemy extends FlxSprite
 					pathing = false;
 				}
 				
-				else 
-				{	
-					if (!pathing) 
+				if (!pathing) 
+				{
+					var newEnd:FlxPoint = pathArray.shift();
+					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+					path.start(this, pathPoints, curSpeed);
+					pathing = true;
+					if (pathArray.length == 0) 
 					{
-						var newEnd:FlxPoint = pathArray.shift();
-						var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-						path.start(this, pathPoints, curSpeed);
-						pathing = true;
-						if (pathArray.length == 0) 
-						{
-							pathSet = false;
-						}
+						pathSet = false;
 					}
-
 				}
+
 			}
 		}
 	}
@@ -449,7 +448,6 @@ class Enemy extends FlxSprite
 		}
 		else 
 		{
-			trace(wasScared);
 			if (wasScared) 
 			{
 				pathSet = false;
@@ -457,7 +455,6 @@ class Enemy extends FlxSprite
 			}
 			if (!pathSet)
 			{
-				trace("BATMAN");
 				flee();
 				pathSet = true;
 			}
