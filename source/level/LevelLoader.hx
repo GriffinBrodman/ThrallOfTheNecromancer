@@ -53,9 +53,10 @@ class LevelLoader
 		_humanWalls.loadMap(_humanWalls.getData(),AssetPaths.wheat_tile_set__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
 		_ground = _map.loadTilemap(AssetPaths.ground_tile_sheet__png, TILE_LENGTH, TILE_LENGTH, "ground");
 		_playerWalls = _map.loadTilemap(AssetPaths.puddleTilesheet__png, TILE_LENGTH, TILE_LENGTH, "playerwalls");
+		createHumanPlayerWalls();
 		_playerWalls.loadMap(_playerWalls.getData(), AssetPaths.puddleTilesheet__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
 
-		createHumanPlayerWalls();
+
 		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));

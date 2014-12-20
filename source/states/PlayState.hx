@@ -351,7 +351,7 @@ class PlayState extends FlxState
 				_state = 3;
 			}
 			//FlxG.collide(_humanWalls, _grpEnemies);
-			//FlxG.overlap(_playerWalls, _player, snakeCollide);
+			FlxG.collide(_playerWalls, _player);
 			//FlxG.collide(_humanPlayerWalls, _grpEnemies);
 			FlxG.collide(_trueHumanWalls, _grpEnemies);
 			FlxG.collide(_humanPlayerWalls, _player);

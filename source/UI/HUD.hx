@@ -38,16 +38,16 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var LEVEL_X = MAPFRAME_X + 180;
 	private static var LEVEL_Y = MAPFRAME_Y + 45;
 	private static var ESCAPE_X = MAPFRAME_X + 142;
-	private static var ESCAPE_Y = MAPFRAME_X + 210;
+	private static var ESCAPE_Y = MAPFRAME_Y + 206;
 	
 	private static var TIMER_X = START_X;
-	private static var TIMER_Y = MINIMAP_Y + (2 * BAR_GAP);
+	private static var TIMER_Y = MINIMAP_Y + BAR_GAP;
 	private static var TIMER_HEIGHT = 50;
 	private static var TIMER_WIDTH = 50;
 	private static var TIME_SPACER = 10;
 
-	
 	private static var SECS_PER_FRAME:Float;
+	//private var font = AssetPaths.Candara__ttf;
 
 	private var _uiBack:FlxSprite;
 	private var _timer:FlxSprite;
@@ -63,6 +63,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var dashCooldownBar:FlxSprite;
 	private var minimap:FlxMinimap;
 	private var mapFrame:FlxSprite;
+	private var mapUnchanged = true;
 	
 	/** 
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
@@ -91,17 +92,22 @@ class HUD extends FlxTypedGroup<FlxSprite>
 
 		// minimap
 		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT, uiCam);
-		mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
+		if (escapeLimit > 1)
+			mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
+		else
+			mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap_changed__png);
 		mapFrame.scrollFactor.set(0, 0);
 		add(mapFrame);
 		add(minimap);
 		
 		levelNum = new FlxText(LEVEL_X, LEVEL_Y, 0, Std.string(levelNumber), 12);
+		//levelNum.font = this.font;
 		levelNum.color = FlxColor.BLACK;
 		add(levelNum);
 
 		// escapee text
-		_txtEscaped = new FlxText(ESCAPE_X, ESCAPE_Y, 0, Std.string(escapeLimit), 16);
+		_txtEscaped = new FlxText(ESCAPE_X, ESCAPE_Y, 0, Std.string(escapeLimit), 12);
+		//_txtEscaped.font = this.font;
 		_txtEscaped.color = FlxColor.BLACK;
 		_txtEscaped.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 		_txtEscaped.camera = uiCam;
@@ -117,6 +123,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 
 		// timer text
 		_txtTimer = new FlxText(0, _timer.y + TIME_SPACER, 0, secs, 16);
+		//_txtTimer.font = this.font;
 		_txtTimer.color = FlxColor.BLACK;
 		_txtTimer.setBorderStyle(FlxText.BORDER_SHADOW, FlxColor.GRAY, 1, 1);
 		_txtTimer.alignment = "center";
@@ -182,13 +189,13 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
 		_txtTimer.text = Std.string(timer);
-		//_txtTimer.x = FlxG.width / 2;// - 12 - _txtTimer.width - 4;*/
-		var index = Std.int(Math.min((totalTime - timer) / SECS_PER_FRAME, 11));
-		//trace(index);
-		//_timer.animation.frameIndex = index;
-
-		_txtEscaped.text = Std.string(escapees);
-
+		var numLeft = escapeLimit - escapees;
+		_txtEscaped.text = Std.string(numLeft);
+		if (numLeft <= 1 && mapUnchanged)
+		{
+			mapUnchanged = false;
+			mapFrame.loadGraphic(AssetPaths.minimap_changed__png);
+		}
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
 		updateBar(dashCooldownBar, Player.DASH_COOLDOWN - player.getDashCooldown(), Player.DASH_COOLDOWN, BAR_WIDTH);
 	}

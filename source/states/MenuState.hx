@@ -29,7 +29,7 @@ class MenuState extends FlxState
 	private var _btnExit:FlxButton;
 	#end
 	private var _btnContinue:FlxButton;
-	private var _btnFullScreen:FlxButton;
+	//private var _btnFullScreen:FlxButton;
 	private var levelStart:Int;
 	
 	/**
@@ -43,10 +43,10 @@ class MenuState extends FlxState
 		_background = new FlxSprite(0, 0, AssetPaths.menuBackground__jpg);
 		add(_background);
 		
-		_btnFullScreen = new FlxButton(80, 80, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
+		/*_btnFullScreen = new FlxButton(80, 80, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
 		_btnFullScreen.x = 10;
 		_btnFullScreen.y = 10;
-		add(_btnFullScreen);
+		add(_btnFullScreen);*/
 
 		_btnPlay = new FlxButton(0, 0, "", clickPlay);
 		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 226, 285);
@@ -54,21 +54,23 @@ class MenuState extends FlxState
 		_btnPlay.y = FlxG.height - _btnPlay.height;
 		//_btnPlay.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		add(_btnPlay);
-
+		
 		var _save:FlxSave = new FlxSave();
-		if (_save.bind("maize"))
+		if (_save.bind("maize") &&
+			_save.data.Level != null &&
+			_save.data.Level != STARTLEVEL)
 		{
-			if (_save.data.Level != null &&
-			    _save.data.Level != STARTLEVEL)
-			{
-				levelStart = _save.data.Level;
-				_btnContinue = new FlxButton(0, 0, "", clickContinue);
-				_btnContinue.loadGraphic(AssetPaths.continueButton__png, false, 175, 285);
-				_btnContinue.x = _btnPlay.x + _btnPlay.width - 30; // - _btnContinue.width;
-				_btnContinue.y = FlxG.height - _btnContinue.height;
-				//_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-				add(_btnContinue);
-			}
+			levelStart = _save.data.Level;
+			_btnContinue = new FlxButton(0, 0, "", clickContinue);
+			_btnContinue.loadGraphic(AssetPaths.continueButton__png, false, 210, 285);
+			_btnContinue.x = _btnPlay.x + _btnPlay.width - 30; // - _btnContinue.width;
+			_btnContinue.y = _btnPlay.y - 9;
+			//_btnContinue.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
+			add(_btnContinue);
+		}
+		else
+		{
+
 		}
 		
 		//_btnOptions = new FlxButton(0, 0, "Options", clickOptions);
@@ -91,7 +93,7 @@ class MenuState extends FlxState
 	private function clickFullscreen():Void
 	{
 		FlxG.fullscreen = !FlxG.fullscreen;
-		_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
+		//_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
 	}
 	
 	#if desktop
@@ -122,6 +124,19 @@ class MenuState extends FlxState
 		});
 	}
 	
+	override public function update():Void
+	{
+		super.update();
+		if (FlxG.keys.firstJustReleased() == "Z")
+			clickPlay();
+		var _save:FlxSave = new FlxSave();
+		if (_save.bind("maize") &&
+			_save.data.Level != null &&
+			_save.data.Level != STARTLEVEL &&
+			FlxG.keys.firstJustReleased() == "X")
+			clickContinue();
+	}
+	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
@@ -136,6 +151,6 @@ class MenuState extends FlxState
 		_btnExit = FlxDestroyUtil.destroy(_btnExit);
 		#end
 		_btnContinue = FlxDestroyUtil.destroy(_btnContinue);
-		_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
+		//_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
 	}
 }

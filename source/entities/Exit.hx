@@ -8,7 +8,7 @@ import flixel.util.FlxColor;
  */
 class Exit extends FlxSprite
 {
-	private static var DENOMINATOR = 1;// 4;// 2;
+	//private static var DENOMINATOR = 1;// 4;// 2;
 	var escape = false;
 	var graphicPath = "assets/images/exit";
 	var graphicExt = ".png";
@@ -23,7 +23,7 @@ class Exit extends FlxSprite
 			loadGraphic(graphicPath + dir + graphicExt, false, 64, 64);
 		else
 			makeGraphic(64, 64, FlxColor.TRANSPARENT);
-		switch (dir)
+		/*switch (dir)
 		{
 			case "Up":
 				this.height /= DENOMINATOR;
@@ -37,7 +37,7 @@ class Exit extends FlxSprite
 			case "Down":
 				this.height /= DENOMINATOR;
 				this.offset.add(0, (this.height / DENOMINATOR ) * (DENOMINATOR / 2));
-		}
+		}*/
 	}
 	
 	public function canEscape():Bool
