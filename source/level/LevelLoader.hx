@@ -88,7 +88,7 @@ class LevelLoader
 		_humanPlayerWalls.widthInTiles = _humanWalls.widthInTiles;
 		_humanPlayerWalls.heightInTiles = _humanWalls.heightInTiles;
 		//_humanPlayerWalls.customTileRemap = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, TILE_LENGTH, TILE_LENGTH);
+		_humanPlayerWalls.loadMap(humanPlayerWallsData, AssetPaths.humanPlayerWall__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
 
 		_trueHumanWalls = new FlxTilemap();
 		_trueHumanWalls.widthInTiles = _humanWalls.widthInTiles;

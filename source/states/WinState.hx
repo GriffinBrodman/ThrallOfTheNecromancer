@@ -20,6 +20,7 @@ class WinState extends FlxState
 	private var _winScreen:FlxSprite;
 	private var _text:FlxText;
 	private var _nextLevel:Int;
+	private var notTransitioning = true;
 
 	public function new(nextLevel)
 	{
@@ -56,7 +57,8 @@ class WinState extends FlxState
 
 	override public function update():Void {
 		super.update();
-		if (FlxG.keys.firstJustReleased() != "") {
+		if (notTransitioning && FlxG.keys.firstJustReleased() != "") {
+			notTransitioning = false;
 			FlxG.switchState(new PlayState(_nextLevel));
 		}
 	}
