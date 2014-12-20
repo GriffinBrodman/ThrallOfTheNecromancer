@@ -56,8 +56,6 @@ class LevelLoader
 		createHumanPlayerWalls();
 		_playerWalls.loadMap(_playerWalls.getData(), AssetPaths.puddleTilesheet__png, TILE_LENGTH, TILE_LENGTH, FlxTilemap.AUTO);
 
-
-		
 		_map.loadEntities(placeEntities, "entities");
 		escapee_threshold = Std.parseInt(_map.getProperty("escapeLimit"));
 		_timeLeft = Std.parseInt(_map.getProperty("time"));
