@@ -121,7 +121,7 @@ class Enemy extends FlxSprite
 		this.velocity.y = 0;
 		this.stunDuration = duration;
 		this.scared = false;
-		pathArray = [];
+		pathSet = false;
 	}
 	
 	//Updates the field to represent the tile this enemy is currently standing on
@@ -449,11 +449,17 @@ class Enemy extends FlxSprite
 		}
 		else 
 		{
-			if (!pathSet || wasScared) 
+			trace(wasScared);
+			if (wasScared) 
 			{
+				pathSet = false;
+				wasScared = false;
+			}
+			if (!pathSet)
+			{
+				trace("BATMAN");
 				flee();
 				pathSet = true;
-				wasScared = false;
 			}
 			else 
 			{
@@ -466,7 +472,6 @@ class Enemy extends FlxSprite
 					if (pathArray.length == 0) 
 					{
 						pathSet = false;
-						wasScared = false;
 						scared = false;
 						state = "searching";
 					}
