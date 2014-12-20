@@ -163,7 +163,10 @@ class PlayState extends FlxState
 		else if (_currLevel < 17) song = 4;
 		else song = 5;
 		FlxG.sound.pause();
+		FlxG.sound.play(AssetPaths.growl__mp3, .5, true);
 		FlxG.sound.play(AssetPaths.slithering__mp3, .5, true);
+		
+		
 			
 		if (song == 0)
 		{
