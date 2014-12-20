@@ -157,7 +157,7 @@ class Enemy extends FlxSprite
 			}
 		}
 		
-		if (X + 1 <= map.widthInTiles) 
+		if (X + 1 < map.widthInTiles) 
 		{
 			if (tileType(map, X + 1, Y) == 0) 
 			{
@@ -165,7 +165,7 @@ class Enemy extends FlxSprite
 			}		
 		}
 		
-		if (Y + 1 <= map.heightInTiles) 
+		if (Y + 1 < map.heightInTiles) 
 		{
 			if (tileType(map, X, Y + 1) == 0) 
 			{
@@ -358,32 +358,32 @@ class Enemy extends FlxSprite
 					{
 						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
 						{
-							trace("Path is good");
+							//trace("Path is good");
 							pathArray = pathToGoal;		
 							break;
 						}
 						else 
 						{
-							trace("Paths in same direction");
+							//trace("Paths in same direction");
 							continue;
 						}
 					}
 					else 
 					{
-						trace("Path not reachable");
+						//trace("Path not reachable");
 						continue; 
 					}
 				}
 				else 
 				{
-					trace("Snake is on the wall");
+					//trace("Snake is on the wall");
 					pathArray = pathToGoal;		
 					break;
 				}
 			}
 			else 
 			{
-				trace("Currently standing on new goal");
+				//trace("Currently standing on new goal");
 				continue;
 			}
 		}
