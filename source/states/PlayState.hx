@@ -90,13 +90,15 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
+		//FlxG.resizeGame(SCREEN_WIDTH, SCREEN_HEIGHT);
 		FlxG.mouse.visible = false;
 		FlxG.camera.width -= CAM_OFFSET;
-		FlxG.camera.x = CAM_OFFSET;
+
 
 		_sidebar = new FlxCamera(0, 0, CAM_OFFSET, SCREEN_HEIGHT);
+		FlxG.camera.x += _sidebar.width + _sidebar.x;
 		//Put off screen
-		_sidebar.setBounds(SCREEN_WIDTH, 0);
+		_sidebar.setBounds(FlxG.width, 0);
 		FlxG.cameras.add(_sidebar);
 		loader = new LevelLoader(_currLevel);
 		loadLevel();
@@ -148,11 +150,11 @@ class PlayState extends FlxState
 		disableAll();
 		_state = 0;
 		_startDelaySprite = new FlxSprite(0, 0);
-		_startDelaySprite.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.BLACK);
+		_startDelaySprite.makeGraphic(FlxG.width, SCREEN_HEIGHT, FlxColor.BLACK);
 		_startDelaySprite.alpha = 0.6;
 		_startDelaySprite.scrollFactor.set(0, 0);
 		add(_startDelaySprite);
-		_startDelayText = new FlxText(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0, "Press Any Key to Start", 32);
+		_startDelayText = new FlxText(FlxG.width / 2, SCREEN_HEIGHT / 2, 0, "Press Any Key to Start", 32);
 		_startDelayText.scrollFactor.set(0, 0);
 		_startDelayText.screenCenter(true, true);
 		add(_startDelayText);
@@ -382,9 +384,6 @@ class PlayState extends FlxState
 		FlxG.collide(_humanPlayerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
-
-
-		
 	}
 	
 	

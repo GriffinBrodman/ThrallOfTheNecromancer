@@ -27,9 +27,9 @@ class MenuState extends FlxState
 	//private var _txtTitle:FlxText;
 	//private var _btnOptions:FlxButton;
 	private var _btnPlay:FlxButton;
-	#if desktop
+	/*#if desktop
 	private var _btnExit:FlxButton;
-	#end
+	#end*/
 	private var _btnContinue:FlxButton;
 	//private var _btnFullScreen:FlxButton;
 	private var levelStart:Int;
@@ -52,7 +52,7 @@ class MenuState extends FlxState
 		_btnFullScreen.y = 10;
 		add(_btnFullScreen);*/
 
-		_btnPlay = new FlxButton(0, 0, "", clickPlay);
+		_btnPlay = new FlxButton(0, 0, "", overlayStory);
 		_btnPlay.loadGraphic(AssetPaths.newGameButton__png, false, 226, 285);
 		_btnPlay.x = (FlxG.width / 2) - _btnPlay.width;
 		_btnPlay.y = FlxG.height - _btnPlay.height;
@@ -83,11 +83,11 @@ class MenuState extends FlxState
 		//_btnOptions.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		//add(_btnOptions);
 		
-		#if desktop
+		/*#if desktop
 		_btnExit = new FlxButton(FlxG.width - 28, 8, "X", clickExit);
 		_btnExit.loadGraphic(AssetPaths.button__png, true, 20, 20);
 		add(_btnExit);
-		#end
+		#end*/
 		
 		FlxG.camera.fade(FlxColor.BLACK, .33, true);
 		FlxG.sound.pause();
@@ -102,12 +102,24 @@ class MenuState extends FlxState
 		//_btnFullScreen.text = FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED";
 	}
 	
-	#if desktop
+	/*#if desktop
 	private function clickExit():Void
 	{
 		System.exit(0);
 	}
-	#end
+	#end*/
+	
+	private function overlayStory():Void
+	{
+		if (unpressed)
+		{
+			unpressed = false;
+			storyOverlay = new FlxSprite();
+			storyOverlay.loadGraphic(AssetPaths.story_screen__png, false, 960, 640);
+			storyOverlay.screenCenter(true, true);
+			add(storyOverlay);
+		}
+	}
 	
 	private function clickPlay():Void
 	{
@@ -125,9 +137,12 @@ class MenuState extends FlxState
 	
 	private function clickContinue():Void
 	{
-		FlxG.camera.fade(FlxColor.BLACK,.33, false, function() {
-			FlxG.switchState(new PlayState(levelStart));
-		});
+		if (unpressed)
+		{
+			FlxG.camera.fade(FlxColor.BLACK,.33, false, function() {
+				FlxG.switchState(new PlayState(levelStart));
+			});
+		}
 	}
 	
 	override public function update():Void
@@ -137,10 +152,7 @@ class MenuState extends FlxState
 		{
 			if (FlxG.keys.firstJustReleased() == "Z")
 			{
-				unpressed = false;
-				storyOverlay = new FlxSprite();
-				storyOverlay.loadGraphic(AssetPaths.story_screen__png, false, 960, 640);
-				add(storyOverlay);
+				overlayStory();
 			}
 			var _save:FlxSave = new FlxSave();
 			if (_save.bind("maize") &&
@@ -151,7 +163,8 @@ class MenuState extends FlxState
 		}
 		else
 		{
-			if (FlxG.keys.firstJustReleased() != "")
+			if (FlxG.keys.firstJustReleased() != "" ||
+				FlxG.mouse.justPressed)
 				clickPlay();
 		}
 	}
@@ -166,9 +179,9 @@ class MenuState extends FlxState
 		_background = FlxDestroyUtil.destroy(_background);
 		_btnPlay = FlxDestroyUtil.destroy(_btnPlay);
 		//_btnOptions = FlxDestroyUtil.destroy(_btnOptions);
-		#if desktop
+		/*#if desktop
 		_btnExit = FlxDestroyUtil.destroy(_btnExit);
-		#end
+		#end*/
 		_btnContinue = FlxDestroyUtil.destroy(_btnContinue);
 		storyOverlay = FlxDestroyUtil.destroy(storyOverlay);
 		//_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
