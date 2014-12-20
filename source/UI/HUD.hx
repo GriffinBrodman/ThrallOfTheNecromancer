@@ -18,7 +18,7 @@ using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
 {
-	private static var START_X = FlxG.width;
+	private static var START_X = 0;
 
 	private static var BAR_X:Int = START_X;
 	private static var BAR_Y:Int = 5;
@@ -41,12 +41,17 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private static var TIMER_HEIGHT = 50;
 	private static var TIMER_WIDTH = 50;
 
+	private static var LEVEL_X = MAPFRAME_X + 180;
+	private static var LEVEL_Y = MAPFRAME_Y + 45;
+	
 	private static var SECS_PER_FRAME:Float;
 
+	private var _uiBack:FlxSprite;
 	private var _timer:FlxSprite;
 	private var _txtTimer:FlxText;
 	private var totalTime:Int;
 	private var secs:String;
+	private var levelNum:FlxText;
 	private var _txtEscaped:FlxText;
 	private var player:Player;
 	private var screechBack:FlxSprite;
@@ -60,11 +65,15 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
 	 * escape, and number that have escaped.
 	 */
-	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, humanWalls:FlxTilemap, playerWalls:FlxTilemap, humanPlayerWalls:FlxTilemap, uiCam:FlxCamera)
+	public function new(timer:Int, player:Player, escapeLimit:Int, numEscaped:Int, humanWalls:FlxTilemap, 
+						playerWalls:FlxTilemap, humanPlayerWalls:FlxTilemap, uiCam:FlxCamera, levelNumber:Int)
 	{
 		super();
 		this.player = player;
 
+		_uiBack = new FlxSprite(0, 0, AssetPaths.uiBack__png);
+		_uiBack.camera = uiCam;
+		add(_uiBack);
 		// screech cooldown bar
 		//screechCooldownBar = createBar(BAR_X, BAR_Y, BAR_WIDTH, 20, FlxColor.YELLOW);
 		screechBack = new FlxSprite(BAR_X, BAR_Y, AssetPaths.backbar__png);
@@ -88,16 +97,19 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT, uiCam);
 		mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
 		mapFrame.scrollFactor.set(0, 0);
-		this.add(mapFrame);
-		this.add(minimap);
+		add(mapFrame);
+		add(minimap);
+		
+		levelNum = new FlxText(LEVEL_X, LEVEL_Y, 0, Std.string(levelNumber), 12);
+		levelNum.color = FlxColor.BLACK;
+		add(levelNum);
 		
 		// timer text
 		totalTime = timer;
 		SECS_PER_FRAME = totalTime / 12;
 		secs = Std.string(totalTime);
-		_timer = new FlxSprite(0, 0);
-		_timer.loadGraphic(AssetPaths.timekeep__png, true, TIMER_WIDTH, TIMER_HEIGHT);
-		_timer.setPosition((uiCam.width - _timer.width) / 2, TIMER_Y + mapFrame.height);
+		_timer = new FlxSprite(0, 0, AssetPaths.timekeep__png);
+		_timer.setPosition(TIMER_X, TIMER_Y + MINIMAP_HEIGHT);
 		add(_timer);
 		
 		_txtTimer = new FlxText(_timer.x, _timer.y, 0, secs, 32);

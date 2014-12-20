@@ -131,7 +131,8 @@ class PlayState extends FlxState
 		//We will use the following line for the bigger scale, don't delete
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
 		
-		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, _playerWalls, _humanPlayerWalls, _sidebar);
+		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, 
+						_playerWalls, _humanPlayerWalls, _sidebar, _currLevel);
 		add(_hud);
 		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
 		

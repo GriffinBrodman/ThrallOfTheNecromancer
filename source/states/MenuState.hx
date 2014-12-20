@@ -37,6 +37,8 @@ class MenuState extends FlxState
 	 */
 	override public function create():Void
 	{
+		FlxG.sound.muted = false;
+		FlxG.sound.volume = 0.5;
 		levelStart = STARTLEVEL;
 		_background = new FlxSprite(0, 0, AssetPaths.menuBackground__jpg);
 		add(_background);
