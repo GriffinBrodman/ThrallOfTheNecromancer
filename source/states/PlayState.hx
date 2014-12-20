@@ -76,6 +76,8 @@ class PlayState extends FlxState
 	private var _startDelaySprite:FlxSprite;
 	private var _startDelayText:FlxText;
 	private var _noTutorial = true;
+	private var _tutText1:FlxText;
+	private var _tutText2:FlxText;
 	
 	public function new(levelNum:Int) 
 	{
@@ -285,6 +287,8 @@ class PlayState extends FlxState
 		if (_currLevel < 4)
 		{
 			_tutorial.destroy();
+			_tutText1.destroy();
+			_tutText2.destroy();
 		}
 		debug = FlxDestroyUtil.destroy(debug);
 		super.destroy();
@@ -311,6 +315,29 @@ class PlayState extends FlxState
 				_tutorial.scrollFactor.set(0, 0);
 				_tutorial.screenCenter(true, false);
 				add(_tutorial);
+				
+				_tutText1 = new FlxText(0, 0, 0, "Use", 24);
+				_tutText1.screenCenter(true, false);
+				_tutText1.y =  _tutorial.y - _tutorial.height / 2;
+				_tutText1.scrollFactor.set(0, 0);
+				add(_tutText1);
+
+				var string = "to ";
+				
+				switch (_currLevel)
+				{
+					case 1:
+						string += "move!";
+					case 2:
+						string += "dash!";
+					case 3:
+						string += "stun!";
+				}
+				_tutText2 = new FlxText(0, 0, 0, string, 24);
+				_tutText2.screenCenter(true, false);
+				_tutText2.y = _tutorial.y + _tutorial.height;
+				_tutText2.scrollFactor.set(0, 0);
+				add(_tutText2);
 			}
 			if (FlxG.keys.firstJustReleased() != "") {
 				_startTimer = START_DELAY_SECONDS * FRAMES_PER_SECOND;
@@ -332,7 +359,11 @@ class PlayState extends FlxState
 		}
 		else if (_state == 2) {
 			if (_timer >= loader.getTime() * FRAMES_PER_SECOND && _currLevel < 4)
+			{
 				remove(_tutorial);
+				remove(_tutText1);
+				remove(_tutText2);
+			}
 			_timer--;
 			_hud.updateHUD(getSecs(_timer), _escapeLimit, _numEscaped);
 			
