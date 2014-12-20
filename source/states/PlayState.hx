@@ -425,6 +425,7 @@ class PlayState extends FlxState
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
+			e.scaredCheck = 0;
 			e.scaredTimer = 0;
 			if (!wasScared) 
 			{
@@ -446,7 +447,8 @@ class PlayState extends FlxState
 					  e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
 				{
 					e.scared = true;
-					e.scaredTimer = 0;
+					e.scaredCheck = 0;
+					e.scaredTimer = 10;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
 
 					if (!wasScared)

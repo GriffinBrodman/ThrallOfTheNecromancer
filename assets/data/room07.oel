@@ -1,4 +1,4 @@
-<level width="640" height="640" time="15" escapeLimit="1">
+<level width="640" height="640" time="10" escapeLimit="1">
   <ground tileset="ground" exportMode="CSV">1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1
@@ -25,7 +25,7 @@
     <exit id="1" x="0" y="576" escapable="True" orientation="Left" />
     <exit id="3" x="320" y="384" escapable="False" orientation="Up" />
     <exit id="4" x="320" y="576" escapable="False" orientation="Up" />
-    <exit id="5" x="192" y="256" escapable="False" orientation="Up" />
+    <exit id="5" x="192" y="384" escapable="False" orientation="Up" />
     <enemy id="6" x="192" y="384" etype="0" />
     <enemy id="7" x="320" y="256" etype="0" />
     <player id="8" x="64" y="576" />

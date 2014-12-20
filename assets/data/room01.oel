@@ -1,4 +1,4 @@
-<level width="960" height="704" time="7" escapeLimit="1">
+<level width="960" height="704" time="8" escapeLimit="1">
   <ground tileset="ground" exportMode="CSV">1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
