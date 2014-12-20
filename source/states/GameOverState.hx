@@ -15,8 +15,6 @@ class GameOverState extends FlxState
 	private static var textSpacer = 40;
 	private var _currLevel:Int;			// current level
 	private var _win:Bool;				// if we won or lost
-	//private var _txtTitle:FlxText;		// the title text
-	//private var _retryTxt:FlxText;
 	private var _btnMainMenu:FlxButton;	// button to go to main menu
 	private var _btnRetry:FlxButton;
 	private var _background:FlxSprite;
@@ -66,34 +64,19 @@ class GameOverState extends FlxState
 			_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 207, 300);
 			_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
 			_btnRetry.y = FlxG.height - _btnRetry.height;
-			//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-			//_btnRetry.screenCenter(true, false);
 			add(_btnRetry);
+			
 			_btnMainMenu = new FlxButton(0, 0, "", goMainMenu);
 			_btnMainMenu.loadGraphic(AssetPaths.retMain__png, false, 207, 300);
 			_btnMainMenu.x = _btnRetry.x + _btnRetry.width;
 			_btnMainMenu.y = _btnRetry.y;
 			add(_btnMainMenu);
-			/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
-			_btnMainMenu.screenCenter(true, false);
-			_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
-			add(_btnMainMenu);*/
-			
+
 			FlxG.camera.fade(FlxColor.BLACK, .33, true);
 			FlxG.sound.pause();
 			FlxG.sound.playMusic(AssetPaths.losesound__mp3, 1, false);
 		}
 		super.create();
-		/*_retryTxt = new FlxText(0, 0, 0, _win ? "Congratulations, you beat the game!": "Press any key to retry", 32);
-		_retryTxt.screenCenter(true, true);
-		add(_retryTxt);*/
-		
-		/*_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
-		_txtTitle.alignment = "center";
-		_txtTitle.screenCenter(true, false);
-		add(_txtTitle);*/
-		
-
 	}
 	
 	override public function update():Void
@@ -165,6 +148,7 @@ class GameOverState extends FlxState
 		//_txtTitle = FlxDestroyUtil.destroy(_txtTitle);
 		//_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 		_btnRetry = FlxDestroyUtil.destroy(_btnRetry);
+		_btnMainMenu = FlxDestroyUtil.destroy(_btnMainMenu);
 		_background = FlxDestroyUtil.destroy(_background);
 		_beatTxt = FlxDestroyUtil.destroy(_beatTxt);
 		_pressTxt = FlxDestroyUtil.destroy(_pressTxt);

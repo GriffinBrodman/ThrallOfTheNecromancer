@@ -54,7 +54,6 @@ class PlayState extends FlxState
 	private var _humanPlayerWalls:FlxTilemap;
 	private var _trueHumanWalls:FlxTilemap;
 	private var _ground:FlxTilemap;
-	//private var _mBorders:FlxTilemap;
 	private var loader:LevelLoader;
 	private var _grpEnemies:FlxTypedGroup<Enemy>;
 	private var _grpExits:FlxTypedGroup<Exit>;
@@ -90,7 +89,6 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-		//FlxG.resizeGame(SCREEN_WIDTH, SCREEN_HEIGHT);
 		FlxG.mouse.visible = false;
 		FlxG.camera.width -= CAM_OFFSET;
 
@@ -130,17 +128,15 @@ class PlayState extends FlxState
 		{
 			_grpEnemies.members[i].setGoal(_grpExits);
 		}
-		
-		//FlxG.camera.setSize(FlxG.width, FlxG.height);
-		//FlxG.camera.setScale(1.5, 1.5);
+
 		//We will use the following line for the bigger scale, don't delete
 		FlxG.camera.follow(_player, FlxCamera.STYLE_TOPDOWN, 1);
-		
+
 		_hud = new HUD(getSecs(_timer), _player, _escapeLimit, _numEscaped, _humanWalls, 
 						_playerWalls, _humanPlayerWalls, _sidebar, _currLevel);
 		add(_hud);
 		_hud.minimapInit(_player, _grpSnake, _grpEnemies, _grpExits);		
-		
+
 		debug = new FlxText();
 		debug.setPosition(100, FlxG.height - 30);
 		add(debug);
@@ -158,9 +154,7 @@ class PlayState extends FlxState
 		_startDelayText.scrollFactor.set(0, 0);
 		_startDelayText.screenCenter(true, true);
 		add(_startDelayText);
-		
-		
-		
+
 		var song:Int = -1;
 		if (_currLevel < 5) song = 0;
 		else if (_currLevel < 8) song = 1;
@@ -344,20 +338,9 @@ class PlayState extends FlxState
 			_hud.updateHUD(getSecs(_timer), _escapeLimit, _numEscaped);
 			
 			if (_timer <= 0)
-			{
-				/*
-				add(_startDelaySprite);
-				_startDelayText.text = "You win!";				
-				_startDelayText.screenCenter(true, true);
-				_startDelayText.scrollFactor.set(0, 0);
-				add(_startDelayText);
-				disableAll();
-				_state = 3;*/
 				_state = 3;
-			}
-			//FlxG.collide(_humanWalls, _grpEnemies);
+				
 			FlxG.collide(_playerWalls, _player);
-			//FlxG.collide(_humanPlayerWalls, _grpEnemies);
 			FlxG.collide(_trueHumanWalls, _grpEnemies);
 			FlxG.collide(_humanPlayerWalls, _player);
 			_grpEnemies.forEachAlive(checkEnemyVision);
@@ -383,23 +366,21 @@ class PlayState extends FlxState
 				});
 		}
 		FlxG.collide(_humanWalls, _grpEnemies);
-		//FlxG.overlap(_playerWalls, _player, snakeCollide);
 		FlxG.collide(_humanPlayerWalls, _grpEnemies);
 		FlxG.collide(_humanPlayerWalls, _player);
 		_grpEnemies.forEachAlive(checkEnemyVision);
 		FlxG.overlap(_grpEnemies, _grpExits, humanExit);
 	}
 	
-	
 	private function doneFadeOut():Void 
 	{
 		FlxG.switchState(new GameOverState(_won, _currLevel));
 	}
-	
+
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
 	{
 	}
-	
+
 	private function humanExit(human:Enemy, exit:Exit):Void
 	{
 		if (exit.canEscape())
@@ -421,11 +402,10 @@ class PlayState extends FlxState
 			human.setGoal(_grpExits);
 		}
 	}
-	
+
 	private function snakeCollide( wall:FlxTilemap, snake:Player):Void
 	{
 		snake.angle = snake.angle + 180;
-		
 	}
 
 	/**
@@ -439,39 +419,51 @@ class PlayState extends FlxState
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
-		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _trueHumanWalls.ray(e.getMidpoint(), _player.getMidpoint())
-		&& !_player.inWall && e.inLOS(_player.x, _player.y)))
+		if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE &&
+			 _trueHumanWalls.ray(e.getMidpoint(), _player.getMidpoint()) && 
+			 !_player.inWall && 
+			 e.inLOS(_player.x, _player.y)))
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
 			e.scaredTimer = 0;
 			if (!wasScared) 
+			{
+				e.setColorTransform(3, 1, 1);
 				FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
-				Camera.shake(0.005, 20);
-			
+				Camera.shake(0.005, 20, false, function() {
+					e.setColorTransform(1, 1, 1);
+				});
+			}
 		}
 		else {
 			for (i in 0..._grpSnake.length)
 			{
 				dx = e.getMidpoint().x - _grpSnake.members[i].getMidpoint().x;
 				dy = e.getMidpoint().y - _grpSnake.members[i].getMidpoint().y;
-				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE && _trueHumanWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint())
-				&& !_player.inWall && e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
+				if ( (dx * dx + dy * dy <= ENEMY_SIGHT_RANGE * ENEMY_SIGHT_RANGE &&
+					  _trueHumanWalls.ray(e.getMidpoint(), _grpSnake.members[i].getMidpoint()) && 
+					  !_player.inWall && 
+					  e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
 				{
 					e.scared = true;
 					e.scaredTimer = 0;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
 
 					if (!wasScared)
-						Camera.shake(0.005, 20);
+					{
+						e.setColorTransform(3, 1, 1);
+						Camera.shake(0.005, 20, false, function() {
+							e.setColorTransform(1, 1, 1);
+						});
 						FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
-				
+					}
 					break;
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Utility function to convert a boolean to a String
 	 * @param	a

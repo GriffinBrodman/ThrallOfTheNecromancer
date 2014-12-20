@@ -101,9 +101,7 @@ class Enemy extends FlxSprite
 		if (stunDuration > 0)
 			stunDuration--;
 		if (scaredTimer == 0)
-		{
 			pathSet = false;
-		}
 	}
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
@@ -494,10 +492,9 @@ class Enemy extends FlxSprite
 		
 		if (stunDuration > 0)
 			this.setColorTransform(3, 3, 1);
-		else if (scared)
-			this.setColorTransform(3, 1, 1);
 		else
-			this.setColorTransform(1, 1, 1);
+			if(!scared)
+				this.setColorTransform(1, 1, 1);
 	}
 	
 	override public function draw():Void 
