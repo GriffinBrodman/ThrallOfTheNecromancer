@@ -429,7 +429,7 @@ class PlayState extends FlxState
 	private function checkEnemyVision(e:Enemy):Void
 	{
 		var wasScared:Bool = e.scared;
-		//e.scared = false;
+		e.scared = false;
 		
 		var dx = e.getMidpoint().x - _player.getMidpoint().x;
 		var dy = e.getMidpoint().y - _player.getMidpoint().y;
@@ -437,6 +437,7 @@ class PlayState extends FlxState
 		&& !_player.inWall && e.inLOS(_player.x, _player.y)))
 		{
 			e.scared = true;
+			e.scaredTimer = 0;
 			e.snakePos.copyFrom(_player.getMidpoint());
 			if (!wasScared) 
 				FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
