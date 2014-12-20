@@ -44,9 +44,9 @@ class GameOverState extends FlxState
 		add(_background);
 		
 		// create and add each of our items
-		_retryTxt = new FlxText(0, 0, 0, _win ? "Congratulations, you beat the game!": "Press any key to retry", 32);
+		/*_retryTxt = new FlxText(0, 0, 0, _win ? "Congratulations, you beat the game!": "Press any key to retry", 32);
 		_retryTxt.screenCenter(true, true);
-		add(_retryTxt);
+		add(_retryTxt);*/
 		
 		/*_txtTitle = new FlxText(0, 20, 0, _win ? "You Win!" : "Game Over!", 22);
 		_txtTitle.alignment = "center";
@@ -54,14 +54,17 @@ class GameOverState extends FlxState
 		add(_txtTitle);*/
 		
 		_btnRetry = new FlxButton(0, 0, "", retry);
-		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 226, 285);
+		_btnRetry.loadGraphic(AssetPaths.retryButton__png, false, 207, 300);
 		_btnRetry.x = (FlxG.width / 2) - _btnRetry.width;
 		_btnRetry.y = FlxG.height - _btnRetry.height;
 		//_btnRetry.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		//_btnRetry.screenCenter(true, false);
-		if (!_win)
-			add(_btnRetry);
-		
+		add(_btnRetry);
+		_btnMainMenu = new FlxButton(0, 0, "", goMainMenu);
+		_btnMainMenu.loadGraphic(AssetPaths.retMain__png, false, 207, 300);
+		_btnMainMenu.x = _btnRetry.x + _btnRetry.width;
+		_btnMainMenu.y = _btnRetry.y;
+		add(_btnMainMenu);
 		/*_btnMainMenu = new FlxButton(0, (FlxG.height / 2 + 10), "Main Menu", goMainMenu);
 		_btnMainMenu.screenCenter(true, false);
 		_btnMainMenu.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
@@ -76,13 +79,15 @@ class GameOverState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		if (FlxG.keys.firstJustReleased() != "") 
+		if (FlxG.keys.firstJustReleased() == "Z") 
 		{
 			if (_win)
 				FlxG.switchState(new MenuState());
 			else
 				retry();
 		}
+		if (FlxG.keys.firstJustReleased() == "X") 
+			FlxG.switchState(new MenuState());
 	}
 	
 	/**

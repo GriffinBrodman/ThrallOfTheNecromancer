@@ -21,6 +21,8 @@ class MenuState extends FlxState
 {
 	private var STARTLEVEL:Int = 1;
 	private var _background:FlxSprite;
+	private var SCREEN_WIDTH = 960;
+	private var SCREEN_HEIGHT = 640;
 	
 	//private var _txtTitle:FlxText;
 	//private var _btnOptions:FlxButton;
@@ -41,6 +43,7 @@ class MenuState extends FlxState
 		FlxG.sound.volume = 0.5;
 		levelStart = STARTLEVEL;
 		_background = new FlxSprite(0, 0, AssetPaths.menuBackground__jpg);
+		_background.screenCenter(true, true);
 		add(_background);
 		
 		/*_btnFullScreen = new FlxButton(80, 80, FlxG.fullscreen ? "FULLSCREEN" : "WINDOWED", clickFullscreen);
@@ -74,7 +77,7 @@ class MenuState extends FlxState
 		}
 		
 		//_btnOptions = new FlxButton(0, 0, "Options", clickOptions);
-		//_btnOptions.x = (FlxG.width / 2) - _btnOptions.width;
+		//_btnOptions.x = (SCREEN_WIDTH / 2) - _btnOptions.width;
 		//_btnOptions.y = FlxG.height - _btnOptions.height - 50;
 		//_btnOptions.onUp.sound = FlxG.sound.load(AssetPaths.select__wav);
 		//add(_btnOptions);
