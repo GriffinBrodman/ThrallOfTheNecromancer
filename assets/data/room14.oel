@@ -35,6 +35,15 @@
     <exit id="2" x="448" y="896" escapable="True" orientation="Down" />
     <exit id="3" x="448" y="0" escapable="True" orientation="Up" />
     <exit id="4" x="448" y="448" escapable="False" orientation="Up" />
+    <exit id="5" x="448" y="320" escapable="False" orientation="Up" />
+    <exit id="6" x="448" y="256" escapable="False" orientation="Up" />
+    <exit id="7" x="576" y="448" escapable="False" orientation="Up" />
+    <exit id="8" x="640" y="448" escapable="False" orientation="Up" />
+    <exit id="9" x="448" y="448" escapable="False" orientation="Up" />
+    <exit id="10" x="320" y="448" escapable="False" orientation="Up" />
+    <exit id="11" x="256" y="448" escapable="False" orientation="Up" />
+    <exit id="12" x="448" y="576" escapable="False" orientation="Up" />
+    <exit id="13" x="448" y="640" escapable="False" orientation="Up" />
   </entities>
   <playerwalls tileset="playerWalls" exportMode="CSV">1,1,1,1,1,0,0,0,0,0,1,1,1,1,1
 1,1,1,1,0,0,0,0,0,0,0,1,1,1,1
