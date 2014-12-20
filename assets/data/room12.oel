@@ -45,13 +45,9 @@
     <exit id="13" x="256" y="192" escapable="False" orientation="Up" />
     <exit id="14" x="448" y="256" escapable="False" orientation="Up" />
     <exit id="15" x="448" y="640" escapable="False" orientation="Up" />
-    <enemy id="16" x="320" y="448" etype="0" />
     <enemy id="17" x="640" y="320" etype="0" />
-    <enemy id="18" x="256" y="256" etype="0" />
     <enemy id="19" x="448" y="320" etype="0" />
-    <enemy id="20" x="448" y="512" etype="0" />
-    <enemy id="21" x="576" y="448" etype="0" />
-    <enemy id="22" x="256" y="576" etype="0" />
+    <enemy id="20" x="512" y="448" etype="0" />
     <enemy id="23" x="448" y="448" etype="0" />
     <exit id="24" x="448" y="448" escapable="False" orientation="Up" />
     <exit id="2" x="0" y="704" escapable="True" orientation="Left" />
