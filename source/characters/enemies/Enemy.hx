@@ -149,14 +149,6 @@ class Enemy extends FlxSprite
 	{
 		var neighbors = new Array<FlxPoint>();
 		
-		if (Y - 1 >= 0)
-		{
-			if (tileType(map, X, Y - 1) == 0) 
-			{
-				neighbors.push(new FlxPoint(X, Y - 1));
-			}
-		}
-
 		if (X - 1 >= 0) 
 		{
 			if (tileType(map, X - 1, Y) == 0) 
@@ -178,6 +170,14 @@ class Enemy extends FlxSprite
 			if (tileType(map, X, Y + 1) == 0) 
 			{
 			neighbors.push(new FlxPoint(X, Y + 1));
+			}
+		}
+		
+		if (Y - 1 >= 0)
+		{
+			if (tileType(map, X, Y - 1) == 0) 
+			{
+				neighbors.push(new FlxPoint(X, Y - 1));
 			}
 		}
 		
@@ -348,9 +348,9 @@ class Enemy extends FlxSprite
 				pathToGoal = findTarget(walls, currentTile, newGoalTile);
 				//trace("PTG: " + pathToGoal);
 				//trace("Snake Pos: " + snakePos);
-				trace("Snake: " + snakeTile);
+				//trace("Snake: " + snakeTile);
 				var pathToSnake = findTarget(walls, currentTile, snakeTile);
-				trace("PTS: " + pathToSnake);
+				//trace("PTS: " + pathToSnake);
 				//If the first two steps of the respective paths are the same, recalculate path					
 				if (pathToSnake.length != 0) 
 				{	
@@ -358,32 +358,32 @@ class Enemy extends FlxSprite
 					{
 						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
 						{
-							//trace("Path is good");
+							trace("Path is good");
 							pathArray = pathToGoal;		
 							break;
 						}
 						else 
 						{
-							//trace("Paths in same direction");
+							trace("Paths in same direction");
 							continue;
 						}
 					}
 					else 
 					{
-						//trace("Path not reachable");
+						trace("Path not reachable");
 						continue; 
 					}
 				}
 				else 
 				{
-					//trace("Snake is on the wall");
+					trace("Snake is on the wall");
 					pathArray = pathToGoal;		
 					break;
 				}
 			}
 			else 
 			{
-				//trace("Currently standing on new goal");
+				trace("Currently standing on new goal");
 				continue;
 			}
 		}
@@ -419,7 +419,7 @@ class Enemy extends FlxSprite
 			{	
 				if (!pathSet) 
 				{
-					path.cancel;
+					path.cancel();
 					determinePath(walls);
 					pathSet = true;
 				}
@@ -456,14 +456,16 @@ class Enemy extends FlxSprite
 		{
 			if (wasScared) 
 			{
-				path.cancel;
+				trace("BATMAN");
+				path.cancel();
 				flee();
 				pathSet = true;
 				wasScared = false;
 			}
 			if (!pathSet)
 			{
-				path.cancel;
+				trace("IT'S THE JOKER!");
+				path.cancel();
 				flee();
 				pathSet = true;
 			}

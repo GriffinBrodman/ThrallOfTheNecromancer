@@ -437,8 +437,8 @@ class PlayState extends FlxState
 		&& !_player.inWall && e.inLOS(_player.x, _player.y)))
 		{
 			e.scared = true;
-			e.snakePos = new FlxPoint(_player.x, _player.y);
 			e.snakePos.copyFrom(_player.getMidpoint());
+			trace("SET1");
 			e.wasScared = wasScared;
 			if (!wasScared)
 				FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
@@ -454,8 +454,8 @@ class PlayState extends FlxState
 				&& !_player.inWall && e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
 				{
 					e.scared = true;
-					e.snakePos = new FlxPoint(_grpSnake.members[i].x, _grpSnake.members[i].y);
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
+					trace("SET2");
 					e.wasScared = wasScared;
 					if (!wasScared)
 						Camera.shake(0.005, 20);
