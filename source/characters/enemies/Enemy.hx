@@ -43,6 +43,7 @@ class Enemy extends FlxSprite
 	private var pathSet:Bool;
 	
 	public var scared:Bool;
+	public var scaredCheck:Int;
 	public var scaredTimer:Int;
 	
 	private var stunDuration:Int;
@@ -70,8 +71,9 @@ class Enemy extends FlxSprite
 		
 		scared = false;													//Why is this here?
 		
-		scaredTimer = 1;
+		scaredCheck = 1;
 		stunDuration = 0;
+		scaredTimer = 0;
 		
 		snakePos = FlxPoint.get();		
 
@@ -100,7 +102,18 @@ class Enemy extends FlxSprite
 	{
 		if (stunDuration > 0)
 			stunDuration--;
-		if (scaredTimer == 0 && scared)
+		if (scaredTimer > 0) 
+		{
+			scaredTimer--;
+		if (scaredTimer == 0) 
+			{
+				pathSet = false;
+				scared = false;
+				state = "searching";
+			}
+		}
+
+		if (scaredCheck == 0 && scared)
 		{
 			pathSet = false;
 		}
@@ -446,11 +459,11 @@ class Enemy extends FlxSprite
 			pathing = false;
 		}
 		else 
-		{			
-			if (!pathSet || scaredTimer == 0)
+		{
+			if (!pathSet || scaredCheck == 0)
 			{
 				flee();
-				scaredTimer = 1;
+				scaredCheck = 1;
 				pathSet = true;
 			}
 

@@ -444,6 +444,7 @@ class PlayState extends FlxState
 		{
 			e.scared = true;
 			e.snakePos.copyFrom(_player.getMidpoint());
+			e.scaredCheck = 0;
 			e.scaredTimer = 0;
 			if (!wasScared) 
 				FlxG.sound.play(AssetPaths.malegrunt__mp3, .5, false);
@@ -459,7 +460,8 @@ class PlayState extends FlxState
 				&& !_player.inWall && e.inLOS(_grpSnake.members[i].x, _grpSnake.members[i].y)) )
 				{
 					e.scared = true;
-					e.scaredTimer = 0;
+					e.scaredCheck = 0;
+					e.scaredTimer = 10;
 					e.snakePos.copyFrom(_grpSnake.members[i].getMidpoint());
 
 					if (!wasScared)
