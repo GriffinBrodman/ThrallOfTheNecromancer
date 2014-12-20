@@ -292,7 +292,7 @@ class Enemy extends FlxSprite
 				
 				var neighbors = getNeighborTiles(tileMap, Std.int(nextTile.x), Std.int(nextTile.y));
 				for (n in 0...neighbors.length) 
-				{					
+				{
 					//If the neighbor is unvisited, adds it to S
 					if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 					{
@@ -455,15 +455,24 @@ class Enemy extends FlxSprite
 
 			if (path.finished) 
 			{
-				var newEnd:FlxPoint = pathArray.shift();
-				var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-				path.start(this, pathPoints, curSpeed);
-				pathing = true;
 				if (pathArray.length == 0) 
 				{
 					pathSet = false;
 					scared = false;
 					state = "searching";
+				}
+				else
+				{
+					var newEnd:FlxPoint = pathArray.shift();
+					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+					path.start(this, pathPoints, curSpeed);
+					pathing = true;
+					if (pathArray.length == 0) 
+					{
+						pathSet = false;
+						scared = false;
+						state = "searching";
+					}
 				}
 			}
 		}
