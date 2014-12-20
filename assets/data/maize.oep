@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OgmoVersion>2.1.0.6</OgmoVersion>
-  <Name>MaizeMEDIUM</Name>
+  <Name>Maize</Name>
   <BackgroundColor A="255" R="125" G="160" B="255" />
   <GridColor A="255" R="255" G="240" B="90" />
   <LevelDefaultSize>
@@ -16,7 +16,7 @@
     <Width>25600</Width>
     <Height>25600</Height>
   </LevelMaximumSize>
-  <Filename>F:\Coding\Projects\Maize\assets\data\maize.oep</Filename>
+  <Filename>C:\Users\Mark\Workspace\Thrall\ThrallOfTheNecromancer\assets\data\maize.oep</Filename>
   <AngleMode>Degrees</AngleMode>
   <CameraEnabled>false</CameraEnabled>
   <CameraSize>

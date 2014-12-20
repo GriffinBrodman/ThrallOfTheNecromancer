@@ -40,6 +40,7 @@ class Enemy extends FlxSprite
 	private var walls:FlxTilemap;	
 	private var ground:FlxTilemap;
 	public var state:String;
+	private var pathSet:Bool;
 	
 	public var scared:Bool;
 	private var stunDuration:Int;
@@ -64,6 +65,7 @@ class Enemy extends FlxSprite
 
 		path = new FlxPath();											//Path 
 		pathing = false;												//True if enemy is moving to another tile in a path
+		pathSet = false;
 		
 		scared = false;													//Why is this here?
 		fleeingTime = 0;
@@ -76,6 +78,7 @@ class Enemy extends FlxSprite
 		else if (type == 1) loadGraphic(AssetPaths.walkinganimation2__png, true, 64, 64);
 		else if (type == 2) loadGraphic(AssetPaths.walkinganimation3__png, true, 64, 64);
 		else if (type == 3) loadGraphic(AssetPaths.walkinganimation4__png, true, 64, 64);
+		
 		width = 20;
 		height = 30;
 		offset.x = 6;
@@ -89,11 +92,6 @@ class Enemy extends FlxSprite
 		setFacingFlip(FlxObject.LEFT, false, false);
 		setFacingFlip(FlxObject.RIGHT, true, true);
 		drag.x = drag.y = 10;
-		
-		
-		
-		walls = map;
-		path = new FlxPath();
 	}
 	
 	public function updateCooldowns() 
@@ -112,30 +110,13 @@ class Enemy extends FlxSprite
 	
 	public function setGoal(goal:FlxTypedGroup<Exit>) {
 		goals = goal;
-		var dest = goals.getRandom();
-		var xOffset = 0.0;
-		var yOffset = 0.0;
-		if (dest.canEscape())
-		{
-			xOffset = TILE_DIMENSION / 2;
-			yOffset = TILE_DIMENSION / 2;
-			switch (dest.getDirection())
-			{
-				case "Left":
-					yOffset = 0;
-				case "Right":
-					xOffset *= -1;
-				case "Down":
-					yOffset *= -1;
-			}
-		}
-		endPoint = dest.getMidpoint().subtract(xOffset, yOffset);
 	}
 	
 	public function stun(duration:Int) {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 		this.stunDuration = duration;
+		this.scared = false;
 	}
 	
 	//Updates the field to represent the tile this enemy is currently standing on
@@ -161,28 +142,28 @@ class Enemy extends FlxSprite
 	public function getNeighborTiles(map:FlxTilemap, X:Int, Y:Int):Array<FlxPoint> 
 	{
 		var neighbors = new Array<FlxPoint>();
-		if (Y + 1 < map.heightInTiles) 
+		if (Y + 1 <= map.heightInTiles) 
 		{
 			if (tileType(map, X, Y + 1) == 0) 
 			{
 			neighbors.push(new FlxPoint(X, Y + 1));
 			}
 		}
-		if (Y - 1 > 0)
+		if (Y - 1 >= 0)
 		{
 			if (tileType(map, X, Y - 1) == 0) 
 			{
 				neighbors.push(new FlxPoint(X, Y - 1));
 			}
 		}
-		if (X + 1 < map.widthInTiles) 
+		if (X + 1 <= map.widthInTiles) 
 		{
 			if (tileType(map, X + 1, Y) == 0) 
 			{
 				neighbors.push(new FlxPoint(X + 1, Y));
 			}		
 		}
-		if (X - 1 > 0) 
+		if (X - 1 >= 0) 
 		{
 			if (tileType(map, X - 1, Y) == 0) 
 			{
@@ -283,7 +264,7 @@ class Enemy extends FlxSprite
 	//Determines what path to take to exit
 	public function determinePath(tileMap:FlxTilemap):Void { }
 	
-	//Finds path to target tile
+	//Finds path to target tile using DFS. Does not return the shortest path
 	public function targetedDFS(tileMap:FlxTilemap, target:FlxPoint):Array<FlxPoint>
 	{
 		//Declare some temp data structures for pathfinding. 
@@ -313,8 +294,7 @@ class Enemy extends FlxSprite
 					{
 						S.push(neighbors[n]);
 					}
-				}
-				
+				}				
 				
 				if (nextTile != currentTile) 
 				{
@@ -339,70 +319,70 @@ class Enemy extends FlxSprite
 		return path;
 	}
 	
-	public function flee():Void 
+	public function flee():Void
 	{
 		//Define tile that the snake is on
+		trace("SCARED");
 		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
+		var pathToGoal: Array<FlxPoint>;
 		
 		while (true) 
 		{		
 			var newGoal = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
-			
-			//Check path to goal vs path to snake
-			var pathToGoal = targetedDFS(walls, newGoalTile);
-			var pathToSnake = targetedDFS(walls, snakeTile);
-			
-			//If the first two steps of the respective paths are the same, recalculate path
-			if (newGoal != endPoint) 
+			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
 			{
-				if (pathToGoal[0].x != pathToSnake[0].x && pathToGoal[0].y != pathToSnake[0].y) 
-				{
-					if (pathToGoal[1].x != pathToSnake[0].x && pathToGoal[1].y != pathToSnake[1].y) 
+				//Check path to goal vs path to snake
+				trace("New Goal: " + newGoalTile);
+				pathToGoal = findTarget(walls, currentTile, newGoalTile);
+				trace("PTG: " + pathToGoal);
+				trace("Snake: " + snakeTile);
+				var pathToSnake = findTarget(walls, currentTile, snakeTile);
+				trace("PTS: " + pathToSnake);
+				//If the first two steps of the respective paths are the same, recalculate path					
+				if (pathToSnake.length != 0) 
+				{	
+					if (pathToGoal.length != 0)
 					{
-						endPoint = newGoal;
-						break;
+						if (pathToGoal[0].x != pathToSnake[0].x || pathToGoal[0].y != pathToSnake[0].y) 
+						{
+							trace("Path is good");
+							pathArray = pathToGoal;		
+							break;
+						}
+						else 
+						{
+							trace("Paths in same direction");
+							continue;
+						}
 					}
 					else 
 					{
+						trace("Path not reachable");
 						continue; 
 					}
 				}
 				else 
 				{
-					continue;
+					("Snake is on the wall");
+					pathArray = pathToGoal;		
+					break;
 				}
 			}
+			else 
+			{
+				trace("Currently standing on new goal");
+				continue;
+			}
 		}
-			
-		var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-		if (pathPoints != null && !pathing) 
-		{
-			pathing = true;
-			path.start(this,pathPoints, curSpeed);
-		}
+		
+		pathArray = pathToGoal;		
 	}
 	
 	private function newPossibleGoal():FlxPoint
 	{
 		var dest = goals.getRandom();
-		var xOffset = 0.0;
-		var yOffset = 0.0;
-		if (dest.canEscape())
-		{
-			xOffset = TILE_DIMENSION / 2;
-			yOffset = TILE_DIMENSION / 2;
-			switch (dest.getDirection())
-			{
-				case "Left":
-					yOffset = 0;
-				case "Right":
-					xOffset *= -1;
-				case "Down":
-					yOffset *= -1;
-			}
-		}
-		return dest.getMidpoint().subtract(xOffset, yOffset);
+		return new FlxPoint(dest.x, dest.y);
 	}
 	
 	public function searching():Void
@@ -411,8 +391,8 @@ class Enemy extends FlxSprite
 		{
 			path.cancel();
 			pathing = false;
+			pathSet = false;
 			state = "fleeing";
-			fleeingTime = 50;
 			curSpeed = scaredSpeed;
 			path.speed = scaredSpeed;
 		}
@@ -423,79 +403,70 @@ class Enemy extends FlxSprite
 				path.cancel();
 				pathing = false;
 			}
-			
-			if (path.finished)
-			{
-				path.cancel();
-				pathing = false;
-			}
-			
-			if (!pathing) 
-			{
-				if (pathArray.length == 0) 
+			else 
+			{			
+				if (pathSet == false) 
 				{
+					trace("Calculating path");
 					determinePath(walls);
+					pathSet = true;
 				}
-				else if (pathArray.length > 0) 
-				{					
-					var newEnd:FlxPoint = pathArray.shift();
-					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-					path.start(this, pathPoints, curSpeed);
-					pathing = true;
-				}
-				/*var newEnd:FlxPoint = goals.getRandom().getMidpoint();
-				while (newEnd == endPoint) newEnd = goals.getRandom().getMidpoint();
-				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
+				
+				if (path.finished) 
 				{
-					pathing = true;
-					path.start(this,pathPoints, curSpeed);
-				}*/
+					pathing = false;
+				}
+				
+				else 
+				{	
+					if (!pathing) 
+					{
+						trace("pathing");
+						var newEnd:FlxPoint = pathArray.shift();
+						var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+						path.start(this, pathPoints, curSpeed);
+						pathing = true;
+						if (pathArray.length == 0) 
+						{
+							pathSet = false;
+						}
+					}
+
+				}
 			}
 		}
 	}
 	
 	public function fleeing():Void
 	{
-	
-		if (fleeingTime == 0)
+		if (stunDuration > 0)
 		{
-			state = "searching";
+			path.cancel();
+			pathing = false;
 		}
 		else 
 		{
-			if (stunDuration > 0)
+			if (!pathSet) 
 			{
-				path.cancel();
-				pathing = false;
-			}
-			/*else if (pathing == false)
-			{
-				pathArray = [];
 				flee();
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
-				{
-					pathing = true;
-					path.start(this,pathPoints, curSpeed);
-				}
-			}*/
-			else /*if (pathing == false)*/ 
+				pathSet = true;
+			}
+			else 
 			{
-				var newEnd:FlxPoint = newPossibleGoal();
-				while (newEnd == endPoint) 
+				if (path.finished) 
 				{
-					newEnd = newPossibleGoal();
-				}
-				endPoint = newEnd;
-				var pathPoints:Array<FlxPoint> = walls.findPath(getMidpoint(), endPoint);
-				if (pathPoints != null && !pathing) 
-				{
+					var newEnd:FlxPoint = pathArray.shift();
+					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+					path.start(this, pathPoints, curSpeed);
 					pathing = true;
-					path.start(this,pathPoints, curSpeed);
+					if (pathArray.length == 0) 
+					{
+						pathSet = false;
+						scared = false;
+					}
 				}
-			}		
+
+			}
 		}
 	}
 	
@@ -545,9 +516,6 @@ class Enemy extends FlxSprite
 			else
 				facing = FlxObject.DOWN;
 		}
-		else {
-			facing = FlxObject.NONE;
-		}
 		
 		if (facing == FlxObject.LEFT || facing == FlxObject.RIGHT)
 		{
@@ -561,7 +529,6 @@ class Enemy extends FlxSprite
 		{
 			animation.pause();
 		}
-			
 		super.draw();
 	}
 	
@@ -575,89 +542,70 @@ class Enemy extends FlxSprite
 		super.destroy();		
 	}
 	
-	/*
-	 * 1.) Assign to every node a tentative distance value: set it to 
-	 * zero for our initial node and to infinity for all other nodes.
-	 * 
-	 * 2.) Mark all nodes unvisited. Set the initial node as current. 
-	 * Create a set of the unvisited nodes called the unvisited set 
-	 * consisting of all the nodes.
-	 * 
-	 * 3.) For the current node, consider all of its unvisited neighbors 
-	 * and calculate their tentative distances. Compare the newly calculated 
-	 * tentative distance to the current assigned value and assign the smaller 
-	 * one. For example, if the current node A is marked with a distance of 6, 
-	 * and the edge connecting it with a neighbor B has length 2, then the 
-	 * distance to B (through A) will be 6 + 2 = 8. If B was previously marked 
-	 * with a distance greater than 8 then change it to 8. Otherwise, keep the 
-	 * current value.
-	 * 
-	 * 4.) When we are done considering all of the neighbors of the current node, 
-	 * mark the current node as visited and remove it from the unvisited set. 
-	 * A visited node will never be checked again. 
-	 * 
-	 * 5.) If the destination node has been marked visited (when planning a route 
-	 * between two specific nodes) or if the smallest tentative distance among the 
-	 * nodes in the unvisited set is infinity when planning a complete traversal; 
-	 * occurs when there is no connection between the initial node and remaining 
-	 * unvisited nodes), then stop. The algorithm has finished.
-	 * 
-	 * 6.)	Select the unvisited node that is marked with the smallest tentative 
-	 * distance, and set it as the new "current node" then go back to step 3.*/
 	
 	public function findTarget(tileMap:FlxTilemap, start:FlxPoint, end:FlxPoint):Array<FlxPoint>
 	{
 		var current:FlxPoint;				//Current tile being considered
 		var previous:FlxPoint;				//Used to reconstruct path
 		var Q = new Array<FlxPoint>();		//Array for iteration
-		var path = new Array<FlxPoint>();	//Path to target		
 		var visitedArrayArray:Array<Array<Bool>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) false]];	//Keeps track of whether each node is visited.	
 		var previousArrayArray:Array<Array<FlxPoint>> = [for (x in 0...tileMap.widthInTiles) [for (y in 0...tileMap.heightInTiles) null]];		//Keeps track of previous node
 		
 		//Start at the given start tile
-		current = start;
-		Q.push(current);
+		
+		if (tileMap.getTile(Std.int(end.x), Std.int(end.y)) != 0) 
+		{
+			return [];
+		}
+		
+		Q.push(start);
+		previousArrayArray[Std.int(start.x)][Std.int(start.y)] = start;
 		
 		//Get neighbors of tile
 		while (Q.length > 0) 
 		{
 			current = Q.shift();
+			
+			if (current.x == end.x && current.y == end.y) 
+			{
+				return makePath(current, previousArrayArray); 
+			}
+																				
+			//Get list of neighbors
 			var neighbors = getNeighborTiles(tileMap, Std.int(current.x), Std.int(current.y));
 			for(n in 0...neighbors.length) 
 			{
-				//if neighbor is unvisited, enqueue it
+				//if neighbor is unvisited, enqueue it, mark pr1evious. 
+
 				if (visitedArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] == false) 
 				{
-					Q.push(neighbors[n]);
-					visitedArrayArray[Std.int(current.x)][Std.int(current.y)] = true;
+					Q.push(neighbors[n]);	//Add neighbor to open queue
+					previousArrayArray[Std.int(neighbors[n].x)][Std.int(neighbors[n].y)] = current;	//To rebuild path
+					
+					if (neighbors[n].x == end.x && neighbors[n].y == end.y) 
+					{
+						return makePath(neighbors[n], previousArrayArray); 
+					}
+				}
+				else 
+				{
+					continue;
 				}
 			}
-			
+			visitedArrayArray[Std.int(current.x)][Std.int(current.y)] = true;
 		}
+		return [];
+	}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	public function makePath(end:FlxPoint, grid:Array<Array<FlxPoint>>):Array<FlxPoint> 
+	{
+		var path = new Array<FlxPoint>();	//Path to target
+		while (grid[Std.int(end.x)][Std.int(end.y)].x != end.x || (grid[Std.int(end.x)][Std.int(end.y)].y) != end.y)
+		{
+			path.push(end);
+			end = grid[Std.int(end.x)][Std.int(end.y)];
+		}
+		path.reverse();
 		return path;
 	}
-	
-	
-	
-	
 }
