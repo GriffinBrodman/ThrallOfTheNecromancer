@@ -33,7 +33,8 @@ class MenuState extends FlxState
 	private var _btnContinue:FlxButton;
 	//private var _btnFullScreen:FlxButton;
 	private var levelStart:Int;
-	
+	private var storyOverlay:FlxSprite;
+	private var unpressed = true;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -132,14 +133,27 @@ class MenuState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		if (FlxG.keys.firstJustReleased() == "Z")
-			clickPlay();
-		var _save:FlxSave = new FlxSave();
-		if (_save.bind("maize") &&
-			_save.data.Level != null &&
-			_save.data.Level != STARTLEVEL &&
-			FlxG.keys.firstJustReleased() == "X")
-			clickContinue();
+		if (unpressed)
+		{
+			if (FlxG.keys.firstJustReleased() == "Z")
+			{
+				unpressed = false;
+				storyOverlay = new FlxSprite();
+				storyOverlay.loadGraphic(AssetPaths.story_screen__png, false, 960, 640);
+				add(storyOverlay);
+			}
+			var _save:FlxSave = new FlxSave();
+			if (_save.bind("maize") &&
+				_save.data.Level != null &&
+				_save.data.Level != STARTLEVEL &&
+				FlxG.keys.firstJustReleased() == "X")
+				clickContinue();
+		}
+		else
+		{
+			if (FlxG.keys.firstJustReleased() != "")
+				clickPlay();
+		}
 	}
 	
 	/**
@@ -156,6 +170,7 @@ class MenuState extends FlxState
 		_btnExit = FlxDestroyUtil.destroy(_btnExit);
 		#end
 		_btnContinue = FlxDestroyUtil.destroy(_btnContinue);
+		storyOverlay = FlxDestroyUtil.destroy(storyOverlay);
 		//_btnFullScreen = FlxDestroyUtil.destroy(_btnFullScreen);
 	}
 }
