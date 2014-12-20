@@ -24,7 +24,7 @@
   <entities>
     <exit id="0" x="0" y="320" escapable="False" orientation="Left" />
     <exit id="1" x="896" y="320" escapable="True" orientation="Right" />
-    <enemy id="2" x="576" y="320" etype="0" />
+    <enemy id="2" x="640" y="320" etype="0" />
     <player id="3" x="128" y="320" />
     <exit id="4" x="320" y="320" escapable="False" orientation="Up" />
     <exit id="5" x="448" y="320" escapable="False" orientation="Up" />
