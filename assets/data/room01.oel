@@ -24,7 +24,7 @@
   <entities>
     <exit id="0" x="896" y="320" escapable="True" orientation="Right" />
     <exit id="1" x="0" y="320" escapable="True" orientation="Left" />
-    <enemy id="2" x="256" y="320" etype="0" />
+    <enemy id="2" x="192" y="320" etype="0" />
     <player id="3" x="64" y="320" />
   </entities>
   <playerwalls tileset="humanwalls" exportMode="CSV">-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
