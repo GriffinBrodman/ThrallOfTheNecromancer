@@ -70,7 +70,7 @@ class Enemy extends FlxSprite
 		
 		scared = false;													//Why is this here?
 		
-		scaredTimer = 0;
+		scaredTimer = 1;
 		stunDuration = 0;
 		
 		snakePos = FlxPoint.get();		
@@ -100,12 +100,9 @@ class Enemy extends FlxSprite
 	{
 		if (stunDuration > 0)
 			stunDuration--;
-		if (scaredTimer > 0)
+		if (scaredTimer == 0)
 		{
-			scaredTimer--;
-			if (scaredTimer == 0) {
-				pathSet = false;
-			}
+			pathSet = false;
 		}
 	}
 	
@@ -451,9 +448,10 @@ class Enemy extends FlxSprite
 		}
 		else 
 		{			
-			if (!pathSet)
+			if (!pathSet || scaredTimer == 0)
 			{
 				flee();
+				scaredTimer = 1;
 				pathSet = true;
 			}
 
