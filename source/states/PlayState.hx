@@ -158,12 +158,12 @@ class PlayState extends FlxState
 		add(_startDelayText);
 
 		var song:Int = -1;
-		if (_currLevel < 5) song = 0;
-		else if (_currLevel < 8) song = 1;
-		else if (_currLevel < 11) song = 2;
-		else if (_currLevel < 14) song = 3;
-		else if (_currLevel < 17) song = 4;
-		else song = 5;
+		if (_currLevel < 4) song = 0;
+		else if (_currLevel < 7) song = 1;
+		else if (_currLevel < 9) song = 2;
+		else if (_currLevel < 11) song = 3;
+		else if (_currLevel < 13) song = 4;
+		else song = 14;
 		FlxG.sound.pause();
 		FlxG.sound.play(AssetPaths.growl__mp3, .5, true);
 		FlxG.sound.play(AssetPaths.SnakeGrowl_with_silence__mp3, .7, true);
