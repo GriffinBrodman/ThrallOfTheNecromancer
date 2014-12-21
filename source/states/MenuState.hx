@@ -33,7 +33,7 @@ class MenuState extends FlxState
 	private var _btnContinue:FlxButton;
 	//private var _btnFullScreen:FlxButton;
 	private var levelStart:Int;
-	private var storyOverlay:FlxSprite;
+	private var storyOverlay:FlxButton;
 	private var unpressed = true;
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -114,8 +114,8 @@ class MenuState extends FlxState
 		if (unpressed)
 		{
 			unpressed = false;
-			storyOverlay = new FlxSprite();
-			storyOverlay.loadGraphic(AssetPaths.story_screen__png, false, 960, 640);
+			storyOverlay = new FlxButton();
+			storyOverlay.loadGraphic(AssetPaths.story_screen__png, true, 960, 640);
 			storyOverlay.screenCenter(true, true);
 			add(storyOverlay);
 		}
