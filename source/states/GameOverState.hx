@@ -19,18 +19,21 @@ class GameOverState extends FlxState
 	private var _btnRetry:FlxButton;
 	private var _background:FlxSprite;
 	private var _beatTxt:FlxText;
+	private var _skipTxt:FlxText;
 	private var _pressTxt:FlxText;
+	private var _totalLevels:Int;
 	
 	/**
 	 * Called from PlayState, this will set our win and score variables
 	 * @param	Win		true if the player beat the boss, false if they died
 	 * @param	Score	the number of coins collected
 	 */
-	public function new(Win:Bool, currLevel:Int) 
+	public function new(Win:Bool, currLevel:Int, totalLevels:Int ) 
 	{
 		_win = Win;
 		_currLevel = _win ? 1 : currLevel;
 		updateSavedLevel(_currLevel);
+		_totalLevels = totalLevels;
 		super();
 	}
 	
@@ -72,6 +75,11 @@ class GameOverState extends FlxState
 			_btnMainMenu.y = _btnRetry.y;
 			add(_btnMainMenu);
 
+			_skipTxt = new FlxText(0, 0, 0, "Press N to skip to next level", 24);
+			_skipTxt.screenCenter(true, false);
+			_skipTxt.y = FlxG.height - _skipTxt.height;
+			add(_skipTxt);
+			
 			FlxG.camera.fade(FlxColor.BLACK, .33, true);
 			FlxG.sound.pause();
 			FlxG.sound.playMusic(AssetPaths.losesound__mp3, 1, false);
@@ -90,11 +98,11 @@ class GameOverState extends FlxState
 		else
 		{
 			if (FlxG.keys.firstJustReleased() == "Z") 
-			{
 				retry();
-			}
 			if (FlxG.keys.firstJustReleased() == "X") 
 				goMainMenu();
+			if (FlxG.keys.firstJustReleased() == "N")
+				nextLevel();
 		}
 	}
 	
@@ -140,6 +148,17 @@ class GameOverState extends FlxState
 		});
 	}
 	
+	private function nextLevel():Void
+	{
+		FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
+			var nextLevel = _currLevel + 1;
+			if (nextLevel < _totalLevels + 1)
+				FlxG.switchState(new PlayState(_currLevel + 1));
+			else
+				FlxG.switchState(new GameOverState(true, _currLevel, _totalLevels));
+		});
+	}
+	
 	override public function destroy():Void 
 	{
 		super.destroy();
@@ -152,5 +171,6 @@ class GameOverState extends FlxState
 		_background = FlxDestroyUtil.destroy(_background);
 		_beatTxt = FlxDestroyUtil.destroy(_beatTxt);
 		_pressTxt = FlxDestroyUtil.destroy(_pressTxt);
+		_skipTxt = FlxDestroyUtil.destroy(_skipTxt);
 	}
 }

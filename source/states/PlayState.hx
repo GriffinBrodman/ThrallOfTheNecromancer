@@ -383,11 +383,11 @@ class PlayState extends FlxState
 			}
 		}
 		else if (_state == 3) {
-			if (_currLevel + 1 >= _numLevels)
+			if (_currLevel + 1 > _numLevels)
 			{
 				_won = true;
 				FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
-				FlxG.switchState(new GameOverState(_won, _currLevel));
+				FlxG.switchState(new GameOverState(_won, _currLevel, _numLevels));
 				});
 			}
 			else
@@ -404,7 +404,7 @@ class PlayState extends FlxState
 	
 	private function doneFadeOut():Void 
 	{
-		FlxG.switchState(new GameOverState(_won, _currLevel));
+		FlxG.switchState(new GameOverState(_won, _currLevel, _numLevels));
 	}
 
 	private function playerTouchEnemy(P:Player, E:Enemy):Void
@@ -423,7 +423,7 @@ class PlayState extends FlxState
 			if (_numEscaped >= _escapeLimit)
 			{
 				FlxG.camera.fade(FlxColor.BLACK, .33, false, function() {
-					FlxG.switchState(new GameOverState(_won, _currLevel));
+					FlxG.switchState(new GameOverState(_won, _currLevel, _numLevels));
 				});
 			}
 		}

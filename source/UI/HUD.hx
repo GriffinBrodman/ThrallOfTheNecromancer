@@ -64,6 +64,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var minimap:FlxMinimap;
 	private var mapFrame:FlxSprite;
 	private var mapUnchanged = true;
+	private var mapUnchanged2 = true;
 	
 	/** 
 	 * Constructor for HUD. Takes in number of seconds passed, number of enemies that can
@@ -92,10 +93,12 @@ class HUD extends FlxTypedGroup<FlxSprite>
 
 		// minimap
 		minimap = new FlxMinimap(humanWalls, playerWalls, humanPlayerWalls, this, MINIMAP_X, MINIMAP_Y, MINIMAP_WIDTH, MINIMAP_HEIGHT, uiCam);
-		if (escapeLimit > 1)
-			mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
-		else
+		if (escapeLimit == 1)
 			mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap_changed__png);
+		else
+		{
+			mapFrame = new FlxSprite(MAPFRAME_X, MAPFRAME_Y, AssetPaths.minimap__png);
+		}
 		mapFrame.scrollFactor.set(0, 0);
 		add(mapFrame);
 		add(minimap);
@@ -189,12 +192,17 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	public function updateHUD(timer:Int, escapeLimit:Int, escapees:Int):Void
 	{
 		_txtTimer.text = Std.string(timer);
-		var numLeft = escapeLimit - escapees;
+		var numLeft = Std.int(Math.max(0, escapeLimit - escapees - 1));
 		_txtEscaped.text = Std.string(numLeft);
-		if (numLeft <= 1 && mapUnchanged)
+		if (numLeft == 1 && mapUnchanged)
 		{
 			mapUnchanged = false;
 			mapFrame.loadGraphic(AssetPaths.minimap_changed__png);
+		}
+		if (numLeft == 0 && mapUnchanged2)
+		{
+			mapUnchanged2 = false;
+			mapFrame.loadGraphic(AssetPaths.minimap__png);
 		}
 		updateBar(screechCooldownBar, Player.SCREECH_COOLDOWN - player.getScreechCooldown(), Player.SCREECH_COOLDOWN, BAR_WIDTH);
 		updateBar(dashCooldownBar, Player.DASH_COOLDOWN - player.getDashCooldown(), Player.DASH_COOLDOWN, BAR_WIDTH);
