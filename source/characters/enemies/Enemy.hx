@@ -329,9 +329,8 @@ class Enemy extends FlxSprite
 		//trace("SCARED");
 		var snakeTile = new FlxPoint(Math.round(snakePos.x / TILE_DIMENSION), Math.round(snakePos.y / TILE_DIMENSION));
 		var pathToGoal: Array<FlxPoint>;
-		
 		while (true) 
-		{		
+		{	
 			var newGoal = newPossibleGoal();
 			var newGoalTile = new FlxPoint(Math.round(newGoal.x / TILE_DIMENSION), Math.round(newGoal.y / TILE_DIMENSION));
 			if (newGoalTile.x != currentTile.x || newGoalTile.y != currentTile.y) 
@@ -370,14 +369,15 @@ class Enemy extends FlxSprite
 				else 
 				{
 					//trace("Snake is on the wall");
-					pathArray = pathToGoal;		
+					pathArray = pathToGoal;
 					break;
 				}
 			}
 			else 
 			{
 				//trace("Currently standing on new goal");
-				continue;
+				pathArray = [];
+				break;
 			}
 		}
 		
@@ -455,23 +455,26 @@ class Enemy extends FlxSprite
 
 			if (path.finished) 
 			{
-				if (pathArray.length == 0) 
+				if (pathArray != null)
 				{
-					pathSet = false;
-					scared = false;
-					state = "searching";
-				}
-				else
-				{
-					var newEnd:FlxPoint = pathArray.shift();
-					var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
-					path.start(this, pathPoints, curSpeed);
-					pathing = true;
 					if (pathArray.length == 0) 
 					{
 						pathSet = false;
 						scared = false;
 						state = "searching";
+					}
+					else
+					{
+						var newEnd:FlxPoint = pathArray.shift();
+						var pathPoints = walls.findPath(tileToCoords(currentTile), tileToCoords(newEnd));
+						path.start(this, pathPoints, curSpeed);
+						pathing = true;
+						if (pathArray.length == 0) 
+						{
+							pathSet = false;
+							scared = false;
+							state = "searching";
+						}
 					}
 				}
 			}

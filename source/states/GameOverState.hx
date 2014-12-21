@@ -50,7 +50,7 @@ class GameOverState extends FlxState
 		// create and add each of our items
 		if (_win)
 		{
-			_beatTxt = new FlxText(0, 0, 0, "Congratulations, you've beat the game!", 32);
+			_beatTxt = new FlxText(0, 0, 0, "Congratulations, you beat the game!", 32);
 			_pressTxt = new FlxText(0, 0, 0, "Press Z to return to the menu", 24);
 			_beatTxt.screenCenter(true, true);
 			_pressTxt.screenCenter(true, true);
